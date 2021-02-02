@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
-
-#nullable disable
 
 namespace ACFIP.Data.Models
 {
@@ -13,7 +10,7 @@ namespace ACFIP.Data.Models
     {
         public CameraSetting()
         {
-            CameraConfigurations = new HashSet<CameraConfiguration>();
+            CameraConfiguration = new HashSet<CameraConfiguration>();
         }
 
         [Key]
@@ -24,7 +21,7 @@ namespace ACFIP.Data.Models
         [Column("angle")]
         public double? Angle { get; set; }
 
-        [InverseProperty(nameof(CameraConfiguration.CameraSetting))]
-        public virtual ICollection<CameraConfiguration> CameraConfigurations { get; set; }
+        [InverseProperty("CameraSetting")]
+        public virtual ICollection<CameraConfiguration> CameraConfiguration { get; set; }
     }
 }

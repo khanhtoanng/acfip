@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
-
-#nullable disable
 
 namespace ACFIP.Data.Models
 {
@@ -19,10 +16,10 @@ namespace ACFIP.Data.Models
         public int ViolationCaseId { get; set; }
 
         [ForeignKey(nameof(ViolationCaseId))]
-        [InverseProperty("ViolationCaseTypes")]
+        [InverseProperty("ViolationCaseType")]
         public virtual ViolationCase ViolationCase { get; set; }
         [ForeignKey(nameof(ViolationTypeId))]
-        [InverseProperty("ViolationCaseTypes")]
+        [InverseProperty("ViolationCaseType")]
         public virtual ViolationType ViolationType { get; set; }
     }
 }

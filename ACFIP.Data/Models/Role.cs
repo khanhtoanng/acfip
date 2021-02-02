@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
-
-#nullable disable
 
 namespace ACFIP.Data.Models
 {
@@ -13,7 +10,7 @@ namespace ACFIP.Data.Models
     {
         public Role()
         {
-            Accounts = new HashSet<Account>();
+            Account = new HashSet<Account>();
         }
 
         [Key]
@@ -23,7 +20,7 @@ namespace ACFIP.Data.Models
         [StringLength(50)]
         public string Name { get; set; }
 
-        [InverseProperty(nameof(Account.Role))]
-        public virtual ICollection<Account> Accounts { get; set; }
+        [InverseProperty("Role")]
+        public virtual ICollection<Account> Account { get; set; }
     }
 }

@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
-
-#nullable disable
 
 namespace ACFIP.Data.Models
 {
@@ -22,10 +19,10 @@ namespace ACFIP.Data.Models
         public string ConnectionUrl { get; set; }
 
         [ForeignKey(nameof(CameraId))]
-        [InverseProperty("CameraConfigurations")]
+        [InverseProperty("CameraConfiguration")]
         public virtual Camera Camera { get; set; }
         [ForeignKey(nameof(CameraSettingId))]
-        [InverseProperty("CameraConfigurations")]
+        [InverseProperty("CameraConfiguration")]
         public virtual CameraSetting CameraSetting { get; set; }
     }
 }

@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
-
-#nullable disable
 
 namespace ACFIP.Data.Models
 {
@@ -13,7 +10,7 @@ namespace ACFIP.Data.Models
     {
         public Area()
         {
-            Cameras = new HashSet<Camera>();
+            Camera = new HashSet<Camera>();
         }
 
         [Key]
@@ -26,7 +23,7 @@ namespace ACFIP.Data.Models
         [StringLength(100)]
         public string Description { get; set; }
 
-        [InverseProperty(nameof(Camera.Area))]
-        public virtual ICollection<Camera> Cameras { get; set; }
+        [InverseProperty("Area")]
+        public virtual ICollection<Camera> Camera { get; set; }
     }
 }

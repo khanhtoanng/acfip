@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
-
-#nullable disable
 
 namespace ACFIP.Data.Models
 {
@@ -25,7 +22,7 @@ namespace ACFIP.Data.Models
         public int? RoleId { get; set; }
 
         [ForeignKey(nameof(RoleId))]
-        [InverseProperty("Accounts")]
+        [InverseProperty("Account")]
         public virtual Role Role { get; set; }
     }
 }

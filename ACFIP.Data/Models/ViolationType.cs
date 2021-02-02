@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
-
-#nullable disable
 
 namespace ACFIP.Data.Models
 {
@@ -13,7 +10,7 @@ namespace ACFIP.Data.Models
     {
         public ViolationType()
         {
-            ViolationCaseTypes = new HashSet<ViolationCaseType>();
+            ViolationCaseType = new HashSet<ViolationCaseType>();
         }
 
         [Key]
@@ -26,7 +23,7 @@ namespace ACFIP.Data.Models
         [StringLength(100)]
         public string Description { get; set; }
 
-        [InverseProperty(nameof(ViolationCaseType.ViolationType))]
-        public virtual ICollection<ViolationCaseType> ViolationCaseTypes { get; set; }
+        [InverseProperty("ViolationType")]
+        public virtual ICollection<ViolationCaseType> ViolationCaseType { get; set; }
     }
 }

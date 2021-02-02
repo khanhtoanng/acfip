@@ -16,12 +16,19 @@ using ACFIP.Data.UnitOfWork;
 using Microsoft.OpenApi.Models;
 using ACFIP.Bussiness.Service.Account;
 using ACFIP.Bussiness.Service.AccountService;
-using ACFIP.Bussiness.Service.Camera;
+using ACFIP.Bussiness.Service.CameraService;
+using ACFIP.Bussiness.Service.ViolationCaseService;
+using ACFIP.Bussiness.Service.AuthenticationService;
 
 namespace Project
 {
     public class Startup
     {
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
         public IConfiguration Configuration { get; }
 
         public void ConfigureServices(IServiceCollection services)
@@ -36,6 +43,9 @@ namespace Project
                             .AllowAnyHeader();
                 });
             });
+
+            // configure controller
+            services.AddControllers();
 
             // add config connection string to database
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
@@ -97,9 +107,10 @@ namespace Project
 
         public void ServiceAddScoped(IServiceCollection services)
         {
-            services.AddScoped<IViolationCaseService, ViolationCaseService>();
+            services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<ICameraService, CameraService>();
             services.AddScoped<IViolationCaseService, ViolationCaseService>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
 
         }
 

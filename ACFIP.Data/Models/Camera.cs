@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
-
-#nullable disable
 
 namespace ACFIP.Data.Models
 {
@@ -13,8 +10,8 @@ namespace ACFIP.Data.Models
     {
         public Camera()
         {
-            CameraConfigurations = new HashSet<CameraConfiguration>();
-            ViolationCases = new HashSet<ViolationCase>();
+            CameraConfiguration = new HashSet<CameraConfiguration>();
+            ViolationCase = new HashSet<ViolationCase>();
         }
 
         [Key]
@@ -30,11 +27,11 @@ namespace ACFIP.Data.Models
         public int? AreaId { get; set; }
 
         [ForeignKey(nameof(AreaId))]
-        [InverseProperty("Cameras")]
+        [InverseProperty("Camera")]
         public virtual Area Area { get; set; }
-        [InverseProperty(nameof(CameraConfiguration.Camera))]
-        public virtual ICollection<CameraConfiguration> CameraConfigurations { get; set; }
-        [InverseProperty(nameof(ViolationCase.Camera))]
-        public virtual ICollection<ViolationCase> ViolationCases { get; set; }
+        [InverseProperty("Camera")]
+        public virtual ICollection<CameraConfiguration> CameraConfiguration { get; set; }
+        [InverseProperty("Camera")]
+        public virtual ICollection<ViolationCase> ViolationCase { get; set; }
     }
 }
