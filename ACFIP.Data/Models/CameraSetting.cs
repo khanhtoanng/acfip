@@ -10,7 +10,7 @@ namespace ACFIP.Data.Models
     {
         public CameraSetting()
         {
-            CameraConfiguration = new HashSet<CameraConfiguration>();
+            CameraConfigurations = new HashSet<CameraConfiguration>();
         }
 
         [Key]
@@ -22,6 +22,6 @@ namespace ACFIP.Data.Models
         public double? Angle { get; set; }
 
         [InverseProperty("CameraSetting")]
-        public virtual ICollection<CameraConfiguration> CameraConfiguration { get; set; }
+        public virtual ICollection<CameraConfiguration> CameraConfigurations { get; set; }
     }
 }

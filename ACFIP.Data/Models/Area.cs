@@ -10,7 +10,7 @@ namespace ACFIP.Data.Models
     {
         public Area()
         {
-            Camera = new HashSet<Camera>();
+            Cameras = new HashSet<Camera>();
         }
 
         [Key]
@@ -24,6 +24,6 @@ namespace ACFIP.Data.Models
         public string Description { get; set; }
 
         [InverseProperty("Area")]
-        public virtual ICollection<Camera> Camera { get; set; }
+        public virtual ICollection<Camera> Cameras { get; set; }
     }
 }

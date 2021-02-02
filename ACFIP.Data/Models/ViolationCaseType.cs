@@ -16,10 +16,10 @@ namespace ACFIP.Data.Models
         public int ViolationCaseId { get; set; }
 
         [ForeignKey(nameof(ViolationCaseId))]
-        [InverseProperty("ViolationCaseType")]
+        [InverseProperty("ViolationCaseTypes")]
         public virtual ViolationCase ViolationCase { get; set; }
         [ForeignKey(nameof(ViolationTypeId))]
-        [InverseProperty("ViolationCaseType")]
+        [InverseProperty("ViolationCaseTypes")]
         public virtual ViolationType ViolationType { get; set; }
     }
 }

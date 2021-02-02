@@ -13,14 +13,14 @@ namespace ACFIP.Bussiness.Service
          where TEntity : class
          where TDto : class
     {
-        protected readonly IUnitOfWork _unitOfWork;
+        protected readonly IUnitOfWork _uow;
         protected readonly IMapper _mapper;
 
         protected abstract IGenericRepository<TEntity> _reponsitory { get; }
 
         public BaseService(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _unitOfWork = unitOfWork;
+            _uow = unitOfWork;
             _mapper = mapper;
         }
 
@@ -29,7 +29,7 @@ namespace ACFIP.Bussiness.Service
             var entity = _mapper.Map<TEntity>(dto);
             _reponsitory.Add(entity);
 
-            await _unitOfWork.SaveAsync();
+            await _uow.SaveAsync();
 
             return _mapper.Map<TDto>(entity);
         }
@@ -41,14 +41,14 @@ namespace ACFIP.Bussiness.Service
                 _reponsitory.Delete(id);
 
             }
-            return await _unitOfWork.SaveAsync() > 0;
+            return await _uow.SaveAsync() > 0;
         }
 
         public virtual async Task<TDto> UpdateAsync(TDto dto)
         {
             var entity = _mapper.Map<TEntity>(dto);
             _reponsitory.Update(entity);
-            await _unitOfWork.SaveAsync();
+            await _uow.SaveAsync();
 
             return _mapper.Map<TDto>(entity);
         }
@@ -65,6 +65,11 @@ namespace ACFIP.Bussiness.Service
         public Task<IEnumerable<TEntity>> GetAsync(int pageIndex = 0, int pageSize = 0, Expression<Func<TEntity, bool>> filter = null, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, string includeProperties = "")
         {
             return _reponsitory.Get(pageIndex, pageSize, filter, orderBy, includeProperties);
+        }
+
+        public Task<TEntity> GetFirst(Expression<Func<TEntity, bool>> filter = null, string includeProperties = "")
+        {
+            return _reponsitory.GetFirst(filter, includeProperties);
         }
     }
 }

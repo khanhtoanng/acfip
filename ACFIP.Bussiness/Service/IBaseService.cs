@@ -13,6 +13,8 @@ namespace ACFIP.Bussiness.Service
         Task<IEnumerable<TEntity>> GetAsync(int pageIndex = 0, int pageSize = 0, Expression<Func<TEntity, bool>> filter = null,
                                                         Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
                                                         string includeProperties = "");
+        Task<TEntity> GetFirst(Expression<Func<TEntity, bool>> filter = null, string includeProperties = "");
+
         Task<TDto> CreateAsync(TDto dto);
         Task<TDto> UpdateAsync(TDto dto);
         Task<bool> DeleteAsync(object id);

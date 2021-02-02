@@ -16,13 +16,12 @@ namespace ACFIP.Data.Models
         [StringLength(50)]
         public string Password { get; set; }
         [Column("status")]
-        [StringLength(50)]
-        public string Status { get; set; }
+        public int? Status { get; set; }
         [Column("roleId")]
         public int? RoleId { get; set; }
 
         [ForeignKey(nameof(RoleId))]
-        [InverseProperty("Account")]
+        [InverseProperty("Accounts")]
         public virtual Role Role { get; set; }
     }
 }

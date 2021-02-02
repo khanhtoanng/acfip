@@ -10,8 +10,8 @@ namespace ACFIP.Data.Models
     {
         public Camera()
         {
-            CameraConfiguration = new HashSet<CameraConfiguration>();
-            ViolationCase = new HashSet<ViolationCase>();
+            CameraConfigurations = new HashSet<CameraConfiguration>();
+            ViolationCases = new HashSet<ViolationCase>();
         }
 
         [Key]
@@ -27,11 +27,11 @@ namespace ACFIP.Data.Models
         public int? AreaId { get; set; }
 
         [ForeignKey(nameof(AreaId))]
-        [InverseProperty("Camera")]
+        [InverseProperty("Cameras")]
         public virtual Area Area { get; set; }
         [InverseProperty("Camera")]
-        public virtual ICollection<CameraConfiguration> CameraConfiguration { get; set; }
+        public virtual ICollection<CameraConfiguration> CameraConfigurations { get; set; }
         [InverseProperty("Camera")]
-        public virtual ICollection<ViolationCase> ViolationCase { get; set; }
+        public virtual ICollection<ViolationCase> ViolationCases { get; set; }
     }
 }

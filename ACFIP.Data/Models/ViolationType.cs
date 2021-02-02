@@ -10,7 +10,7 @@ namespace ACFIP.Data.Models
     {
         public ViolationType()
         {
-            ViolationCaseType = new HashSet<ViolationCaseType>();
+            ViolationCaseTypes = new HashSet<ViolationCaseType>();
         }
 
         [Key]
@@ -24,6 +24,6 @@ namespace ACFIP.Data.Models
         public string Description { get; set; }
 
         [InverseProperty("ViolationType")]
-        public virtual ICollection<ViolationCaseType> ViolationCaseType { get; set; }
+        public virtual ICollection<ViolationCaseType> ViolationCaseTypes { get; set; }
     }
 }

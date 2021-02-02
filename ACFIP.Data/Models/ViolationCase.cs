@@ -10,7 +10,7 @@ namespace ACFIP.Data.Models
     {
         public ViolationCase()
         {
-            ViolationCaseType = new HashSet<ViolationCaseType>();
+            ViolationCaseTypes = new HashSet<ViolationCaseType>();
         }
 
         [Key]
@@ -28,9 +28,9 @@ namespace ACFIP.Data.Models
         public int? CameraId { get; set; }
 
         [ForeignKey(nameof(CameraId))]
-        [InverseProperty("ViolationCase")]
+        [InverseProperty("ViolationCases")]
         public virtual Camera Camera { get; set; }
         [InverseProperty("ViolationCase")]
-        public virtual ICollection<ViolationCaseType> ViolationCaseType { get; set; }
+        public virtual ICollection<ViolationCaseType> ViolationCaseTypes { get; set; }
     }
 }

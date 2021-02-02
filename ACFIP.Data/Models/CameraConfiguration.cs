@@ -19,10 +19,10 @@ namespace ACFIP.Data.Models
         public string ConnectionUrl { get; set; }
 
         [ForeignKey(nameof(CameraId))]
-        [InverseProperty("CameraConfiguration")]
+        [InverseProperty("CameraConfigurations")]
         public virtual Camera Camera { get; set; }
         [ForeignKey(nameof(CameraSettingId))]
-        [InverseProperty("CameraConfiguration")]
+        [InverseProperty("CameraConfigurations")]
         public virtual CameraSetting CameraSetting { get; set; }
     }
 }

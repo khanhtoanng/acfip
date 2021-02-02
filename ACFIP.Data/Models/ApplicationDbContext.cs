@@ -38,7 +38,7 @@ namespace ACFIP.Data.Models
             modelBuilder.Entity<Account>(entity =>
             {
                 entity.HasOne(d => d.Role)
-                    .WithMany(p => p.Account)
+                    .WithMany(p => p.Accounts)
                     .HasForeignKey(d => d.RoleId)
                     .HasConstraintName("FK__account__roleId__1273C1CD");
             });
@@ -46,7 +46,7 @@ namespace ACFIP.Data.Models
             modelBuilder.Entity<Camera>(entity =>
             {
                 entity.HasOne(d => d.Area)
-                    .WithMany(p => p.Camera)
+                    .WithMany(p => p.Cameras)
                     .HasForeignKey(d => d.AreaId)
                     .HasConstraintName("FK__camera__areaId__1920BF5C");
             });
@@ -54,16 +54,16 @@ namespace ACFIP.Data.Models
             modelBuilder.Entity<CameraConfiguration>(entity =>
             {
                 entity.HasKey(e => new { e.CameraId, e.CameraSettingId })
-                    .HasName("PK__camera_c__96F24AA52F6106D6");
+                    .HasName("PK__camera_c__96F24AA5EE3E4237");
 
                 entity.HasOne(d => d.Camera)
-                    .WithMany(p => p.CameraConfiguration)
+                    .WithMany(p => p.CameraConfigurations)
                     .HasForeignKey(d => d.CameraId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__camera_co__camer__1BFD2C07");
 
                 entity.HasOne(d => d.CameraSetting)
-                    .WithMany(p => p.CameraConfiguration)
+                    .WithMany(p => p.CameraConfigurations)
                     .HasForeignKey(d => d.CameraSettingId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__camera_co__camer__1CF15040");
@@ -72,7 +72,7 @@ namespace ACFIP.Data.Models
             modelBuilder.Entity<ViolationCase>(entity =>
             {
                 entity.HasOne(d => d.Camera)
-                    .WithMany(p => p.ViolationCase)
+                    .WithMany(p => p.ViolationCases)
                     .HasForeignKey(d => d.CameraId)
                     .HasConstraintName("FK__violation__camer__21B6055D");
             });
@@ -80,16 +80,16 @@ namespace ACFIP.Data.Models
             modelBuilder.Entity<ViolationCaseType>(entity =>
             {
                 entity.HasKey(e => new { e.ViolationTypeId, e.ViolationCaseId })
-                    .HasName("PK__violatio__1F6F4BB3509C3651");
+                    .HasName("PK__violatio__1F6F4BB39A921DE9");
 
                 entity.HasOne(d => d.ViolationCase)
-                    .WithMany(p => p.ViolationCaseType)
+                    .WithMany(p => p.ViolationCaseTypes)
                     .HasForeignKey(d => d.ViolationCaseId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__violation__viola__25869641");
 
                 entity.HasOne(d => d.ViolationType)
-                    .WithMany(p => p.ViolationCaseType)
+                    .WithMany(p => p.ViolationCaseTypes)
                     .HasForeignKey(d => d.ViolationTypeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__violation__viola__24927208");

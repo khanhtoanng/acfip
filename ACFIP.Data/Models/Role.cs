@@ -10,7 +10,7 @@ namespace ACFIP.Data.Models
     {
         public Role()
         {
-            Account = new HashSet<Account>();
+            Accounts = new HashSet<Account>();
         }
 
         [Key]
@@ -21,6 +21,6 @@ namespace ACFIP.Data.Models
         public string Name { get; set; }
 
         [InverseProperty("Role")]
-        public virtual ICollection<Account> Account { get; set; }
+        public virtual ICollection<Account> Accounts { get; set; }
     }
 }
