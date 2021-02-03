@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ACFIP.Data.UnitOfWork
 {
-    public class UnitOfWork : IUnitOfWork, IDisposable
+    public class UnitOfWork : IDisposable,IUnitOfWork
     {
         private ApplicationDbContext _context;
 
@@ -58,15 +58,14 @@ namespace ACFIP.Data.UnitOfWork
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!_disposed)
+            if (!this._disposed)
             {
                 if (disposing)
                 {
                     _context.Dispose();
                 }
             }
-
-            _disposed = true;
+            this._disposed = true;
         }
 
         public void Dispose()

@@ -64,16 +64,25 @@ namespace ACFIP.Data.Repository
         {
             if (entity == null) throw new ArgumentException("entity");
             _dbSet.Attach(entity);
+            _context.Entry(entity).State = EntityState.Modified;
             _dbSet.Update(entity);
         }
 
-
         public virtual void Delete(object id)
         {
-            TEntity entity = _dbSet.Find(id);
+            TEntity entityToDelete = _dbSet.Find(id);
+            _context.Entry(entityToDelete).State = EntityState.Deleted;
+            Delete(entityToDelete);
+        }
+
+        public virtual void Delete(TEntity entity)
+        {
+            if (entity == null) throw new ArgumentException("entity");
             _dbSet.Attach(entity);
+            _context.Entry(entity).State = EntityState.Deleted;
             _dbSet.Remove(entity);
         }
+
 
         public Task<TEntity> GetFirst(Expression<Func<TEntity, bool>> filter = null, string includeProperties = "")
         {

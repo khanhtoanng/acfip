@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace ACFIP.Data.Models
 {
@@ -21,6 +22,7 @@ namespace ACFIP.Data.Models
         public string Name { get; set; }
 
         [InverseProperty("Role")]
+        [JsonIgnore]
         public virtual ICollection<Account> Accounts { get; set; }
     }
 }

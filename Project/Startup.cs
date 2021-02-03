@@ -19,6 +19,7 @@ using ACFIP.Bussiness.Service.AccountService;
 using ACFIP.Bussiness.Service.CameraService;
 using ACFIP.Bussiness.Service.ViolationCaseService;
 using ACFIP.Bussiness.Service.AuthenticationService;
+using ACFIP.Bussiness.Service.AreaService;
 
 namespace Project
 {
@@ -45,9 +46,7 @@ namespace Project
             });
 
             // configure controller
-            services.AddControllers().AddNewtonsoftJson(options =>
-                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-            );
+            services.AddControllers().AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore); ;
 
             // add config connection string to database
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
@@ -113,6 +112,7 @@ namespace Project
             services.AddScoped<ICameraService, CameraService>();
             services.AddScoped<IViolationCaseService, ViolationCaseService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<IAreaService, AreaService>();
 
         }
 

@@ -17,6 +17,8 @@ namespace ACFIP.Data.Repository
         Task<TEntity> GetById(object id);
         void Add(TEntity entity);
         void Delete(object id);
+        void Delete(TEntity entityToDelete);
+
         void Update(TEntity entity);
     }
 }

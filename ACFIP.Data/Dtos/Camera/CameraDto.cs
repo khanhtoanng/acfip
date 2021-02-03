@@ -11,7 +11,7 @@ namespace ACFIP.Data.Dtos.Camera
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Status { get; set; }
+        public int Status { get; set; }
         public int? AreaId { get; set; }
         public virtual AreaDto Area { get; set; }
         public virtual ICollection<CameraConfigurationDto> CameraConfigurations { get; set; }

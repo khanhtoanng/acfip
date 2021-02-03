@@ -1,5 +1,6 @@
 ﻿using ACFIP.Bussiness.Service.Account;
 using ACFIP.Data.Dtos;
+using ACFIP.Data.Dtos.Account;
 using ACFIP.Data.Dtos.Accounts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -24,7 +25,7 @@ namespace Project.Controller
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] PagingRequestParam param)
         {
-            var result = await _accountService.GetAsync(pageIndex: param.PageIndex, pageSize: param.PageSize);
+            var result = await _accountService.GetAsync(pageIndex: param.PageIndex, pageSize: param.PageSize,includeProperties:"Role");
             if (result == null)
             {
                 return NotFound();
@@ -69,8 +70,19 @@ namespace Project.Controller
 
         }
         #endregion
-
+        [HttpPut("status")]
+        public async Task<IActionResult> UpdateStatusAccount([FromBody] AccountStatusParam param)
+        {
+            try
+            {
+                var result = await _accountService.UpdateStatusAccount(param);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { message = e.Message });
+            }
         
-
+        }
     }
 }

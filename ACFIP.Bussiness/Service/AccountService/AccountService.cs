@@ -1,8 +1,11 @@
 ﻿using ACFIP.Bussiness.Service.Account;
+using ACFIP.Data.Dtos.Account;
 using ACFIP.Data.Dtos.Accounts;
 using ACFIP.Data.Repository;
 using ACFIP.Data.UnitOfWork;
 using AutoMapper;
+using System;
+using System.Threading.Tasks;
 
 namespace ACFIP.Bussiness.Service.AccountService
 {
@@ -13,5 +16,17 @@ namespace ACFIP.Bussiness.Service.AccountService
         }
 
         protected override IGenericRepository<Data.Models.Account> _reponsitory => _uow.AccountRepository;
+
+        public async Task<bool> UpdateStatusAccount(AccountStatusParam param)
+        {
+            ACFIP.Data.Models.Account account = await _reponsitory.GetById(param.Id);
+            if(account != null)
+            {
+                account.Status = param.Status;
+                _reponsitory.Update(account);
+                return await _uow.SaveAsync() > 0;
+            }
+            throw new Exception("Cannot find this account");
+        }
     }
 }
