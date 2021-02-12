@@ -99,15 +99,13 @@ namespace ACFIP.Bussiness.Service.CameraService
 
         public async Task<CameraDto> UpdateCamera(CameraRequestParam param)
         {
-            // add camera to [camera]
-            Camera camera = new Camera()
-            {
-                Id = param.Id,
-                Name = param.Name,
-                AreaId = param.AreaId,
-                Status = param.Status,
-            };
+            // get camera by id
+            Camera camera = await _uow.CameraRepository.GetById(param.Id);
+            camera.Name = param.Name;
+            camera.Status = param.Status;
+            camera.AreaId = param.AreaId;
             _uow.CameraRepository.Update(camera);
+
             // if insert success
             if (await _uow.SaveAsync() > 0)
             {
@@ -127,14 +125,14 @@ namespace ACFIP.Bussiness.Service.CameraService
                         throw new Exception("Insert to [camera_setting] fails");
                     }
                 }
+
                 // update camera config to [camera_configuration]
-                CameraConfiguration cameraConfiguration = new CameraConfiguration()
-                {
-                    CameraId = camera.Id,
-                    CameraSettingId = cameraSetting.Id,
-                    ConnectionUrl = param.ConnectionUrl
-                };
+                CameraConfiguration cameraConfiguration = await _uow.CameraConfigurationRepository
+                    .GetFirst(filter: el => el.CameraId == camera.Id);
+                cameraConfiguration.CameraSettingId = cameraSetting.Id;
+                cameraConfiguration.ConnectionUrl = param.ConnectionUrl;
                 _uow.CameraConfigurationRepository.Update(cameraConfiguration);
+
                 return await _uow.SaveAsync() > 0
                     ? _mapper.Map<CameraDto>(camera)
                     : throw new Exception("Update to [camera_configuration] fails");
