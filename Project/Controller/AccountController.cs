@@ -2,6 +2,8 @@
 using ACFIP.Data.Dtos;
 using ACFIP.Data.Dtos.Account;
 using ACFIP.Data.Dtos.Accounts;
+using ACFIP.Data.Helper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -23,6 +25,7 @@ namespace Project.Controller
         }
         #region CRUD
         [HttpGet]
+        //[Authorize(Roles =AppConstants.Role.Manager.NAME)]
         public async Task<IActionResult> Get([FromQuery] PagingRequestParam param)
         {
             var result = await _accountService.GetAsync(pageIndex: param.PageIndex, pageSize: param.PageSize,includeProperties:"Role");
@@ -35,7 +38,7 @@ namespace Project.Controller
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById([FromRoute] string id)
         {
-            var result = await _accountService.GetFirst(filter: el => el.Id == id);
+            var result = await _accountService.GetFirst(filter: el => el.Id == id,includeProperties:"Role");
             if (result == null)
             {
                 return NotFound();
@@ -45,7 +48,11 @@ namespace Project.Controller
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] string id)
         {
-            var result = await _accountService.DeleteAsync(id);        
+            var result = await _accountService.DeleteAccount(id);
+            if (result == null)
+            {
+                return NotFound();
+            }
             return Ok(result);
         }
         [HttpPut]

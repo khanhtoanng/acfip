@@ -62,14 +62,14 @@ namespace ACFIP.Bussiness.Service
             return null;
         }
 
-        public Task<IEnumerable<TEntity>> GetAsync(int pageIndex = 0, int pageSize = 0, Expression<Func<TEntity, bool>> filter = null, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, string includeProperties = "")
+        public async Task<IEnumerable<TDto>> GetAsync(int pageIndex = 0, int pageSize = 0, Expression<Func<TEntity, bool>> filter = null, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, string includeProperties = "")
         {
-            return _reponsitory.Get(pageIndex, pageSize, filter, orderBy, includeProperties);
+            return _mapper.Map<IEnumerable<TDto>>(await _reponsitory.Get(pageIndex, pageSize, filter, orderBy, includeProperties));
         }
 
-        public Task<TEntity> GetFirst(Expression<Func<TEntity, bool>> filter = null, string includeProperties = "")
+        public async Task<TDto> GetFirst(Expression<Func<TEntity, bool>> filter = null, string includeProperties = "")
         {
-            return _reponsitory.GetFirst(filter, includeProperties);
+            return _mapper.Map <TDto>( await _reponsitory.GetFirst(filter, includeProperties));
         }
     }
 }

@@ -71,29 +71,41 @@ namespace ACFIP.Bussiness.Service.CameraService
             }
         }
 
+        //public async Task<CameraDto> DeleteCamera(int id)
+        //{
+        //    if (id == 0)
+        //    {
+        //        throw new ArgumentException("Param is null");
+        //    }
+        //    CameraConfiguration cameraConfiguration = await _uow.CameraConfigurationRepository.GetFirst(filter: el => el.CameraId == id);
+        //    _uow.CameraConfigurationRepository.Delete(cameraConfiguration);
+        //    if (await _uow.SaveAsync() > 0)
+        //    {
+        //        Camera camera = await _uow.CameraRepository.GetFirst(filter: el => el.Id == id);
+        //        _uow.CameraRepository.Delete(camera);
+        //        if (await _uow.SaveAsync() > 0)
+        //        {
+        //            return _mapper.Map<CameraDto>(camera);
+        //        }
+        //    }
+        //    throw new Exception("Delete Camera fails");
+        //}
         public async Task<CameraDto> DeleteCamera(int id)
         {
             if (id == 0)
             {
                 throw new ArgumentException("Param is null");
             }
-            CameraConfiguration cameraConfiguration = await _uow.CameraConfigurationRepository.GetFirst(filter: el => el.CameraId == id);
-            _uow.CameraConfigurationRepository.Delete(cameraConfiguration);
-            if (await _uow.SaveAsync() > 0)
-            {
-                Camera camera = await _uow.CameraRepository.GetFirst(filter: el => el.Id == id);
-                _uow.CameraRepository.Delete(camera);
-                if (await _uow.SaveAsync() > 0)
-                {
-                    return _mapper.Map<CameraDto>(camera);
-                }
-            }
-            throw new Exception("Delete Camera fails");
+            Camera camera = await _uow.CameraRepository.GetFirst(filter: el => el.Id == id);
+            camera.DelFlg = 1;
+            _uow.CameraRepository.Update(camera);
+            return await _uow.SaveAsync() > 0 ? _mapper.Map<CameraDto>(camera) : throw new Exception("Delete to [camera] fails");
         }
 
         public async Task<IEnumerable<CameraDto>> GetAllCamera(PagingRequestParam param)
         {
-            IEnumerable<Camera> listCamera = await _uow.CameraRepository.Get(pageIndex: param.PageIndex, pageSize: param.PageSize);
+            IEnumerable<Camera> listCamera = await _uow.CameraRepository
+                .Get(pageIndex: param.PageIndex, pageSize: param.PageSize,includeProperties: "Area");
             return _mapper.Map<IEnumerable<CameraDto>>(listCamera);
         }
 
@@ -132,7 +144,8 @@ namespace ACFIP.Bussiness.Service.CameraService
                 cameraConfiguration.CameraSettingId = cameraSetting.Id;
                 cameraConfiguration.ConnectionUrl = param.ConnectionUrl;
                 _uow.CameraConfigurationRepository.Update(cameraConfiguration);
-
+                // get Area
+                Area area = await _uow.AreaRepository.GetFirst(filter: el => el.Id == camera.AreaId);
                 return await _uow.SaveAsync() > 0
                     ? _mapper.Map<CameraDto>(camera)
                     : throw new Exception("Update to [camera_configuration] fails");
@@ -149,8 +162,7 @@ namespace ACFIP.Bussiness.Service.CameraService
         {
             Camera camera = await _uow.CameraRepository.GetFirst(
                 filter: el => el.Id == id,
-                includeProperties: "Area");
-            //,CameraConfigurations,CameraConfigurations.CameraSetting
+                includeProperties: "Area,CameraConfigurations,CameraConfigurations.CameraSetting");
             return _mapper.Map<CameraDto>(camera);
         }
 

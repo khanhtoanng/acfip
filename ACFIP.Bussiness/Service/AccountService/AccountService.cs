@@ -17,10 +17,25 @@ namespace ACFIP.Bussiness.Service.AccountService
 
         protected override IGenericRepository<Data.Models.Account> _reponsitory => _uow.AccountRepository;
 
+        public async Task<AccountDto> DeleteAccount(string id)
+        {
+            ACFIP.Data.Models.Account account = await _reponsitory.GetById(id);
+            if (account != null)
+            {
+                account.DelFlg = 1;
+                _reponsitory.Update(account);
+                return await _uow.SaveAsync() > 0
+                    ? _mapper.Map<AccountDto>(account)
+                    : null;
+            }
+            throw new Exception("Cannot find this account");
+
+        }
+
         public async Task<bool> UpdateStatusAccount(AccountStatusParam param)
         {
             ACFIP.Data.Models.Account account = await _reponsitory.GetById(param.Id);
-            if(account != null)
+            if (account != null)
             {
                 account.Status = param.Status;
                 _reponsitory.Update(account);

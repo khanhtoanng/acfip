@@ -19,6 +19,8 @@ namespace ACFIP.Data.Models
         public int? Status { get; set; }
         [Column("roleId")]
         public int? RoleId { get; set; }
+        [Column("delFlg")]
+        public int? DelFlg { get; set; }
 
         [ForeignKey(nameof(RoleId))]
         [InverseProperty("Accounts")]

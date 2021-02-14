@@ -29,7 +29,7 @@ namespace ACFIP.Data.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                //optionsBuilder.UseSqlServer("Server=SE130120;Database=ACFIPDB;Trusted_Connection=True;");
+              //  optionsBuilder.UseSqlServer("Server=SE130120;Database=ACFIPDB;Trusted_Connection=True;");
             }
         }
 
@@ -53,8 +53,9 @@ namespace ACFIP.Data.Models
 
             modelBuilder.Entity<CameraConfiguration>(entity =>
             {
-                entity.HasKey(e => new { e.CameraId, e.CameraSettingId })
-                    .HasName("PK__camera_c__96F24AA5EE3E4237");
+                // fix bug Update camera by delete { e.CameraId, e.CameraSettingId })
+                entity.HasKey(e => new { e.CameraId })
+                    .HasName("PK__camera_c__96F24AA52E549714");
 
                 entity.HasOne(d => d.Camera)
                     .WithMany(p => p.CameraConfigurations)
@@ -80,7 +81,7 @@ namespace ACFIP.Data.Models
             modelBuilder.Entity<ViolationCaseType>(entity =>
             {
                 entity.HasKey(e => new { e.ViolationTypeId, e.ViolationCaseId })
-                    .HasName("PK__violatio__1F6F4BB39A921DE9");
+                    .HasName("PK__violatio__1F6F4BB35E4061AC");
 
                 entity.HasOne(d => d.ViolationCase)
                     .WithMany(p => p.ViolationCaseTypes)

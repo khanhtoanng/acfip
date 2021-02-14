@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
 
 namespace ACFIP.Data.Models
 {
@@ -25,6 +24,8 @@ namespace ACFIP.Data.Models
         public int? Status { get; set; }
         [Column("areaId")]
         public int? AreaId { get; set; }
+        [Column("delFlg")]
+        public int? DelFlg { get; set; }
 
         [ForeignKey(nameof(AreaId))]
         [InverseProperty("Cameras")]

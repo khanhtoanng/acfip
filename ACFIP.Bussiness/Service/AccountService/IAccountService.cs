@@ -7,5 +7,6 @@ namespace ACFIP.Bussiness.Service.Account
     public interface IAccountService : IBaseService<ACFIP.Data.Models.Account, AccountDto>
     {
         public Task<bool> UpdateStatusAccount(AccountStatusParam param);
+        public Task<AccountDto> DeleteAccount(string id);
     }
 }
