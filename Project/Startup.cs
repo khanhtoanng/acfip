@@ -11,17 +11,18 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using ACFIP.Data.Helper;
+using ACFIP.Data.Helpers;
 using ACFIP.Data.UnitOfWork;
 using Microsoft.OpenApi.Models;
-using ACFIP.Bussiness.Service.Account;
-using ACFIP.Bussiness.Service.AccountService;
-using ACFIP.Bussiness.Service.CameraService;
-using ACFIP.Bussiness.Service.ViolationCaseService;
-using ACFIP.Bussiness.Service.AuthenticationService;
-using ACFIP.Bussiness.Service.AreaService;
+using ACFIP.Data.AppContext;
+using ACFIP.Bussiness.Services.Account;
+using ACFIP.Bussiness.Services.AccountService;
+using ACFIP.Bussiness.Services.CameraService;
+using ACFIP.Bussiness.Services.ViolationCaseService;
+using ACFIP.Bussiness.Services.AuthenticationService;
+using ACFIP.Bussiness.Services.AreaService;
 
-namespace Project
+namespace ACFIP.Core
 {
     public class Startup
     {
@@ -34,6 +35,11 @@ namespace Project
 
         public void ConfigureServices(IServiceCollection services)
         {
+            // Add Configuration Singleton
+            var config = new AppSettings();
+            Configuration.Bind("AppSettings", config);
+            services.AddSingleton(config);
+
             // Cors configure
             services.AddCors(opts =>
             {
@@ -49,7 +55,7 @@ namespace Project
             services.AddControllers();
 
             // add config connection string to database
-            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(config.DbConnectionString));
 
             // add config auto mapper
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -65,14 +71,14 @@ namespace Project
                     cfg.RequireHttpsMetadata = false;
                     cfg.SaveToken = true;
 
-                    cfg.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+                    cfg.TokenValidationParameters = new TokenValidationParameters()
                     {
                         ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["AppSettings:JwtSecret"])),
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config.JwtSecret)),
                         ValidateIssuer = true,
-                        ValidIssuer = AppSettings.Settings.Issuer,
+                        ValidIssuer = config.Issuer,
                         ValidateAudience = true,
-                        ValidAudience = AppSettings.Settings.Audience,
+                        ValidAudience = config.Audience,
                         RequireExpirationTime = false
                     };
                 });
@@ -123,22 +129,22 @@ namespace Project
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseCors("AllowAll");
 
-            app.UseHttpsRedirection();
+            //app.UseExceptionHandler("/error");
+
+            app.UseCors("AllowAll");
 
             // add swagger
             app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "FPTU - ACFIP API");
-            });
+
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "FPTU - ACFIP API"));
+            
+            app.UseHttpsRedirection();
 
             app.UseRouting();
 
             app.UseAuthentication();
 
-            // add authorization
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

@@ -8,9 +8,7 @@ namespace ACFIP.Data.Dtos.ViolationCaseType
 {
     public class ViolationCaseTypeDto
     {
-        public int ViolationTypeId { get; set; }
-        public int ViolationCaseId { get; set; }
-        public virtual ViolationCaseDto ViolationCase { get; set; }
-        public virtual ViolationTypeDto ViolationType { get; set; }
+        public ViolationCaseDto Case { get; set; }
+        public ViolationTypeDto Type { get; set; }
     }
 }

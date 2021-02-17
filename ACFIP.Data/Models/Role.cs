@@ -7,22 +7,13 @@ using System.Text.Json.Serialization;
 namespace ACFIP.Data.Models
 {
     [Table("role")]
-    public partial class Role
+    public class Role
     {
-        public Role()
-        {
-            Accounts = new HashSet<Account>();
-        }
-
         [Key]
-        [Column("id")]
+        [Column("id", Order = 0)]
         public int Id { get; set; }
-        [Column("name")]
-        [StringLength(50)]
+        [Required]
+        [Column("name", Order = 1)]
         public string Name { get; set; }
-
-        [InverseProperty("Role")]
-        [JsonIgnore]
-        public virtual ICollection<Account> Accounts { get; set; }
     }
 }

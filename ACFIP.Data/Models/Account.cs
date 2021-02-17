@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ACFIP.Data.Helpers;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -6,24 +7,27 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace ACFIP.Data.Models
 {
     [Table("account")]
-    public partial class Account
+    public partial class Account : BaseModel
     {
         [Key]
-        [Column("id")]
-        [StringLength(50)]
+        [Column("id", Order = 0)]
         public string Id { get; set; }
-        [Column("password")]
-        [StringLength(50)]
-        public string Password { get; set; }
-        [Column("status")]
-        public int? Status { get; set; }
-        [Column("roleId")]
-        public int? RoleId { get; set; }
-        [Column("delFlg")]
-        public int? DelFlg { get; set; }
-
-        [ForeignKey(nameof(RoleId))]
-        [InverseProperty("Accounts")]
-        public virtual Role Role { get; set; }
+        [Required]
+        [Column("hashed_password", Order = 1)]
+        public string HashedPassword { get; set; }
+        [Required]
+        [Column("salt", Order = 2, TypeName = "binary(16)")]
+        public byte[] Salt { get; set; }
+        [Required]
+        [ForeignKey(nameof(Role))]
+        [Column("role_id", Order = 3)]
+        public int RoleId { get; set; }
+        public Role Role { get; set; }
+        [Required]
+        [Column("status", Order = 4)]
+        public int Status { get; set; } = AppConstants.Account.ACTIVE;
+        [Required]
+        [Column("deleted_flag", Order = 5)]
+        public bool DeletedFlag { get; set; } = false;
     }
 }

@@ -1,21 +1,20 @@
-﻿using ACFIP.Data.Helper;
-using ACFIP.Data.Models;
+﻿using ACFIP.Data.AppContext;
+using ACFIP.Data.Helpers;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ACFIP.Data.Repository
 {
     public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class
     {
-        internal ApplicationDbContext _context;
+        internal ApplicationContext _context;
         internal DbSet<TEntity> _dbSet;
 
-        public GenericRepository(ApplicationDbContext context)
+        public GenericRepository(ApplicationContext context)
         {
             _context = context;
             _dbSet = context.Set<TEntity>();

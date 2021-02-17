@@ -7,8 +7,8 @@ using ACFIP.Data.Dtos.ViolationType;
 using ACFIP.Data.Models;
 using ACFIP.Data.Dtos.Area;
 using ACFIP.Data.Dtos.ViolationCaseType;
-using ACFIP.Data.Dtos.CameraSetting;
 using ACFIP.Data.Dtos.CameConfiguration;
+using ACFIP.Data.Dtos.CameraCamConfiguration;
 
 namespace ACFIP.Data.Automapper
 {
@@ -37,8 +37,8 @@ namespace ACFIP.Data.Automapper
             CreateMap<ViolationCaseType, ViolationCaseTypeDto>();
             CreateMap<ViolationCaseTypeDto, ViolationCaseType>();
 
-            CreateMap<CameraSetting, CameraSettingDto>();
-            CreateMap<CameraSettingDto, CameraSetting>();
+            CreateMap<CameraCamConfig, CameraCamConfigDto>();
+            CreateMap<CameraCamConfigDto, CameraCamConfig>();
 
             CreateMap<CameraConfiguration, CameraConfigurationDto>();
             CreateMap<CameraConfigurationDto, CameraConfiguration>();

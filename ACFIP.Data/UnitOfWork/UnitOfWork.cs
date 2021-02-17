@@ -1,4 +1,5 @@
-﻿using ACFIP.Data.Models;
+﻿using ACFIP.Data.AppContext;
+using ACFIP.Data.Models;
 using ACFIP.Data.Repository;
 using System;
 using System.Collections.Generic;
@@ -7,71 +8,87 @@ using System.Threading.Tasks;
 
 namespace ACFIP.Data.UnitOfWork
 {
-    public class UnitOfWork : IDisposable,IUnitOfWork
+    public class UnitOfWork : IDisposable, IUnitOfWork
     {
-        private ApplicationDbContext _context;
-
-        public UnitOfWork(ApplicationDbContext context)
+        private ApplicationContext _context;
+        private bool disposed = false;
+        private IGenericRepository<Account> _accountRepository;
+        private IGenericRepository<Role> _roleRepository;
+        private IGenericRepository<Area> _areaRepository;
+        private IGenericRepository<Camera> _cameraRepository;
+        private IGenericRepository<CameraCamConfig> _camConfigRepository;
+        private IGenericRepository<CameraConfiguration> _configRepository;
+        private IGenericRepository<ViolationCase> _violationCaseRepository;
+        private IGenericRepository<ViolationType> _violationTypeRepository;
+        private IGenericRepository<ViolationCaseType> _violationCaseTypeRepository;
+        public UnitOfWork(ApplicationContext context)
         {
             _context = context;
-            InitRepository();
+        }
+        public IGenericRepository<Account> AccountRepository
+        {
+            get { return _accountRepository ??= new GenericRepository<Account>(_context); }
         }
 
-        private bool _disposed = false;
-
-        public IGenericRepository<Account> AccountRepository { get; set; }
-
-        public IGenericRepository<Camera> CameraRepository { get; set; }
-
-
-        public IGenericRepository<Role> RoleRepository { get; set; }
-
-        public IGenericRepository<ViolationCase> ViolationCaseRepository { get; set; }
-
-        public IGenericRepository<ViolationType> ViolationTypeRepository { get; set; }
-
-        public IGenericRepository<CameraSetting> CameraSettingRepository{ get; set; }
-
-        public IGenericRepository<CameraConfiguration> CameraConfigurationRepository{ get; set; }
-
-        public IGenericRepository<Area> AreaRepository{ get; set; }
-
-        public IGenericRepository<ViolationCaseType> ViolationCaseTypeRepository{ get; set; }
-
-        private void InitRepository()
+        public IGenericRepository<Role> RoleRepository
         {
-            AccountRepository = new GenericRepository<Account>(_context);
-            CameraRepository = new GenericRepository<Camera>(_context);
-            CameraSettingRepository = new GenericRepository<CameraSetting>(_context);
-            CameraConfigurationRepository = new GenericRepository<CameraConfiguration>(_context);
-            AreaRepository = new GenericRepository<Area>(_context);
-            RoleRepository = new GenericRepository<Role>(_context);
-            ViolationCaseRepository = new GenericRepository<ViolationCase>(_context);
-            ViolationTypeRepository = new GenericRepository<ViolationType>(_context);
-            ViolationCaseTypeRepository = new GenericRepository<ViolationCaseType>(_context);
+            get { return _roleRepository ??= new GenericRepository<Role>(_context); }
+        }
+
+        public IGenericRepository<Area> AreaRepository
+        {
+            get { return _areaRepository ??= new GenericRepository<Area>(_context); }
+        }
+
+        public IGenericRepository<Camera> CameraRepository
+        {
+            get { return _cameraRepository ??= new GenericRepository<Camera>(_context); }
+        }
+
+        public IGenericRepository<CameraCamConfig> CameraCamConfigRepository
+        {
+            get { return _camConfigRepository ??= new GenericRepository<CameraCamConfig>(_context); }
+        }
+
+        public IGenericRepository<CameraConfiguration> CameraConfigurationRepository
+        {
+            get { return _configRepository ??= new GenericRepository<CameraConfiguration>(_context); }
+        }
+
+        public IGenericRepository<ViolationCase> ViolationCaseRepository
+        {
+            get { return _violationCaseRepository ??= new GenericRepository<ViolationCase>(_context); }
+        }
+
+        public IGenericRepository<ViolationType> ViolationTypeRepository
+        {
+            get { return _violationTypeRepository ??= new GenericRepository<ViolationType>(_context); }
+        }
+
+        public IGenericRepository<ViolationCaseType> ViolationCaseTypeRepository
+        {
+            get { return _violationCaseTypeRepository ??= new GenericRepository<ViolationCaseType>(_context); }
         }
 
         public async Task<int> SaveAsync()
         {
             return await _context.SaveChangesAsync();
         }
-
         protected virtual void Dispose(bool disposing)
         {
-            if (!this._disposed)
+            if (!this.disposed)
             {
                 if (disposing)
                 {
                     _context.Dispose();
                 }
             }
-            this._disposed = true;
+            this.disposed = true;
         }
-
         public void Dispose()
         {
             Dispose(true);
-            GC.SuppressFinalize(this);
+            System.GC.SuppressFinalize(this);
         }
     }
 }

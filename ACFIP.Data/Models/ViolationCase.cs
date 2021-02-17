@@ -6,31 +6,25 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace ACFIP.Data.Models
 {
     [Table("violation_case")]
-    public partial class ViolationCase
+    public class ViolationCase : BaseModel
     {
         public ViolationCase()
         {
             ViolationCaseTypes = new HashSet<ViolationCaseType>();
         }
-
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
-        [Column("id")]
+        [Column("id", Order = 0)]
         public int Id { get; set; }
-        [Column("createTime", TypeName = "datetime")]
-        public DateTime? CreateTime { get; set; }
-        [Column("image_url")]
-        [StringLength(255)]
-        public string ImageUrl { get; set; }
-        [Column("video_url")]
-        [StringLength(255)]
+        [Required]
+        [ForeignKey(nameof(Camera))]
+        [Column("camera_id", Order = 1)]
+        public int CameraId { get; set; }
+        public Camera Camera { get; set; }
+        [Column("image_url", Order = 2)]
+        public string ImgUrl { get; set; }
+        [Column("video_url", Order = 3)]
         public string VideoUrl { get; set; }
-        [Column("camera_id")]
-        public int? CameraId { get; set; }
-
-        [ForeignKey(nameof(CameraId))]
-        [InverseProperty("ViolationCases")]
-        public virtual Camera Camera { get; set; }
-        [InverseProperty("ViolationCase")]
         public virtual ICollection<ViolationCaseType> ViolationCaseTypes { get; set; }
     }
 }

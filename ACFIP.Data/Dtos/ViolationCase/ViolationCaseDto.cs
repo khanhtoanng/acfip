@@ -7,15 +7,12 @@ using ACFIP.Data.Dtos.ViolationType;
 
 namespace ACFIP.Data.Dtos.ViolationCase
 {
-    public class ViolationCaseDto
+    public class ViolationCaseDto : BaseDto
     {
         public int Id { get; set; }
-        public DateTime? CreateTime { get; set; }
-        public string ImageUrl { get; set; }
+        public string ImgUrl { get; set; }
         public string VideoUrl { get; set; }
-        public int? CameraId { get; set; }
-
         public virtual CameraDto Camera { get; set; }
-        public virtual ICollection<ViolationCaseTypeDto> ViolationCaseTypes { get; set; }
+        public virtual List<ViolationTypeDto> ListViolationType { get; set; }
     }
 }

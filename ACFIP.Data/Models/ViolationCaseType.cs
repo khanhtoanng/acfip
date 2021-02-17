@@ -5,21 +5,18 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ACFIP.Data.Models
 {
-    [Table("violation_case_type")]
-    public partial class ViolationCaseType
+    [Table("violation_case_violation_type")]
+    public class ViolationCaseType
     {
-        [Key]
-        [Column("violation_type_id")]
-        public int ViolationTypeId { get; set; }
-        [Key]
-        [Column("violation_case_id")]
-        public int ViolationCaseId { get; set; }
-
-        [ForeignKey(nameof(ViolationCaseId))]
-        [InverseProperty("ViolationCaseTypes")]
-        public virtual ViolationCase ViolationCase { get; set; }
-        [ForeignKey(nameof(ViolationTypeId))]
-        [InverseProperty("ViolationCaseTypes")]
-        public virtual ViolationType ViolationType { get; set; }
+        [Required]
+        [ForeignKey(nameof(ViolationCase))]
+        [Column("case_id", Order = 0)]
+        public int CaseId { get; set; }
+        public ViolationCase Case { get; set; }
+        [Required]
+        [ForeignKey(nameof(ViolationType))]
+        [Column("type_id", Order = 1)]
+        public int TypeId { get; set; }
+        public ViolationType Type { get; set; }
     }
 }
