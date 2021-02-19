@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Linq.Expressions;
+using ACFIP.Data.Dtos.ViolationCaseType;
+using ACFIP.Data.Dtos.Camera;
 
 namespace ACFIP.Bussiness.Services.ViolationCaseService
 {
@@ -57,37 +59,54 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
 
         public async Task<IEnumerable<ViolationCaseDto>> GetAllViolation(ViolationRequestParam param)
         {
-            IEnumerable<ViolationCase> listViolationCase = await _uow.ViolationCaseRepository
-                .Get(filter: el => el.CameraId == param.CameraId && el.Camera.AreaId == param.AreaId,
-                includeProperties: "Camera,Camera.Area");
+            IEnumerable<ViolationCaseDto> result = null;
+            Expression<Func<ViolationCase, bool>> filter = f => true;
+            Func<ViolationCaseType, bool> filterType = f => true;
 
-            var listViolationCaseType =( await _uow.ViolationCaseTypeRepository
-                                        .Get(filter: el => el.TypeId == param.ViolationTypeId))
-                                        .GroupBy(el => el.CaseId);
+            //if (param.AreaId != 0)
+            //{
+            //    Expression<Func<ViolationCase, bool>> newPred = c => c.Case.Camera.AreaId == param.AreaId;
+            //    filter = Expression.Lambda<Func<ViolationCase, bool>>(Expression.AndAlso(filter, newPred), filter.Parameters);
+            //}
+            //if (param.CameraId != 0)
+            //{
+            //    Expression<Func<ViolationCase, bool>> newPred = c => c.Case.Camera.AreaId == param.AreaId;
+            //    filter = Expression.Lambda<Func<ViolationCase, bool>>(Expression.AndAlso(filter, newPred), filter.Parameters);
+            //}
+            if (param.ViolationTypeId != 0)
+            {
+                filterType = f => f.TypeId == param.ViolationTypeId;
+            }
+            Predicate<ViolationCaseType> predicateType = new Predicate<ViolationCaseType>(filterType);
 
+            IEnumerable<ViolationCase> violationCases = (await _uow.ViolationCaseRepository
+                .Get(filter: filter, includeProperties: "Camera,Camera.Area,ViolationCaseTypes,ViolationCaseTypes.Type"))
+                .Where(el => el.ViolationCaseTypes.ToList().FindIndex(predicateType) >= 0);
 
-            List<ViolationCaseDto> list = ((List<ViolationCaseDto>)(from vCase in listViolationCase
-                                                                    join vType in listViolationCaseType
-                                                                    on vCase.Id equals vType.Key
-                                                                    select new ViolationCaseDto()
-                                                                    {
-                                                                        Id = vCase.Id,
-                                                                        CreatedTime = vCase.CreatedTime,
-                                                                        LastModifiedTime = vCase.LastModifiedTime,
-                                                                        ImgUrl = vCase.ImgUrl,
-                                                                        VideoUrl = vCase.VideoUrl,
-                                                                        ListViolationType = _mapper.Map<List<ViolationTypeDto>>(vType.GetEnumerator())
-                                                                    })).ToList();
-            
-            return list;
+            result = (from vCase in violationCases
+                      select new ViolationCaseDto() 
+                      {
+                        Id = vCase.Id,
+                        CreatedTime = vCase.CreatedTime,
+                        LastModifiedTime = vCase.LastModifiedTime,
+                        ImgUrl = vCase.ImgUrl,
+                        VideoUrl = vCase.VideoUrl,
+                        Camera = _mapper.Map<CameraDto>(vCase.Camera),
+                        ListViolationType = vCase.ViolationCaseTypes.Select(el => new ViolationTypeDto() {Id = el.Type.Id, Name = el.Type.Name }).ToList(),
+                      });
+            return result;
+
         }
 
         public async Task<ViolationCaseDto> GetDetailViolation(int id)
         {
+            ViolationCaseDto result = null;
             ViolationCase violationCase = await _uow.ViolationCaseRepository
                 .GetFirst(filter: el => el.Id == id,
-                includeProperties: "Camera,ViolationCaseTypes.Type");
-            return _mapper.Map<ViolationCaseDto>(violationCase);
+                includeProperties: "Camera,Camera.Area,ViolationCaseTypes,ViolationCaseTypes.Type");
+            result = _mapper.Map<ViolationCaseDto>(violationCase);
+            result.ListViolationType = violationCase.ViolationCaseTypes.Select(el => new ViolationTypeDto() { Id = el.Type.Id, Name = el.Type.Name }).ToList();
+            return result;
         }
     }
 }

@@ -74,7 +74,7 @@ namespace ACFIP.Core.Controllers
 
         }
         [HttpPost]
-        public async Task<IActionResult> CreateAccount([FromBody] CameraCreateParam param)
+        public async Task<IActionResult> CreateCamera([FromBody] CameraCreateParam param)
         {
             try
             {
