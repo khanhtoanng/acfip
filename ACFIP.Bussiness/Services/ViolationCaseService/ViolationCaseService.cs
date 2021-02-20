@@ -60,24 +60,40 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
         public async Task<IEnumerable<ViolationCaseDto>> GetAllViolation(ViolationRequestParam param)
         {
             IEnumerable<ViolationCaseDto> result = null;
-            Expression<Func<ViolationCase, bool>> filter = f => true;
             Func<ViolationCaseType, bool> filterType = f => true;
 
-            //if (param.AreaId != 0)
-            //{
-            //    Expression<Func<ViolationCase, bool>> newPred = c => c.Case.Camera.AreaId == param.AreaId;
-            //    filter = Expression.Lambda<Func<ViolationCase, bool>>(Expression.AndAlso(filter, newPred), filter.Parameters);
-            //}
-            //if (param.CameraId != 0)
-            //{
-            //    Expression<Func<ViolationCase, bool>> newPred = c => c.Case.Camera.AreaId == param.AreaId;
-            //    filter = Expression.Lambda<Func<ViolationCase, bool>>(Expression.AndAlso(filter, newPred), filter.Parameters);
-            //}
+            var parameter = Expression.Parameter(typeof(ViolationCase), "vCase");
+
+            var memberAccessCamera = Expression.Property(parameter, "CameraId");
+
+            Expression memberAccessArea = parameter;
+            foreach (var member in "Camera.AreaId".Split(".")) 
+            {
+                memberAccessArea = Expression.PropertyOrField(memberAccessArea, member);
+            }
+
+
+            var expr = Expression.Equal(Expression.Constant(1), Expression.Constant(1));
+
+            if (param.AreaId != 0)
+            {
+                //Expression<Func<ViolationCase, bool>> newPred = c => c.Camera.AreaId == param.AreaId;
+                //filter = Expression.Lambda<Func<ViolationCase, bool>>(Expression.AndAlso(filter.Body, newPred.Body), filter.Parameters);
+                expr = Expression.AndAlso(expr, Expression.Equal(memberAccessArea, Expression.Constant(param.AreaId)));
+
+            }
+            if (param.CameraId != 0)
+            {
+                //Expression<Func<ViolationCase, bool>> newPred = c => c.CameraId == param.CameraId;
+                //filter = Expression.Lambda<Func<ViolationCase, bool>>(Expression.AndAlso(filter.Body, newPred.Body), filter.Parameters);
+                expr = Expression.AndAlso(expr, Expression.Equal(memberAccessCamera, Expression.Constant(param.CameraId)));
+            }
             if (param.ViolationTypeId != 0)
             {
                 filterType = f => f.TypeId == param.ViolationTypeId;
             }
             Predicate<ViolationCaseType> predicateType = new Predicate<ViolationCaseType>(filterType);
+            var filter = Expression.Lambda<Func<ViolationCase, bool>>(expr, parameter);
 
             IEnumerable<ViolationCase> violationCases = (await _uow.ViolationCaseRepository
                 .Get(filter: filter, includeProperties: "Camera,Camera.Area,ViolationCaseTypes,ViolationCaseTypes.Type"))
