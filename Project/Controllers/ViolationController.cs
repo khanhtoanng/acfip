@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 namespace ACFIP.Core.Controllers
 {
     [Route("api/v1/violations")]
+    [ApiVersion("1.0")]
     [ApiController]
     public class ViolationController : ControllerBase
     {

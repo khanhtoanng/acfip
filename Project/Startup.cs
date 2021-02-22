@@ -21,6 +21,7 @@ using ACFIP.Bussiness.Services.CameraService;
 using ACFIP.Bussiness.Services.ViolationCaseService;
 using ACFIP.Bussiness.Services.AuthenticationService;
 using ACFIP.Bussiness.Services.AreaService;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ACFIP.Core
 {
@@ -109,6 +110,13 @@ namespace ACFIP.Core
                         Type = ReferenceType.SecurityScheme
                     }}, new List<string>()}
                 });
+            });
+            // API versioning
+            services.AddApiVersioning(x =>
+            {
+                x.DefaultApiVersion = new ApiVersion(1, 0);
+                x.AssumeDefaultVersionWhenUnspecified = true;
+                x.ReportApiVersions = true;
             });
         }
 
