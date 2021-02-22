@@ -56,6 +56,8 @@ namespace ACFIP.Data.Repository
         public virtual void Add(TEntity entity)
         {
             if (entity == null) throw new ArgumentException("entity");
+            _dbSet.Attach(entity);
+            _context.Entry(entity).State = EntityState.Added;
             _dbSet.Add(entity);
         }
 

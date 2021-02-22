@@ -16,7 +16,7 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
 {
     public class ViolationCaseService : IViolationCaseService
     {
-        private IMapper _mapper;
+        private readonly IMapper _mapper;
         private readonly IUnitOfWork _uow;
 
         public ViolationCaseService(IUnitOfWork uow, IMapper mapper)

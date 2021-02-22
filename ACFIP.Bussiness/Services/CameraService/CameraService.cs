@@ -1,7 +1,6 @@
 ﻿using ACFIP.Data.Dtos;
 using ACFIP.Data.Dtos.CameConfiguration;
 using ACFIP.Data.Dtos.Camera;
-using ACFIP.Data.Dtos.CameraCamConfiguration;
 using ACFIP.Data.Helpers;
 using ACFIP.Data.Models;
 using ACFIP.Data.Repository;
@@ -15,7 +14,7 @@ namespace ACFIP.Bussiness.Services.CameraService
 {
     public class CameraService : ICameraService
     {
-        private IMapper _mapper;
+        private readonly IMapper _mapper;
         private readonly IUnitOfWork _uow;
 
         public CameraService(IUnitOfWork uow, IMapper mapper)
@@ -31,20 +30,17 @@ namespace ACFIP.Bussiness.Services.CameraService
             {
                 Name = param.Name,
                 AreaId = param.AreaId,
-                Status = AppConstants.Camera.ACTIVE,
+                ConnectionString = param.ConnectionString
             };
             _uow.CameraRepository.Add(camera);
             // if insert success
             if (await _uow.SaveAsync() > 0)
             {
-                CameraConfiguration cameraConfiguration = new CameraConfiguration()
+                CameraConfiguration cameraConfiguration = new CameraConfiguration();
+                // check if camera-configs is not referenced
+                if (param.ConfigId == null)
                 {
-                    Id = param.CameraConfigId
-                };
-                // check if camera-configs is referenced
-                if (cameraConfiguration.Id == 0)
-                {
-                    //insert setting to [camera_setting]
+                    //insert configuration to [camera_configuration]
                     cameraConfiguration.Height = param.Height;
                     cameraConfiguration.Angle = param.Angle;
                     _uow.CameraConfigurationRepository.Add(cameraConfiguration);
@@ -53,18 +49,16 @@ namespace ACFIP.Bussiness.Services.CameraService
                         throw new Exception("Insert to [camera_configuration] fails");
                     }
                 }
-                // insert camera config to [camera_camera_configuration]
-                CameraCamConfig cameraCamConfiguration = new CameraCamConfig()
+                else
                 {
-                    CameraId = camera.Id,
-                    ConfigId = cameraConfiguration.Id,
-                    ConnectionString = param.ConnectionString
-                };
-                _uow.CameraCamConfigRepository.Add(cameraCamConfiguration);
+                    cameraConfiguration = await _uow.CameraConfigurationRepository.GetById(param.ConfigId);
+                }
+                // update camera with config id in request param
+                camera.ConfigId = cameraConfiguration.Id;
+                _uow.CameraRepository.Update(camera);
                 return await _uow.SaveAsync() > 0
-                    ? _mapper.Map<CameraDto>(camera)
-                    : throw new Exception("Insert to [camera_camera_configuration] fails");
-
+                            ? _mapper.Map<CameraDto>(camera)
+                            : throw new Exception("Update to [camera] fails");
             }
             else
             {
@@ -95,6 +89,8 @@ namespace ACFIP.Bussiness.Services.CameraService
         {
             Camera camera = await _uow.CameraRepository.GetFirst(filter: el => el.Id == id);
             camera.DeletedFlag = true;
+            camera.AreaId = null;
+            camera.ConfigId = null;
             _uow.CameraRepository.Update(camera);
             return await _uow.SaveAsync() > 0 ? _mapper.Map<CameraDto>(camera) : throw new Exception("Delete to [camera] fails");
         }
@@ -102,16 +98,16 @@ namespace ACFIP.Bussiness.Services.CameraService
         public async Task<IEnumerable<CameraDto>> GetAllCamera(CameraRequestParam param)
         {
             IEnumerable<Camera> listCamera = null;
-            if (param.AreaId == 0)
+            if (param.AreaId == null)
             {
                 listCamera = await _uow.CameraRepository
-                        .Get(pageIndex: param.PageIndex, pageSize: param.PageSize, includeProperties: "Area");
+                        .Get(pageIndex: param.PageIndex, pageSize: param.PageSize, includeProperties: "Area,Config");
             }
             else
             {
                 listCamera = await _uow.CameraRepository
                         .Get(pageIndex: param.PageIndex, pageSize: param.PageSize,
-                        filter: el => el.AreaId == param.AreaId, includeProperties: "Area");
+                        filter: el => el.AreaId == param.AreaId, includeProperties: "Area,Config");
             }
             return _mapper.Map<IEnumerable<CameraDto>>(listCamera);
         }
@@ -121,21 +117,19 @@ namespace ACFIP.Bussiness.Services.CameraService
             // get camera by id
             Camera camera = await _uow.CameraRepository.GetById(param.Id);
             camera.Name = param.Name;
-            camera.Status = param.Status;
+            camera.IsActive = param.IsActive;
             camera.AreaId = param.AreaId;
+            camera.ConnectionString = param.ConnectionString;
             _uow.CameraRepository.Update(camera);
 
-            // if insert success
+            // if update success
             if (await _uow.SaveAsync() > 0)
             {
-                CameraConfiguration cameraConfiguration = new CameraConfiguration()
+                CameraConfiguration cameraConfiguration = new CameraConfiguration();
+                // check if camera-configs is not referenced
+                if (param.ConfigId == null)
                 {
-                    Id = param.CameraConfigId
-                };
-                // check if camera-configs is referenced
-                if (cameraConfiguration.Id == 0)
-                {
-                    //insert setting to [camera_setting]
+                    //insert configuration to [camera_configuration]
                     cameraConfiguration.Height = param.Height;
                     cameraConfiguration.Angle = param.Angle;
                     _uow.CameraConfigurationRepository.Add(cameraConfiguration);
@@ -144,20 +138,24 @@ namespace ACFIP.Bussiness.Services.CameraService
                         throw new Exception("Insert to [camera_configuration] fails");
                     }
                 }
-
-                // update camera config to [camera_configuration]
-                CameraCamConfig cameraCamConfiguration = await _uow.CameraCamConfigRepository
-                    .GetFirst(filter: el => el.CameraId == camera.Id);
-                cameraCamConfiguration.ConfigId = cameraConfiguration.Id;
-                cameraCamConfiguration.ConnectionString = param.ConnectionString;
-                _uow.CameraCamConfigRepository.Update(cameraCamConfiguration);
+                else
+                {
+                    cameraConfiguration = await _uow.CameraConfigurationRepository.GetById(param.ConfigId);
+                    if (cameraConfiguration.Id == 0) 
+                    {
+                        throw new Exception("Can not find Id Configuration");
+                    }
+                }
+               
+                // update camera with config id in request param
+                camera.ConfigId = cameraConfiguration.Id;
+                _uow.CameraRepository.Update(camera);
 
                 // get Area
                 Area area = await _uow.AreaRepository.GetFirst(filter: el => el.Id == camera.AreaId);
-
                 return await _uow.SaveAsync() > 0
-                    ? _mapper.Map<CameraDto>(camera)
-                    : throw new Exception("Update to [camera_camera_configuration] fails");
+                            ? _mapper.Map<CameraDto>(camera)
+                            : throw new Exception("Update to [camera] fails");
             }
             else
             {
@@ -168,26 +166,21 @@ namespace ACFIP.Bussiness.Services.CameraService
 
         public async Task<CameraDto> GetDetailCamera(int id)
         {
-            Camera camera = await _uow.CameraRepository.GetFirst(
+            return _mapper.Map<CameraDto>(await _uow.CameraRepository.GetFirst(
                 filter: el => el.Id == id,
-                includeProperties: "Area");
-            CameraCamConfig cameraCamConfig = await _uow.CameraCamConfigRepository.GetFirst(
-                filter: el => el.CameraId == id, includeProperties: "Config");
-            CameraDto result = _mapper.Map<CameraDto>(camera);
-            result.CameraCamConfiguration = _mapper.Map<CameraCamConfigDto>(cameraCamConfig);
-            return result;
+                includeProperties: "Area,Config"));
         }
 
-        public async Task<CameraDto> UpdateStatusCamera(CameraStatus cameraUpdate)
+        public async Task<CameraDto> UpdateStatusCamera(CameraActivationParam cameraUpdate)
         {
             Camera camera = await _uow.CameraRepository.GetById(cameraUpdate.Id);
             if (camera != null)
             {
-                camera.Status = cameraUpdate.Status;
+                camera.IsActive = cameraUpdate.IsActive;
                 _uow.CameraRepository.Update(camera);
                 return await _uow.SaveAsync() > 0
                     ? _mapper.Map<CameraDto>(camera)
-                    : throw new Exception("Update Camera Status fails");
+                    : throw new Exception("Update Camera Status Active fails");
             }
             return null;
         }

@@ -16,16 +16,21 @@ namespace ACFIP.Data.Models
         [Required]
         [Column("name", Order = 1)]
         public string Name { get; set; }
-        [Required]
-        [Column("status", Order = 2)]
-        public int Status { get; set; } =  AppConstants.Camera.ACTIVE;
-        [Required]
-        [Column("deleted_flag", Order = 4)]
-        public bool DeletedFlag { get; set; } = false;
-        [Required]
         [ForeignKey(nameof(Area))]
-        [Column("area_id", Order = 3)]
-        public int AreaId { get; set; }
+        [Column("area_id", Order = 2)]
+        public int? AreaId { get; set; }
         public Area Area { get; set; }
+        [ForeignKey(nameof(CameraConfiguration))]
+        [Column("configuration_id", Order = 3)]
+        public int? ConfigId { get; set; }
+        public CameraConfiguration Config { get; set; }
+        [Column("connection_string", Order = 4)]
+        public string ConnectionString { get; set; }
+        [Required]
+        [Column("is_active", Order = 5)]
+        public bool IsActive { get; set; } = false;
+        [Required]
+        [Column("deleted_flag", Order = 6)]
+        public bool DeletedFlag { get; set; } = false;
     }
 }

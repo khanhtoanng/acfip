@@ -34,12 +34,12 @@ namespace ACFIP.Bussiness.Services.AccountService
 
         }
 
-        public async Task<AccountDto> UpdateStatusAccount(AccountStatusParam param)
+        public async Task<AccountDto> UpdateStatusAccount(AccountActivationParam param)
         {
             Data.Models.Account account = await _reponsitory.GetById(param.Id);
             if (account != null)
             {
-                account.Status = param.Status;
+                account.IsActive = param.IsActive;
                 _reponsitory.Update(account);
                 return await _uow.SaveAsync() > 0
                     ? _mapper.Map<AccountDto>(account)

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace ACFIP.Core.Controllers
 {
-    [Route("api/v1/camera")]
+    [Route("api/v1/cameras")]
     [ApiController]
     public class CameraController : ControllerBase
     {
@@ -91,7 +91,7 @@ namespace ACFIP.Core.Controllers
             }
         }
         [HttpPut("status")]
-        public async Task<IActionResult> UpdateStatusCamera([FromBody] CameraStatus param)
+        public async Task<IActionResult> UpdateStatusCamera([FromBody] CameraActivationParam param)
         {
             try
             {

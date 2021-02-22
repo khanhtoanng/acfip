@@ -4,14 +4,16 @@ using ACFIP.Data.AppContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ACFIP.Data.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20210222140501_UpdateCameraAreaAccout")]
+    partial class UpdateCameraAreaAccout
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -104,10 +106,12 @@ namespace ACFIP.Data.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int?>("AreaId")
+                        .IsRequired()
                         .HasColumnName("area_id")
                         .HasColumnType("int");
 
                     b.Property<int?>("ConfigId")
+                        .IsRequired()
                         .HasColumnName("configuration_id")
                         .HasColumnType("int");
 
@@ -303,11 +307,15 @@ namespace ACFIP.Data.Migrations
                 {
                     b.HasOne("ACFIP.Data.Models.Area", "Area")
                         .WithMany("Cameras")
-                        .HasForeignKey("AreaId");
+                        .HasForeignKey("AreaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("ACFIP.Data.Models.CameraConfiguration", "Config")
                         .WithMany()
-                        .HasForeignKey("ConfigId");
+                        .HasForeignKey("ConfigId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ACFIP.Data.Models.ViolationCase", b =>

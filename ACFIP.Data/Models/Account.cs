@@ -24,8 +24,8 @@ namespace ACFIP.Data.Models
         public int RoleId { get; set; }
         public Role Role { get; set; }
         [Required]
-        [Column("status", Order = 4)]
-        public int Status { get; set; } = AppConstants.Account.ACTIVE;
+        [Column("is_active", Order = 4)]
+        public bool IsActive { get; set; } = true;
         [Required]
         [Column("deleted_flag", Order = 5)]
         public bool DeletedFlag { get; set; } = false;

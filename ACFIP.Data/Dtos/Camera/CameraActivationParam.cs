@@ -4,9 +4,9 @@ using System.Text;
 
 namespace ACFIP.Data.Dtos.Camera
 {
-    public class CameraStatus
+    public class CameraActivationParam
     {
         public int Id { get; set; }
-        public int Status { get; set; }
+        public bool IsActive { get; set; }
     }
 }

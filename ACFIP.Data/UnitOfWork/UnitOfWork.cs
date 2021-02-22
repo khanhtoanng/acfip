@@ -16,7 +16,6 @@ namespace ACFIP.Data.UnitOfWork
         private IGenericRepository<Role> _roleRepository;
         private IGenericRepository<Area> _areaRepository;
         private IGenericRepository<Camera> _cameraRepository;
-        private IGenericRepository<CameraCamConfig> _camConfigRepository;
         private IGenericRepository<CameraConfiguration> _configRepository;
         private IGenericRepository<ViolationCase> _violationCaseRepository;
         private IGenericRepository<ViolationType> _violationTypeRepository;
@@ -45,10 +44,6 @@ namespace ACFIP.Data.UnitOfWork
             get { return _cameraRepository ??= new GenericRepository<Camera>(_context); }
         }
 
-        public IGenericRepository<CameraCamConfig> CameraCamConfigRepository
-        {
-            get { return _camConfigRepository ??= new GenericRepository<CameraCamConfig>(_context); }
-        }
 
         public IGenericRepository<CameraConfiguration> CameraConfigurationRepository
         {

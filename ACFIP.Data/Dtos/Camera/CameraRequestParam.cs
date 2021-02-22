@@ -6,6 +6,6 @@ namespace ACFIP.Data.Dtos.Camera
 {
     public class CameraRequestParam : PagingRequestParam
     {
-        public int AreaId { get; set; }
+        public int? AreaId { get; set; }
     }
 }

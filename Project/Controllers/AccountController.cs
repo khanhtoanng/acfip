@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace ACFIP.Core.Controllers
 {
-    [Route("api/v1/account")]
+    [Route("api/v1/accounts")]
     [ApiController]
     public class AccountController : ControllerBase
     {
@@ -78,7 +78,7 @@ namespace ACFIP.Core.Controllers
         }
         #endregion
         [HttpPut("status")]
-        public async Task<IActionResult> UpdateStatusAccount([FromBody] AccountStatusParam param)
+        public async Task<IActionResult> UpdateStatusAccount([FromBody] AccountActivationParam param)
         {
             try
             {

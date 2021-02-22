@@ -10,7 +10,7 @@ namespace ACFIP.Bussiness.Services.AuthenticationService
 {
     public class AuthenticationService : IAuthenticationService
     {
-        private IMapper _mapper;
+        private readonly IMapper _mapper;
         private readonly IUnitOfWork _uow;
 
         public AuthenticationService(IUnitOfWork uow, IMapper mapper)

@@ -14,7 +14,7 @@ namespace ACFIP.Bussiness.Services.CameraService
         public Task<CameraDto> DeleteCamera(int id);
         public Task<CameraDto> CreateCamera(CameraCreateParam param);
         public Task<CameraDto> UpdateCamera(CameraUpdateParam param);
-        public Task<CameraDto> UpdateStatusCamera(CameraStatus cameraUpdate);
+        public Task<CameraDto> UpdateStatusCamera(CameraActivationParam cameraUpdate);
 
     }
 }

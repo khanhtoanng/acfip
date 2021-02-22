@@ -17,6 +17,9 @@ namespace ACFIP.Data.Models
         public string Name { get; set; }
         [Column("description", Order = 2)]
         public string Description { get; set; }
+        [Required]
+        [Column("deleted_flag", Order = 3)]
+        public bool DeletedFlag { get; set; } = false;
         public virtual ICollection<Camera> Cameras { get; set; }
     }
 }

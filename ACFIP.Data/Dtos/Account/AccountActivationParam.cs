@@ -4,9 +4,9 @@ using System.Text;
 
 namespace ACFIP.Data.Dtos.Account
 {
-    public class AccountStatusParam
+    public class AccountActivationParam
     {
         public string Id { get; set; }
-        public int Status { get; set; }
+        public bool IsActive { get; set; }
     }
 }

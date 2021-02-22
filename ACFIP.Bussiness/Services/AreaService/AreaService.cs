@@ -13,7 +13,7 @@ namespace ACFIP.Bussiness.Services.AreaService
 {
     public class AreaService : IAreaService
     {
-        private IMapper _mapper;
+        private readonly IMapper _mapper;
         private readonly IUnitOfWork _uow;
 
         public AreaService(IUnitOfWork uow, IMapper mapper)

@@ -12,7 +12,6 @@ namespace ACFIP.Data.UnitOfWork
         IGenericRepository<Account> AccountRepository { get; }
         IGenericRepository<Camera> CameraRepository { get; }
         IGenericRepository<CameraConfiguration> CameraConfigurationRepository { get; }
-        IGenericRepository<CameraCamConfig> CameraCamConfigRepository { get; }
         IGenericRepository<Area> AreaRepository { get; }
         IGenericRepository<Role> RoleRepository { get; }
         IGenericRepository<ViolationCase> ViolationCaseRepository { get; }

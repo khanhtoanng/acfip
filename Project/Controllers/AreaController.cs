@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ACFIP.Core.Controllers
 {
-    [Route("api/v1/area")]
+    [Route("api/v1/areas")]
     [ApiController]
     public class AreaController : ControllerBase
     {
