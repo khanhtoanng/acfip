@@ -36,6 +36,7 @@ namespace ACFIP.Core.Controllers
             return Ok(result);
         }
         [HttpGet("{id}")]
+        [Authorize(Roles = AppConstants.Role.Manager.NAME)]
         public async Task<IActionResult> GetById([FromRoute] string id)
         {
             var result = await _accountService.GetFirst(filter: el => el.Id == id, includeProperties: "Role");
@@ -46,6 +47,7 @@ namespace ACFIP.Core.Controllers
             return Ok(result);
         }
         [HttpDelete("{id}")]
+        [Authorize(Roles = AppConstants.Role.Manager.NAME)]
         public async Task<IActionResult> Delete([FromRoute] string id)
         {
             var result = await _accountService.DeleteAccount(id);
@@ -55,7 +57,8 @@ namespace ACFIP.Core.Controllers
             }
             return Ok(result);
         }
-        [HttpPut("password-changing")]
+        [HttpPut("password")]
+        [Authorize(Roles = AppConstants.Role.Manager.NAME)]
         public async Task<IActionResult> ChangePassword([FromBody] AccountPasswordParam param)
         {
             var result = await _accountService.ChangePassword(param);
@@ -66,6 +69,7 @@ namespace ACFIP.Core.Controllers
             return Ok(result);
         }
         [HttpPost]
+        [Authorize(Roles = AppConstants.Role.Manager.NAME)]
         public async Task<IActionResult> CreateAccount([FromBody] AccountCreateParam param)
         {
             var result = await _accountService.CreateAccount(param);
@@ -78,6 +82,7 @@ namespace ACFIP.Core.Controllers
         }
         #endregion
         [HttpPut("status")]
+        [Authorize(Roles = AppConstants.Role.Manager.NAME)]
         public async Task<IActionResult> UpdateStatusAccount([FromBody] AccountActivationParam param)
         {
             try

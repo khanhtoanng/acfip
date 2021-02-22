@@ -1,6 +1,8 @@
 ﻿using ACFIP.Bussiness.Services.ViolationCaseService;
 using ACFIP.Data.Dtos;
 using ACFIP.Data.Dtos.ViolationCase;
+using ACFIP.Data.Helpers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -21,6 +23,9 @@ namespace ACFIP.Core.Controllers
             _violationCaseService = violationCaseService;
         }
         [HttpGet]
+        [Authorize(Roles = AppConstants.Role.Monitor.NAME
+                            +","
+                            + AppConstants.Role.Manager.NAME)]
         public async Task<IActionResult> GetAllViolation([FromQuery] ViolationRequestParam param)
         {
             var result = await _violationCaseService.GetAllViolation(param);
@@ -31,6 +36,9 @@ namespace ACFIP.Core.Controllers
             return Ok(result);
         }
         [HttpGet("{id}")]
+        [Authorize(Roles = AppConstants.Role.Monitor.NAME
+                            + ","
+                            + AppConstants.Role.Manager.NAME)]
         public async Task<IActionResult> GetDetailViolation(int id)
         {
             var result = await _violationCaseService.GetDetailViolation(id);
@@ -41,6 +49,9 @@ namespace ACFIP.Core.Controllers
             return Ok(result);
         }
         [HttpPost]
+        [Authorize(Roles = AppConstants.Role.Monitor.NAME
+                            + ","
+                            + AppConstants.Role.Manager.NAME)]
         public async Task<IActionResult> CreateViolation(ViolationCreateParam param)
         {
             try

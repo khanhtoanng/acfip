@@ -1,5 +1,7 @@
 ﻿using ACFIP.Bussiness.Services.AreaService;
 using ACFIP.Data.Dtos;
+using ACFIP.Data.Helpers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -20,6 +22,7 @@ namespace ACFIP.Core.Controllers
             _areaService = areaService;
         }
         [HttpGet]
+        [Authorize(Roles = AppConstants.Role.Monitor.NAME)]
         public async Task<IActionResult> Get([FromQuery] PagingRequestParam param)
         {
             var result = await _areaService.GetAllArea(param);
