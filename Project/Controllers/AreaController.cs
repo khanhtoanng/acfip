@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 namespace ACFIP.Core.Controllers
 {
     [Route("api/v1/areas")]
+    [ApiVersion("1.0")]
     [ApiController]
     public class AreaController : ControllerBase
     {
