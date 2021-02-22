@@ -15,7 +15,6 @@ namespace ACFIP_Server.Context
         public DbSet<Area> Areas { get; set; }
         public DbSet<Camera> Cameras { get; set; }
         public DbSet<CameraConfiguration> CameraConfigurations { get; set; }
-        public DbSet<CameraCamConfig> CameraCamConfigs { get; set; }
         public DbSet<ViolationCase> ViolationCases { get; set; }
         public DbSet<ViolationType> ViolationTypes { get; set; }
         public DbSet<ViolationCaseType> ViolationCaseTypes { get; set; }
@@ -33,9 +32,6 @@ namespace ACFIP_Server.Context
                 );
             builder.Entity<ViolationCaseType>().HasKey(
                     t => new { t.CaseId, t.TypeId }
-                );
-            builder.Entity<CameraCamConfig>().HasKey(
-                    t => new { t.CameraId, t.ConfigId }
                 );
         }
 

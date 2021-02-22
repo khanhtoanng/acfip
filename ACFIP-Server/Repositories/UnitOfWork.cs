@@ -13,7 +13,6 @@ namespace ACFIP_Server.Repositories
         private IGenericRepository<Role> _roleRepo;
         private IGenericRepository<Area> _areaRepo;
         private IGenericRepository<Camera> _cameraRepo;
-        private IGenericRepository<CameraCamConfig> _camConfigRepo;
         private IGenericRepository<CameraConfiguration> _configRepo;
         private IGenericRepository<ViolationCase> _violationCaseRepo;
         private IGenericRepository<ViolationType> _violationTypeRepo;
@@ -40,11 +39,6 @@ namespace ACFIP_Server.Repositories
         public IGenericRepository<Camera> CameraRepo
         {
             get { return _cameraRepo ??= new GenericRepository<Camera>(_context); }
-        }
-
-        public IGenericRepository<CameraCamConfig> CamConfigRepo
-        {
-            get { return _camConfigRepo ??= new GenericRepository<CameraCamConfig>(_context); }
         }
 
         public IGenericRepository<CameraConfiguration> ConfigRepo

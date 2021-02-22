@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace ACFIP_Server.Controllers
 {
-    [Route("api/v1/account")]
+    [Route("api/v1/accounts")]
     [ApiVersion("1.0")]
     [ApiController]
     public class AccountController : Controller
     {
-        private IAccountService _accountService;
-        private AppConfiguration _config;
+        private readonly IAccountService _accountService;
+        private readonly AppConfiguration _config;
         public AccountController(IAccountService accountService, AppConfiguration config)
         {
             _accountService = accountService;

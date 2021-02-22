@@ -11,8 +11,8 @@ namespace ACFIP_Server.Services.Account
 {
     public class AccountService : IAccountService
     {
-        private IUnitOfWork _uow;
-        private IMapper _mapper;
+        private readonly IUnitOfWork _uow;
+        private readonly IMapper _mapper;
         public AccountService(IUnitOfWork uow, IMapper mapper)
         {
             _uow = uow;
@@ -60,7 +60,7 @@ namespace ACFIP_Server.Services.Account
         public async Task<AccountDataset> Login(LoginDataset dataset)
         {
             Models.Account account = await _uow.AccountRepo.GetFirst(filter: t => t.Id == dataset.Id && t.Status && !t.DeletedFlag, includeProperties: "Role");
-            if (hashSHA512(dataset.Password, account.Salt) == account.HashedPassword)
+            if (account != null && hashSHA512(dataset.Password, account.Salt) == account.HashedPassword)
             {
                 return _mapper.Map<AccountDataset>(account);
             }

@@ -9,7 +9,6 @@ namespace ACFIP_Server.Repositories
         IGenericRepository<Role> RoleRepo { get; }
         IGenericRepository<Area> AreaRepo { get; }
         IGenericRepository<Camera> CameraRepo { get; }
-        IGenericRepository<CameraCamConfig> CamConfigRepo { get; }
         IGenericRepository<CameraConfiguration> ConfigRepo { get; }
         IGenericRepository<ViolationCase> ViolationCaseRepo { get; }
         IGenericRepository<ViolationType> ViolationTypeRepo { get; }

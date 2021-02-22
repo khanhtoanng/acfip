@@ -2,6 +2,8 @@ using ACFIP_Server.Context;
 using ACFIP_Server.Helpers;
 using ACFIP_Server.Repositories;
 using ACFIP_Server.Services.Account;
+using ACFIP_Server.Services.Area;
+using ACFIP_Server.Services.Camera;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -75,8 +77,10 @@ namespace ACFIP_Server
             // Add service scope
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IAreaService, AreaService>();
+            services.AddScoped<ICameraService, CameraService>();
 
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson();
             // Auto mapper
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             // Generate swagger
@@ -124,7 +128,7 @@ namespace ACFIP_Server
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "ACFIP API");
             });
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
 

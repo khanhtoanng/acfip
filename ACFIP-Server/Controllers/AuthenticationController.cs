@@ -17,8 +17,8 @@ namespace ACFIP_Server.Controllers
     [ApiController]
     public class AuthenticationController : Controller
     {
-        private IAccountService _accountService;
-        private AppConfiguration _config;
+        private readonly IAccountService _accountService;
+        private readonly AppConfiguration _config;
         public AuthenticationController(IAccountService accountService, AppConfiguration config)
         {
             _accountService = accountService;

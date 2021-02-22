@@ -4,14 +4,16 @@ using ACFIP_Server.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ACFIP_Server.Migrations
 {
     [DbContext(typeof(MainContext))]
-    partial class MainContextModelSnapshot : ModelSnapshot
+    [Migration("20210221034631_t5")]
+    partial class t5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -76,10 +78,6 @@ namespace ACFIP_Server.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("created_time");
 
-                    b.Property<bool>("DeletedFlag")
-                        .HasColumnType("bit")
-                        .HasColumnName("deleted_flag");
-
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("description");
@@ -116,10 +114,6 @@ namespace ACFIP_Server.Migrations
                     b.Property<DateTime>("CreatedTime")
                         .HasColumnType("datetime2")
                         .HasColumnName("created_time");
-
-                    b.Property<bool>("DeletedFlag")
-                        .HasColumnType("bit")
-                        .HasColumnName("deleted_flag");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit")
