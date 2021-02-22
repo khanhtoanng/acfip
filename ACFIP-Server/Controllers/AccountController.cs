@@ -32,7 +32,7 @@ namespace ACFIP_Server.Controllers
             return NotFound();
         }
 
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> CreateAccount([FromBody] RegisterDataset param)
         {

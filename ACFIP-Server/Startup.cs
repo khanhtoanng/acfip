@@ -4,6 +4,7 @@ using ACFIP_Server.Repositories;
 using ACFIP_Server.Services.Account;
 using ACFIP_Server.Services.Area;
 using ACFIP_Server.Services.Camera;
+using ACFIP_Server.Services.Violation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -79,6 +80,7 @@ namespace ACFIP_Server
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IAreaService, AreaService>();
             services.AddScoped<ICameraService, CameraService>();
+            services.AddScoped<IViolationService, ViolationService>();
 
             services.AddControllers().AddNewtonsoftJson();
             // Auto mapper
