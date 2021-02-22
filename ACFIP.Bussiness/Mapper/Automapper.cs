@@ -9,9 +9,9 @@ using ACFIP.Data.Dtos.Area;
 using ACFIP.Data.Dtos.ViolationCaseType;
 using ACFIP.Data.Dtos.CameConfiguration;
 
-namespace ACFIP.Data.Automapper
+namespace ACFIP.Bussiness.Mapper
 {
-    class Automapper : Profile
+    public class Automapper : Profile
     {
         public Automapper()
         {

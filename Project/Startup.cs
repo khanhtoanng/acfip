@@ -59,7 +59,10 @@ namespace ACFIP.Core
             services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(config.DbConnectionString));
 
             // add config auto mapper
-            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            services.AddAutoMapper(cfg =>
+            {
+                cfg.AddProfile<ACFIP.Bussiness.Mapper.Automapper>();
+            });
 
             // Add jwt authentication
             services.AddAuthentication(x =>
