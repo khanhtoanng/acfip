@@ -22,6 +22,7 @@ using ACFIP.Bussiness.Services.ViolationCaseService;
 using ACFIP.Bussiness.Services.AuthenticationService;
 using ACFIP.Bussiness.Services.AreaService;
 using Microsoft.AspNetCore.Mvc;
+using ACFIP.Core.Settings;
 
 namespace ACFIP.Core
 {

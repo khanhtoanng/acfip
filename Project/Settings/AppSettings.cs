@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ACFIP.Data.Helpers
+namespace ACFIP.Core.Settings
 {
     public class AppSettings
     {
