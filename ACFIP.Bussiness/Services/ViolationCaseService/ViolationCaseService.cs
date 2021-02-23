@@ -66,13 +66,15 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
 
             var memberAccessCamera = Expression.Property(parameter, "CameraId");
 
+            var memberAccessCreateTime = Expression.Property(parameter, "CreatedTime");
+
             Expression memberAccessArea = parameter;
             foreach (var member in "Camera.AreaId".Split(".")) 
             {
                 memberAccessArea = Expression.PropertyOrField(memberAccessArea, member);
             }
 
-
+            // init
             var expr = Expression.Equal(Expression.Constant(1), Expression.Constant(1));
 
             if (param.AreaId != 0)
@@ -88,10 +90,15 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
                 //filter = Expression.Lambda<Func<ViolationCase, bool>>(Expression.AndAlso(filter.Body, newPred.Body), filter.Parameters);
                 expr = Expression.AndAlso(expr, Expression.Equal(memberAccessCamera, Expression.Constant(param.CameraId)));
             }
+            if (param.CreateTime != null)
+            {
+                expr = Expression.AndAlso(expr, Expression.GreaterThanOrEqual(memberAccessCreateTime, Expression.Constant(param.CreateTime)));
+            }
             if (param.ViolationTypeId != 0)
             {
                 filterType = f => f.TypeId == param.ViolationTypeId;
             }
+        
             Predicate<ViolationCaseType> predicateType = new Predicate<ViolationCaseType>(filterType);
             var filter = Expression.Lambda<Func<ViolationCase, bool>>(expr, parameter);
 

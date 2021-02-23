@@ -9,5 +9,6 @@ namespace ACFIP.Data.Dtos.ViolationCase
         public int CameraId { get; set; }
         public int AreaId { get; set; }
         public int ViolationTypeId {get;set;}
+        public DateTime CreateTime { get; set; }
     }
 }
