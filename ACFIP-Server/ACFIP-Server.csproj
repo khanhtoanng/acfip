@@ -6,7 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Datasets\CamConfig\" />
+    <Compile Remove="Datasets\CamConfig\**" />
+    <Content Remove="Datasets\CamConfig\**" />
+    <EmbeddedResource Remove="Datasets\CamConfig\**" />
+    <None Remove="Datasets\CamConfig\**" />
   </ItemGroup>
 
   <ItemGroup>

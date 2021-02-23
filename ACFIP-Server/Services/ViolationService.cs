@@ -8,6 +8,12 @@ using System.Threading.Tasks;
 
 namespace ACFIP_Server.Services.Violation
 {
+    public interface IViolationService
+    {
+        Task<ViolationDataset> GetOne(int id);
+        Task<ViolationDataset> GetLatest(int cameraId);
+        Task<ViolationDataset> Create(ViolationDataset dataset);
+    }
     public class ViolationService : IViolationService
     {
         private readonly IUnitOfWork _uow;
@@ -35,6 +41,13 @@ namespace ACFIP_Server.Services.Violation
                 return dataset;
             }
             return null;
+        }
+
+        public async Task<ViolationDataset> GetLatest(int cameraId)
+        {
+            Func<IQueryable<Models.ViolationCase>, IOrderedQueryable<Models.ViolationCase>> order;
+            order = v => v.OrderByDescending(t => t.CreatedTime);
+            return _mapper.Map<ViolationDataset>((await _uow.ViolationCaseRepo.Get(filter: v => v.CameraId == cameraId, orderBy: order)).FirstOrDefault());
         }
 
         public async Task<ViolationDataset> GetOne(int id)

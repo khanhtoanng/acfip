@@ -1,4 +1,5 @@
-﻿using ACFIP_Server.Services.Area;
+﻿using ACFIP_Server.Datasets.Area;
+using ACFIP_Server.Services.Area;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -23,6 +24,17 @@ namespace ACFIP_Server.Controllers
         public async Task<IActionResult> GetAreas()
         {
             return Ok(await _areaService.GetAll());
+        }
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] AreaCreateDataset dataset)
+        {
+            AreaDataset result = await _areaService.Create(dataset);
+            if (result != null)
+            {
+                return Created("", result);
+            }
+            return BadRequest();
         }
     }
 }

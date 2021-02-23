@@ -12,4 +12,9 @@ namespace ACFIP_Server.Datasets.Area
         public string Description { get; set; }
         public List<CameraDataset> Cameras { get; set; }
     }
+
+    public class AreaCreateDataset
+    {
+        public string Description { get; set; }
+    }
 }

@@ -26,6 +26,12 @@ namespace ACFIP_Server.Controllers
             return Ok(await _violationService.GetOne(id));
         }
         [AllowAnonymous]
+        [HttpGet("latest")]
+        public async Task<IActionResult> GetLatest(int cameraId)
+        {
+            return Ok(await _violationService.GetLatest(cameraId));
+        }
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> CreateViolationCase([FromBody] ViolationDataset violationDataset)
         {

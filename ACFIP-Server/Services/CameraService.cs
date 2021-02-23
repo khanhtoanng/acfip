@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 
 namespace ACFIP_Server.Services.Camera
 {
+    public interface ICameraService
+    {
+        Task<List<CameraDataset>> Get(bool isActive);
+    }
     public class CameraService : ICameraService
     {
         private readonly IUnitOfWork _uow;
