@@ -23,7 +23,7 @@ namespace ACFIP.Core.Controllers
             _areaService = areaService;
         }
         [HttpGet]
-        //[Authorize(Roles = AppConstants.Role.Monitor.NAME)]
+        [Authorize(Roles = AppConstants.Role.Monitor.NAME)]
         public async Task<IActionResult> Get()
         {
             var result = await _areaService.GetAllArea();

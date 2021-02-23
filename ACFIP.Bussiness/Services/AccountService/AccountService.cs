@@ -58,7 +58,7 @@ namespace ACFIP.Bussiness.Services.AccountService
             account.Id = param.Id;
             account.Salt = salt;
             account.HashedPassword = AppUtils.hashSHA512(param.Password, salt);
-            account.RoleId = AppConstants.Role.Monitor.ID;
+            account.RoleId = param.RoleId;
             _uow.AccountRepository.Add(account);
             if (await _uow.SaveAsync() > 0)
             {
