@@ -24,7 +24,6 @@ namespace ACFIP.Core.Controllers
         {
             _accountService = accountService;
         }
-        #region CRUD
         [HttpGet]
         [Authorize(Roles =AppConstants.Role.Manager.NAME)]
         public async Task<IActionResult> Get([FromQuery] PagingRequestParam param)
@@ -81,7 +80,6 @@ namespace ACFIP.Core.Controllers
             return Ok(result);
 
         }
-        #endregion
         [HttpPut("status")]
         [Authorize(Roles = AppConstants.Role.Manager.NAME)]
         public async Task<IActionResult> UpdateStatusAccount([FromBody] AccountActivationParam param)

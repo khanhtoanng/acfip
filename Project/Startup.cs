@@ -23,6 +23,7 @@ using ACFIP.Bussiness.Services.AuthenticationService;
 using ACFIP.Bussiness.Services.AreaService;
 using Microsoft.AspNetCore.Mvc;
 using ACFIP.Core.Settings;
+using Newtonsoft.Json;
 
 namespace ACFIP.Core
 {
@@ -54,7 +55,11 @@ namespace ACFIP.Core
             });
 
             // configure controller
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(
+            options =>
+            {
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            }); 
 
             // add config connection string to database
             services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(config.DbConnectionString));
@@ -137,12 +142,12 @@ namespace ACFIP.Core
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+            //if (env.IsDevelopment())
+            //{
+            //    app.UseDeveloperExceptionPage();
+            //}
 
-            //app.UseExceptionHandler("/error");
+            app.UseExceptionHandler("/error");
 
             app.UseCors("AllowAll");
 
@@ -150,7 +155,7 @@ namespace ACFIP.Core
             app.UseSwagger();
 
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "FPTU - ACFIP API"));
-            
+
             app.UseHttpsRedirection();
 
             app.UseRouting();

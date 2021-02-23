@@ -14,8 +14,7 @@ namespace ACFIP.Data.Dtos.Camera
         public bool IsActive { get; set; }
         public bool DeletedFlag { get; set; }
         public string ConnectionString { get; set; }
-
-        public AreaDto Area { get; set; }
+        public virtual AreaDto Area { get; set; }
         public virtual CameraConfigurationDto Config { get; set; }
 
     }

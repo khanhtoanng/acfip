@@ -9,7 +9,7 @@ namespace ACFIP.Bussiness.Services.AreaService
 {
     public interface IAreaService
     {
-        public Task<IEnumerable<AreaDto>> GetAllArea(PagingRequestParam param);
+        public Task<IEnumerable<AreaDto>> GetAllArea();
         public Task<AreaDto> GetAreaById(int id);
     }
 }

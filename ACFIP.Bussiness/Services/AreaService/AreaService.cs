@@ -22,9 +22,9 @@ namespace ACFIP.Bussiness.Services.AreaService
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<AreaDto>> GetAllArea(PagingRequestParam param)
+        public async Task<IEnumerable<AreaDto>> GetAllArea()
         {
-            IEnumerable<Area> listArea = await _uow.AreaRepository.Get(pageIndex: param.PageIndex, pageSize: param.PageSize);
+            IEnumerable<Area> listArea = await _uow.AreaRepository.Get(includeProperties: "Cameras");
             return _mapper.Map<IEnumerable<AreaDto>>(listArea);
         }
 

@@ -23,10 +23,10 @@ namespace ACFIP.Core.Controllers
             _areaService = areaService;
         }
         [HttpGet]
-        [Authorize(Roles = AppConstants.Role.Monitor.NAME)]
-        public async Task<IActionResult> Get([FromQuery] PagingRequestParam param)
+        //[Authorize(Roles = AppConstants.Role.Monitor.NAME)]
+        public async Task<IActionResult> Get()
         {
-            var result = await _areaService.GetAllArea(param);
+            var result = await _areaService.GetAllArea();
             if (result == null)
             {
                 return NotFound();
