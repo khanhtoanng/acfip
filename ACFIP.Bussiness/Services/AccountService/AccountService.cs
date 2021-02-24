@@ -8,6 +8,7 @@ using AutoMapper;
 using System;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace ACFIP.Bussiness.Services.AccountService
 {
@@ -49,13 +50,16 @@ namespace ACFIP.Bussiness.Services.AccountService
         }
         public async Task<AccountDto> CreateAccount(AccountCreateParam param)
         {
+            int index =  (await _uow.AccountRepository.Get(filter: el => el.RoleId == param.RoleId && !el.DeletedFlag)).GroupBy(el => el.RoleId).Count() + 1;
+            string idName = (await _uow.RoleRepository.GetById(param.RoleId)).Name;
             Data.Models.Account account = new Data.Models.Account();
             byte[] salt = new byte[16];
             using (var rng = RandomNumberGenerator.Create())
             {
                 rng.GetBytes(salt);
             }
-            account.Id = param.Id;
+
+            account.Id = idName + index;
             account.Salt = salt;
             account.HashedPassword = AppUtils.hashSHA512(param.Password, salt);
             account.RoleId = param.RoleId;

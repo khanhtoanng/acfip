@@ -9,7 +9,7 @@ namespace ACFIP.Data.Dtos.Accounts
     public class AccountDto:BaseDto
     {
         public string Id { get; set; }
-        public int Status { get; set; }
+        public bool IsActive { get; set; }
         public bool DeletedFlag { get; set; }
         public virtual RoleDto Role { get; set; }
     }

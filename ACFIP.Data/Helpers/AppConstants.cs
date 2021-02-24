@@ -13,14 +13,20 @@ namespace ACFIP.Data.Helpers
         }
         public struct Role
         {
-            public struct Monitor {
+            public struct Admin 
+            {
+                public const string NAME = "Admin";
+                public const int ID = 1;
+            }
+            public struct Monitor 
+            {
                 public const string NAME = "Monitor";
-                public const int ID = 2;
+                public const int ID = 3;
             }
             public struct Manager
             {
                 public const string NAME = "Manager";
-                public const int ID = 1;
+                public const int ID = 2;
             }
         }
     }
