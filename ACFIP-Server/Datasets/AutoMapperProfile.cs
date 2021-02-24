@@ -11,7 +11,9 @@ namespace ACFIP_Server.Datasets
         public AutoMapperProfile()
         {
             CreateMap<Models.Account, AccountDataset>();
-            CreateMap<Models.Camera, CameraDataset>();
+            CreateMap<Models.Camera, CameraDataset>()
+                .ForMember(des => des.Height, src => src.MapFrom(t => t.Config.Height))
+                .ForMember(des => des.Angle, src => src.MapFrom(t => t.Config.Angle));
             CreateMap<Models.Area, AreaDataset>();
             CreateMap<Models.ViolationCase, ViolationDataset>();
         }

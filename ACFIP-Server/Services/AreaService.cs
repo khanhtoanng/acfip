@@ -37,7 +37,12 @@ namespace ACFIP_Server.Services.Area
 
         public async Task<List<AreaDataset>> GetAll()
         {
-            IEnumerable<Models.Area> areas = await _uow.AreaRepo.Get(filter: a => !a.DeletedFlag,includeProperties: "Cameras");
+            IEnumerable<Models.Area> areas = await _uow.AreaRepo.Get(filter: a => !a.DeletedFlag);
+            foreach (Models.Area area in areas)
+            {
+                IEnumerable<Models.Camera> cams = await _uow.CameraRepo.Get(filter: c => c.AreaId == area.Id && !c.DeletedFlag, includeProperties: "Config");
+                area.Cameras = cams.ToList();
+            }
             List<AreaDataset> result = _mapper.Map<List<AreaDataset>>(areas);
             return result;
         }

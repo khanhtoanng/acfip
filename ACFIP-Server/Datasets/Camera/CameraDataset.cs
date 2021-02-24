@@ -12,5 +12,9 @@ namespace ACFIP_Server.Datasets.Camera
         public bool IsActive { get; set; }
         public string ConnectionString { get; set; }
         public int? AreaId { get; set; }
+        public int? ConfigId { get; set; }
+        public float Height { get; set; }
+        public float Angle { get; set; }
     }
+
 }

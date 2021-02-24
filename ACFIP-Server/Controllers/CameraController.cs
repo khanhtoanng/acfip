@@ -1,4 +1,5 @@
-﻿using ACFIP_Server.Services.Camera;
+﻿using ACFIP_Server.Datasets.Camera;
+using ACFIP_Server.Services.Camera;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -24,6 +25,18 @@ namespace ACFIP_Server.Controllers
         public async Task<IActionResult> Get(bool isActive)
         {
             return Ok(await _cameraService.Get(isActive));
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<IActionResult> Create(CameraDataset dataset)
+        {
+            var result = await _cameraService.Create(dataset);
+            if (result != null)
+            {
+                return Created("", result);
+            }
+            return BadRequest();
         }
     }
 }
