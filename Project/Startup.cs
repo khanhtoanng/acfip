@@ -24,6 +24,8 @@ using ACFIP.Bussiness.Services.AreaService;
 using Microsoft.AspNetCore.Mvc;
 using ACFIP.Core.Settings;
 using Newtonsoft.Json;
+using ACFIP.Bussiness.Services.Role;
+using ACFIP.Bussiness.Services.ViolationType;
 
 namespace ACFIP.Core
 {
@@ -55,11 +57,12 @@ namespace ACFIP.Core
             });
 
             // configure controller
-            services.AddControllers().AddNewtonsoftJson(
-            options =>
-            {
-                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-            }); 
+            services.AddControllers();
+            //services.AddControllers().AddNewtonsoftJson(
+            //options =>
+            //{
+            //    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            //}); 
 
             // add config connection string to database
             services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(config.DbConnectionString));
@@ -136,7 +139,8 @@ namespace ACFIP.Core
             services.AddScoped<IViolationCaseService, ViolationCaseService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IAreaService, AreaService>();
-
+            services.AddScoped<IRoleService, RoleService>();
+            services.AddScoped<IViolationTypeService, ViolationTypeService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
