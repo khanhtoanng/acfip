@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace ACFIP.Data.Models
 {
     [Table("violation_case")]
-    public class ViolationCase : BaseModel
+    public class ViolationCase 
     {
         public ViolationCase()
         {
@@ -20,11 +20,15 @@ namespace ACFIP.Data.Models
         [ForeignKey(nameof(Camera))]
         [Column("camera_id", Order = 1)]
         public int CameraId { get; set; }
+    
         public Camera Camera { get; set; }
         [Column("image_url", Order = 2)]
         public string ImgUrl { get; set; }
         [Column("video_url", Order = 3)]
         public string VideoUrl { get; set; }
+        [Required]
+        [Column("created_time")]
+        public DateTime CreatedTime { get; set; }
         public virtual ICollection<ViolationCaseType> ViolationCaseTypes { get; set; }
     }
 }

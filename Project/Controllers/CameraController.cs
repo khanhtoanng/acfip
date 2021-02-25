@@ -23,7 +23,7 @@ namespace ACFIP.Core.Controllers
         {
             _cameraService = cameraService;
         }
-        //[Authorize(Roles = AppConstants.Role.Monitor.NAME)]
+        [Authorize(Roles = AppConstants.Role.Monitor.NAME)]
         [HttpGet]
         public async Task<IActionResult> Get(bool isActive)
         {
@@ -35,7 +35,7 @@ namespace ACFIP.Core.Controllers
             return Ok(result);
         }
 
-        //[Authorize(Roles = AppConstants.Role.Monitor.NAME)]
+        [Authorize(Roles = AppConstants.Role.Monitor.NAME)]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetDetailCamera([FromRoute] int id)
         {
@@ -47,7 +47,7 @@ namespace ACFIP.Core.Controllers
             return Ok(result);
         }
 
-        //[Authorize(Roles = AppConstants.Role.Monitor.NAME)]
+        [Authorize(Roles = AppConstants.Role.Monitor.NAME)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCamera([FromRoute] int id)
         {
@@ -63,7 +63,7 @@ namespace ACFIP.Core.Controllers
 
         }
 
-        //[Authorize(Roles = AppConstants.Role.Monitor.NAME)]
+        [Authorize(Roles = AppConstants.Role.Monitor.NAME)]
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] CameraUpdateParam param)
         {
@@ -83,7 +83,7 @@ namespace ACFIP.Core.Controllers
 
         }
 
-        //[Authorize(Roles = AppConstants.Role.Monitor.NAME)]
+        [Authorize(Roles = AppConstants.Role.Monitor.NAME)]
         [HttpPost]
         public async Task<IActionResult> CreateCamera([FromBody] CameraCreateParam param)
         {
@@ -102,7 +102,7 @@ namespace ACFIP.Core.Controllers
             }
         }
 
-        //[Authorize(Roles = AppConstants.Role.Monitor.NAME)]
+        [Authorize(Roles = AppConstants.Role.Monitor.NAME)]
         [HttpPut("status")]
         public async Task<IActionResult> UpdateStatusCamera([FromBody] CameraActivationParam param)
         {

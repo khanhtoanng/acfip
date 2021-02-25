@@ -30,6 +30,7 @@ namespace ACFIP.Bussiness.Services.CameraService
             {
                 Name = param.Name,
                 AreaId = param.AreaId,
+               ManufactureId  = param.ManufactureId,
                 ConnectionString = param.ConnectionString
             };
             _uow.CameraRepository.Add(camera);
@@ -107,6 +108,7 @@ namespace ACFIP.Bussiness.Services.CameraService
             // get camera by id
             Camera camera = await _uow.CameraRepository.GetById(param.Id);
             camera.Name = param.Name;
+            camera.ManufactureId = param.ManufactureId;
             camera.IsActive = param.IsActive;
             camera.AreaId = param.AreaId;
             camera.ConnectionString = param.ConnectionString;

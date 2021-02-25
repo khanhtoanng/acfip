@@ -4,14 +4,16 @@ using ACFIP.Data.AppContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ACFIP.Data.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20210225073505_AddManufactureIdInCam")]
+    partial class AddManufactureIdInCam
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -129,7 +131,7 @@ namespace ACFIP.Data.Migrations
 
                     b.Property<string>("ManufactureId")
                         .IsRequired()
-                        .HasColumnName("manufacture_id")
+                        .HasColumnName("name")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")

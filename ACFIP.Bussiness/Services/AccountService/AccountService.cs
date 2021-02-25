@@ -50,8 +50,9 @@ namespace ACFIP.Bussiness.Services.AccountService
         }
         public async Task<AccountDto> CreateAccount(AccountCreateParam param)
         {
-            int index =  (await _uow.AccountRepository.Get(filter: el => el.RoleId == param.RoleId && !el.DeletedFlag)).GroupBy(el => el.RoleId).Count() + 1;
-            string idName = (await _uow.RoleRepository.GetById(param.RoleId)).Name;
+            var index =  (await _uow.AccountRepository.Get(filter: el => el.RoleId == param.RoleId)).Count();
+            int suffixId = index + 1;
+            string prefixId = (await _uow.RoleRepository.GetById(param.RoleId)).Name;
             Data.Models.Account account = new Data.Models.Account();
             byte[] salt = new byte[16];
             using (var rng = RandomNumberGenerator.Create())
@@ -59,7 +60,7 @@ namespace ACFIP.Bussiness.Services.AccountService
                 rng.GetBytes(salt);
             }
 
-            account.Id = idName + index;
+            account.Id = prefixId + suffixId;
             account.Salt = salt;
             account.HashedPassword = AppUtils.hashSHA512(param.Password, salt);
             account.RoleId = param.RoleId;

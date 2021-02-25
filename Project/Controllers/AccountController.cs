@@ -25,7 +25,7 @@ namespace ACFIP.Core.Controllers
             _accountService = accountService;
         }
         [HttpGet]
-        [Authorize(Roles =AppConstants.Role.Manager.NAME)]
+        [Authorize(Roles = AppConstants.Role.Manager.NAME + "," + AppConstants.Role.Admin.NAME)]
         public async Task<IActionResult> Get([FromQuery] PagingRequestParam param)
         {
             var result = await _accountService.GetAsync(pageIndex: param.PageIndex, pageSize: param.PageSize, includeProperties: "Role");
@@ -36,7 +36,7 @@ namespace ACFIP.Core.Controllers
             return Ok(result);
         }
         [HttpGet("{id}")]
-        [Authorize(Roles = AppConstants.Role.Manager.NAME)]
+        [Authorize(Roles = AppConstants.Role.Manager.NAME + "," + AppConstants.Role.Admin.NAME)]
         public async Task<IActionResult> GetById([FromRoute] string id)
         {
             var result = await _accountService.GetFirst(filter: el => el.Id == id, includeProperties: "Role");
@@ -47,7 +47,7 @@ namespace ACFIP.Core.Controllers
             return Ok(result);
         }
         [HttpDelete("{id}")]
-        [Authorize(Roles = AppConstants.Role.Manager.NAME)]
+        [Authorize(Roles = AppConstants.Role.Manager.NAME + "," + AppConstants.Role.Admin.NAME)]
         public async Task<IActionResult> Delete([FromRoute] string id)
         {
             var result = await _accountService.DeleteAccount(id);
@@ -58,7 +58,9 @@ namespace ACFIP.Core.Controllers
             return Ok(result);
         }
         [HttpPut("password")]
-        [Authorize(Roles = AppConstants.Role.Manager.NAME)]
+        [Authorize(Roles = AppConstants.Role.Manager.NAME 
+                    + "," + AppConstants.Role.Admin.NAME 
+                    + "," + AppConstants.Role.Monitor.NAME)]
         public async Task<IActionResult> ChangePassword([FromBody] AccountPasswordParam param)
         {
             var result = await _accountService.ChangePassword(param);
@@ -69,7 +71,7 @@ namespace ACFIP.Core.Controllers
             return Ok(result);
         }
         [HttpPost]
-        [Authorize(Roles = AppConstants.Role.Manager.NAME)]
+        [Authorize(Roles = AppConstants.Role.Manager.NAME + "," + AppConstants.Role.Admin.NAME)]
         public async Task<IActionResult> CreateAccount([FromBody] AccountCreateParam param)
         {
             var result = await _accountService.CreateAccount(param);
@@ -81,7 +83,7 @@ namespace ACFIP.Core.Controllers
 
         }
         [HttpPut("status")]
-        [Authorize(Roles = AppConstants.Role.Manager.NAME)]
+        [Authorize(Roles = AppConstants.Role.Manager.NAME + "," + AppConstants.Role.Admin.NAME)]
         public async Task<IActionResult> UpdateStatusAccount([FromBody] AccountActivationParam param)
         {
             try

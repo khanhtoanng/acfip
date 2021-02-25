@@ -21,7 +21,11 @@ namespace ACFIP.Bussiness.Mapper
             CreateMap<Account, AccountDto>();
             CreateMap<AccountDto, Account>();
 
-            CreateMap<Camera, CameraDto>();
+            CreateMap<Camera, CameraDto>()
+                .ForMember(des => des.Height, src => src.MapFrom(t => t.Config.Height))
+                .ForMember(des => des.Angle, src => src.MapFrom(t => t.Config.Angle))
+                .ForMember(des => des.AreaName, src => src.MapFrom(t => t.Area.Name));
+
             CreateMap<CameraDto, Camera>();
 
             CreateMap<Area, AreaDto>();

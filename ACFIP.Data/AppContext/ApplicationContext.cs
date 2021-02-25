@@ -24,8 +24,9 @@ namespace ACFIP.Data.AppContext
         {
             base.OnModelCreating(builder);
             builder.Entity<Role>().HasData(
-                    new Role() { Id = 1, Name = "Manager" },
-                    new Role() { Id = 2, Name = "Monitor" }
+                    new Role() { Id = 1, Name = "Admin" },
+                    new Role() { Id = 2, Name = "Manager" },
+                    new Role() { Id = 3, Name = "Monitor" }
                 );
             builder.Entity<ViolationType>().HasData(
                     new ViolationType() { Id = 1, Name = "Vest" },

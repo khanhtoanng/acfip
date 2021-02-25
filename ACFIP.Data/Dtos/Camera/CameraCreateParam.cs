@@ -8,6 +8,7 @@ namespace ACFIP.Data.Dtos.Camera
     {
         public string Name { get; set; }
         public int AreaId { get; set; }
+        public string ManufactureId { get; set; }
         public int? ConfigId { get; set; }
         public float Angle { get; set; }
         public float Height { get; set; }

@@ -4,14 +4,16 @@ using ACFIP.Data.AppContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ACFIP.Data.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20210225054452_AddAreaIdInViolationCase")]
+    partial class AddAreaIdInViolationCase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -41,6 +43,10 @@ namespace ACFIP.Data.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnName("is_active")
                         .HasColumnType("bit");
+
+                    b.Property<DateTime>("LastModifiedTime")
+                        .HasColumnName("last_modified_time")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("RoleId")
                         .HasColumnName("role_id")
@@ -127,11 +133,6 @@ namespace ACFIP.Data.Migrations
                         .HasColumnName("last_modified_time")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("ManufactureId")
-                        .IsRequired()
-                        .HasColumnName("manufacture_id")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnName("name")
@@ -196,16 +197,11 @@ namespace ACFIP.Data.Migrations
                         new
                         {
                             Id = 1,
-                            Name = "Admin"
-                        },
-                        new
-                        {
-                            Id = 2,
                             Name = "Manager"
                         },
                         new
                         {
-                            Id = 3,
+                            Id = 2,
                             Name = "Monitor"
                         });
                 });
@@ -217,6 +213,9 @@ namespace ACFIP.Data.Migrations
                         .HasColumnName("id")
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AreaId")
+                        .HasColumnType("int");
 
                     b.Property<int>("CameraId")
                         .HasColumnName("camera_id")

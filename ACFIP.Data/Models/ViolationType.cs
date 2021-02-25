@@ -14,8 +14,6 @@ namespace ACFIP.Data.Models
         [Required]
         [Column("name", Order = 1)]
         public string Name { get; set; }
-        [Column("description")]
-        public string Description { get; set; }
     }
    
 }
