@@ -69,9 +69,10 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
             var memberAccessCreateTime = Expression.Property(parameter, "CreatedTime");
 
             Expression memberAccessArea = Expression.Property(parameter,typeof(ViolationCase).GetProperty("Camera"));
-            memberAccessArea = Expression.Property(memberAccessArea, typeof(Camera).GetProperty("Area"));
-            // cheeting :))
-            memberAccessArea = Expression.Property(memberAccessArea, typeof(Area).GetProperty("Id"));
+            memberAccessArea = Expression.Property(memberAccessArea, typeof(Camera).GetProperty("AreaId"));
+            // setting default value if AreaId is null
+            memberAccessArea = Expression.Coalesce(memberAccessArea,Expression.Constant(param.AreaId));
+
 
             // init
             var expr = Expression.Equal(Expression.Constant(1), Expression.Constant(1));
@@ -111,8 +112,8 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
                         VideoUrl = vCase.VideoUrl,
                         CameraId = vCase.CameraId,
                         CameraName = vCase.Camera.Name,
-                        AreaId    = vCase.Camera.Id,
-                        AreaName = vCase.Camera.Name,
+                        AreaId    = vCase.Camera.AreaId,
+                        AreaName = vCase.Camera.Area.Name,
                         CameraManufactureId = vCase.Camera.ManufactureId,
                         ViolationTypes = vCase.ViolationCaseTypes.Select(el => new ViolationTypeDto() {Id = el.Type.Id, Name = el.Type.Name }).ToList(),
                       });
