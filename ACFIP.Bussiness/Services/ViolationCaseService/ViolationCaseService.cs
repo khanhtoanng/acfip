@@ -68,11 +68,10 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
 
             var memberAccessCreateTime = Expression.Property(parameter, "CreatedTime");
 
-            Expression memberAccessArea = parameter;
-            foreach (var member in "Camera.AreaId".Split(".")) 
-            {
-                memberAccessArea = Expression.PropertyOrField(memberAccessArea, member);
-            }
+            Expression memberAccessArea = Expression.Property(parameter,typeof(ViolationCase).GetProperty("Camera"));
+            memberAccessArea = Expression.Property(memberAccessArea, typeof(Camera).GetProperty("Area"));
+            // cheeting :))
+            memberAccessArea = Expression.Property(memberAccessArea, typeof(Area).GetProperty("Id"));
 
             // init
             var expr = Expression.Equal(Expression.Constant(1), Expression.Constant(1));

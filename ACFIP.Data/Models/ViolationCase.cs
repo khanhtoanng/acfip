@@ -20,7 +20,6 @@ namespace ACFIP.Data.Models
         [ForeignKey(nameof(Camera))]
         [Column("camera_id", Order = 1)]
         public int CameraId { get; set; }
-    
         public Camera Camera { get; set; }
         [Column("image_url", Order = 2)]
         public string ImgUrl { get; set; }
