@@ -23,10 +23,12 @@ namespace ACFIP.Core.Controllers
         {
             _violationCaseService = violationCaseService;
         }
+
+
+        //[Authorize(Roles = AppConstants.Role.Monitor.NAME
+        //                    + ","
+        //                    + AppConstants.Role.Manager.NAME)]
         [HttpGet]
-        [Authorize(Roles = AppConstants.Role.Monitor.NAME
-                            +","
-                            + AppConstants.Role.Manager.NAME)]
         public async Task<IActionResult> GetAllViolation([FromQuery] ViolationRequestParam param)
         {
             var result = await _violationCaseService.GetAllViolation(param);
@@ -49,10 +51,11 @@ namespace ACFIP.Core.Controllers
             }
             return Ok(result);
         }
+
+        //[Authorize(Roles = AppConstants.Role.Monitor.NAME
+        //                    + ","
+        //                    + AppConstants.Role.Manager.NAME)]
         [HttpPost]
-        [Authorize(Roles = AppConstants.Role.Monitor.NAME
-                            + ","
-                            + AppConstants.Role.Manager.NAME)]
         public async Task<IActionResult> CreateViolation(ViolationCreateParam param)
         {
             try
@@ -69,7 +72,10 @@ namespace ACFIP.Core.Controllers
                 return BadRequest(new { message = e.Message });
             }
         }
-        [AllowAnonymous]
+
+        //[Authorize(Roles = AppConstants.Role.Monitor.NAME
+        //                    + ","
+        //                    + AppConstants.Role.Manager.NAME)]
         [HttpGet("latest")]
         public async Task<IActionResult> GetLatest(int cameraId)
         {

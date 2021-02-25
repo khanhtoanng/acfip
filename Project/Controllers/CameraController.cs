@@ -23,9 +23,8 @@ namespace ACFIP.Core.Controllers
         {
             _cameraService = cameraService;
         }
-
-        [HttpGet]
         //[Authorize(Roles = AppConstants.Role.Monitor.NAME)]
+        [HttpGet]
         public async Task<IActionResult> Get(bool isActive)
         {
             var result = await _cameraService.GetAllCamera(isActive);
@@ -35,8 +34,9 @@ namespace ACFIP.Core.Controllers
             }
             return Ok(result);
         }
+
+        //[Authorize(Roles = AppConstants.Role.Monitor.NAME)]
         [HttpGet("{id}")]
-        [Authorize(Roles = AppConstants.Role.Monitor.NAME)]
         public async Task<IActionResult> GetDetailCamera([FromRoute] int id)
         {
             var result = await _cameraService.GetDetailCamera(id);
@@ -46,8 +46,9 @@ namespace ACFIP.Core.Controllers
             }
             return Ok(result);
         }
+
+        //[Authorize(Roles = AppConstants.Role.Monitor.NAME)]
         [HttpDelete("{id}")]
-        [Authorize(Roles = AppConstants.Role.Monitor.NAME)]
         public async Task<IActionResult> DeleteCamera([FromRoute] int id)
         {
             try
@@ -61,8 +62,9 @@ namespace ACFIP.Core.Controllers
             }
 
         }
+
+        //[Authorize(Roles = AppConstants.Role.Monitor.NAME)]
         [HttpPut]
-        [Authorize(Roles = AppConstants.Role.Monitor.NAME)]
         public async Task<IActionResult> Update([FromBody] CameraUpdateParam param)
         {
             try
@@ -80,8 +82,9 @@ namespace ACFIP.Core.Controllers
             }
 
         }
+
+        //[Authorize(Roles = AppConstants.Role.Monitor.NAME)]
         [HttpPost]
-        [Authorize(Roles = AppConstants.Role.Monitor.NAME)]
         public async Task<IActionResult> CreateCamera([FromBody] CameraCreateParam param)
         {
             try
@@ -98,8 +101,9 @@ namespace ACFIP.Core.Controllers
                 return BadRequest(new { message = e.Message });
             }
         }
+
+        //[Authorize(Roles = AppConstants.Role.Monitor.NAME)]
         [HttpPut("status")]
-        [Authorize(Roles = AppConstants.Role.Monitor.NAME)]
         public async Task<IActionResult> UpdateStatusCamera([FromBody] CameraActivationParam param)
         {
             try
