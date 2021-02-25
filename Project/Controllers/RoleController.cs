@@ -21,7 +21,7 @@ namespace ACFIP.Core.Controllers
         {
             _roleService = roleService;
         }
-        [Authorize(Roles = AppConstants.Role.Admin.NAME)]
+        [Authorize(Roles = AppConstants.Role.Admin.NAME+ "," + AppConstants.Role.Manager.NAME)]
         [HttpGet]
         public async Task<IActionResult> Get()
         {
