@@ -37,9 +37,9 @@ namespace ACFIP.Core.Controllers
             return Ok(result);
         }
         [HttpGet("{id}")]
-        [Authorize(Roles = AppConstants.Role.Monitor.NAME
-                            + ","
-                            + AppConstants.Role.Manager.NAME)]
+        //[Authorize(Roles = AppConstants.Role.Monitor.NAME
+        //                    + ","
+        //                    + AppConstants.Role.Manager.NAME)]
         public async Task<IActionResult> GetDetailViolation(int id)
         {
             var result = await _violationCaseService.GetDetailViolation(id);
@@ -68,6 +68,17 @@ namespace ACFIP.Core.Controllers
             {
                 return BadRequest(new { message = e.Message });
             }
+        }
+        [AllowAnonymous]
+        [HttpGet("latest")]
+        public async Task<IActionResult> GetLatest(int cameraId)
+        {
+            var result = await _violationCaseService.GetLast(cameraId);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
         }
     }
 }

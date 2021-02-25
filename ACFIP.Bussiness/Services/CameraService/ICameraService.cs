@@ -9,7 +9,7 @@ namespace ACFIP.Bussiness.Services.CameraService
 {
     public interface ICameraService 
     {
-        public Task<IEnumerable<CameraDto>> GetAllCamera(CameraRequestParam param);
+        public Task<IEnumerable<CameraDto>> GetAllCamera(bool isActive);
         public Task<CameraDto> GetDetailCamera(int id);
         public Task<CameraDto> DeleteCamera(int id);
         public Task<CameraDto> CreateCamera(CameraCreateParam param);

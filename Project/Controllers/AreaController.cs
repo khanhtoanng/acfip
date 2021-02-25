@@ -1,5 +1,6 @@
 ﻿using ACFIP.Bussiness.Services.AreaService;
 using ACFIP.Data.Dtos;
+using ACFIP.Data.Dtos.Area;
 using ACFIP.Data.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -33,6 +34,17 @@ namespace ACFIP.Core.Controllers
             }
             return Ok(result);
         }
- 
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] AreaCreateParam param)
+        {
+            var result = await _areaService.CreateArea(param);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
+        }
+
     }
 }

@@ -11,5 +11,6 @@ namespace ACFIP.Bussiness.Services.AreaService
     {
         public Task<IEnumerable<AreaDto>> GetAllArea();
         public Task<AreaDto> GetAreaById(int id);
+        public Task<AreaDto> CreateArea(AreaCreateParam param);
     }
 }

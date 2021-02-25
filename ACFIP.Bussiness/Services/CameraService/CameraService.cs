@@ -95,20 +95,10 @@ namespace ACFIP.Bussiness.Services.CameraService
             return await _uow.SaveAsync() > 0 ? _mapper.Map<CameraDto>(camera) : throw new Exception("Delete to [camera] fails");
         }
 
-        public async Task<IEnumerable<CameraDto>> GetAllCamera(CameraRequestParam param)
+        public async Task<IEnumerable<CameraDto>> GetAllCamera(bool isActive)
         {
-            IEnumerable<Camera> listCamera = null;
-            if (param.AreaId == null)
-            {
-                listCamera = await _uow.CameraRepository
-                        .Get(pageIndex: param.PageIndex, pageSize: param.PageSize, includeProperties: "Area,Config");
-            }
-            else
-            {
-                listCamera = await _uow.CameraRepository
-                        .Get(pageIndex: param.PageIndex, pageSize: param.PageSize,
-                        filter: el => el.AreaId == param.AreaId, includeProperties: "Area,Config");
-            }
+            IEnumerable<Camera> listCamera = await _uow.CameraRepository
+                        .Get(filter: el => el.IsActive && !el.DeletedFlag && el.Area != null);
             return _mapper.Map<IEnumerable<CameraDto>>(listCamera);
         }
 

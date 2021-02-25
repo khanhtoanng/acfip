@@ -57,14 +57,16 @@ namespace ACFIP.Core.Controllers
                     return Ok(
                         new
                         {
-                            Id = accountDto.Id,
-                            Role = accountDto.Role.Name,
-                            Token = new JwtSecurityTokenHandler().WriteToken(token)
+                            id = accountDto.Id,
+                            role = accountDto.Role.Name,
+                            tokenType = "bearer",
+                            createAt = DateTime.UtcNow,
+                            token = new JwtSecurityTokenHandler().WriteToken(token)
                         });
                 }
                 else
                 {
-                    return Forbid();
+                    return Unauthorized(new { message = "id or password is incorrect" });
                 }
 
             }

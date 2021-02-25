@@ -36,7 +36,7 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
             _uow.ViolationCaseRepository.Add(violationCase);
             if (await _uow.SaveAsync() > 0)
             {
-                List<int> listType = param.ListViolationType;
+                List<int> listType = param.ViolationTypes;
                 foreach (int type in listType)
                 {
                     ViolationCaseType caseType = new ViolationCaseType()
@@ -123,13 +123,20 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
 
         public async Task<ViolationCaseDto> GetDetailViolation(int id)
         {
-            ViolationCaseDto result = null;
-            ViolationCase violationCase = await _uow.ViolationCaseRepository
-                .GetFirst(filter: el => el.Id == id,
-                includeProperties: "Camera,Camera.Area,ViolationCaseTypes,ViolationCaseTypes.Type");
-            result = _mapper.Map<ViolationCaseDto>(violationCase);
-            result.ListViolationType = violationCase.ViolationCaseTypes.Select(el => new ViolationTypeDto() { Id = el.Type.Id, Name = el.Type.Name }).ToList();
-            return result;
+            //ViolationCaseDto result = null;
+            //ViolationCase violationCase = await _uow.ViolationCaseRepository
+            //    .GetFirst(filter: el => el.Id == id,
+            //    includeProperties: "Camera,Camera.Area,ViolationCaseTypes,ViolationCaseTypes.Type");
+            //result = _mapper.Map<ViolationCaseDto>(violationCase);
+            //result.ListViolationType = violationCase.ViolationCaseTypes.Select(el => new ViolationTypeDto() { Id = el.Type.Id, Name = el.Type.Name }).ToList();
+            //return result;
+            return _mapper.Map<ViolationCaseDto>(await _uow.ViolationCaseRepository.GetById(id));
+
+        }
+
+        public async Task<ViolationCaseDto> GetLast(int cameraId)
+        {
+            return _mapper.Map<ViolationCaseDto>((await _uow.ViolationCaseRepository.Get(filter: v => v.CameraId == cameraId, orderBy: v => v.OrderByDescending(t => t.CreatedTime))).FirstOrDefault());
         }
     }
 }

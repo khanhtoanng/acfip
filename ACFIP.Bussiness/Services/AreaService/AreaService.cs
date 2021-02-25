@@ -22,9 +22,24 @@ namespace ACFIP.Bussiness.Services.AreaService
             _mapper = mapper;
         }
 
+        public async Task<AreaDto> CreateArea(AreaCreateParam param)
+        {
+            Area area = new Area()
+            {
+                Name = param.Name,
+                Description = param.Description
+            };
+            _uow.AreaRepository.Add(area);
+            return await _uow.SaveAsync() > 0 ? _mapper.Map<AreaDto>(area) : null;
+        }
+
         public async Task<IEnumerable<AreaDto>> GetAllArea()
         {
-            IEnumerable<Area> listArea = await _uow.AreaRepository.Get(includeProperties: "Cameras");
+            IEnumerable<Area> listArea = await _uow.AreaRepository.Get(filter: el => !el.DeletedFlag);
+            foreach (var area in listArea)
+            {
+                area.Cameras =( await _uow.CameraRepository.Get(filter: el => el.AreaId == area.Id && !el.DeletedFlag, includeProperties: "Config")).ToList();
+            }
             return _mapper.Map<IEnumerable<AreaDto>>(listArea);
         }
 
