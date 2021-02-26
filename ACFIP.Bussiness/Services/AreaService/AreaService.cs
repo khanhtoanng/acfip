@@ -52,5 +52,13 @@ namespace ACFIP.Bussiness.Services.AreaService
         {
             throw new NotImplementedException();
         }
+
+        public async Task<AreaDto> DeleteArea(int id)
+        {
+            Area area = await _uow.AreaRepository.GetById(id);
+            area.DeletedFlag = true;
+            _uow.AreaRepository.Update(area);
+            return await _uow.SaveAsync() > 0 ? _mapper.Map<AreaDto>(area) : null;
+        }
     }
 }

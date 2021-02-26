@@ -56,6 +56,17 @@ namespace ACFIP.Core.Controllers
             }
             return Ok(result);
         }
+        [Authorize(Roles = AppConstants.Role.Monitor.NAME + "," + AppConstants.Role.Manager.NAME)]
+        [HttpDelete]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var result = await _areaService.DeleteArea(id);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
+        }
 
     }
 }
