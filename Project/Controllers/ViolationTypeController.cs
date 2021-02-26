@@ -20,7 +20,7 @@ namespace ACFIP.Core.Controllers
         {
             _violationTypeService = violationTypeService;
         }
-        [Authorize(Roles = AppConstants.Role.Monitor.NAME)]
+        [Authorize(Roles = AppConstants.Role.Monitor.NAME + "," + AppConstants.Role.Manager.NAME)]
         [HttpGet]
         public async Task<IActionResult> GetAllViolationType()
         {

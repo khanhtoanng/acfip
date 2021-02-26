@@ -16,8 +16,9 @@ namespace ACFIP.Data.Dtos.ViolationCase
         public int CameraId { get; set; }
         public string CameraName { get; set; }
         public string CameraManufactureId { get; set; }
-        public int? AreaId { get; set; }
         public string AreaName { get; set; }
+        public string AreaDescription { get; set; }
+
         public DateTime CreatedTime { get; set; }
 
         public virtual List<ViolationTypeDto> ViolationTypes { get; set; }

@@ -31,7 +31,9 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
             {
                 ImgUrl = param.ImageUrl,
                 VideoUrl = param.VideoUrl,
-                CameraId = param.CameraId
+                CameraId = param.CameraId,
+                AreaName = param.AreaName,
+                AreaDescription = param.AreaDescription
             };
             _uow.ViolationCaseRepository.Add(violationCase);
             if (await _uow.SaveAsync() > 0)
@@ -112,8 +114,8 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
                         VideoUrl = vCase.VideoUrl,
                         CameraId = vCase.CameraId,
                         CameraName = vCase.Camera.Name,
-                        AreaId    = vCase.Camera.AreaId,
-                        AreaName = vCase.Camera.Area == null ? "" : vCase.Camera.Area.Name,
+                        AreaName = vCase.AreaName,
+                        AreaDescription = vCase.AreaDescription,
                         CameraManufactureId = vCase.Camera.ManufactureId,
                         ViolationTypes = vCase.ViolationCaseTypes.Select(el => new ViolationTypeDto() {Id = el.Type.Id, Name = el.Type.Name }).ToList(),
                       });

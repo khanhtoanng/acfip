@@ -25,6 +25,10 @@ namespace ACFIP.Data.Models
         public string ImgUrl { get; set; }
         [Column("video_url", Order = 3)]
         public string VideoUrl { get; set; }
+        [Column("area_name", Order = 4)]
+        public string AreaName { get; set; }
+        [Column("area_description", Order = 5)]
+        public string AreaDescription { get; set; }
         [Required]
         [Column("created_time")]
         public DateTime CreatedTime { get; set; }

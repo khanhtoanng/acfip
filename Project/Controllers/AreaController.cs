@@ -23,7 +23,7 @@ namespace ACFIP.Core.Controllers
         {
             _areaService = areaService;
         }
-        [Authorize(Roles = AppConstants.Role.Monitor.NAME)]
+        [Authorize(Roles = AppConstants.Role.Monitor.NAME + "," + AppConstants.Role.Manager.NAME)]
         [HttpGet]
         public async Task<IActionResult> Get()
         {
@@ -34,7 +34,7 @@ namespace ACFIP.Core.Controllers
             }
             return Ok(result);
         }
-        [Authorize(Roles = AppConstants.Role.Monitor.NAME)]
+        [Authorize(Roles = AppConstants.Role.Monitor.NAME + "," + AppConstants.Role.Manager.NAME)]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] AreaCreateParam param)
         {
