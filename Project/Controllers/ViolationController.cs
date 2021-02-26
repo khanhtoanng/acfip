@@ -25,9 +25,9 @@ namespace ACFIP.Core.Controllers
         }
 
 
-        //[Authorize(Roles = AppConstants.Role.Monitor.NAME
-        //                    + ","
-        //                    + AppConstants.Role.Manager.NAME)]
+        [Authorize(Roles = AppConstants.Role.Monitor.NAME
+                            + ","
+                            + AppConstants.Role.Manager.NAME)]
         [HttpGet]
         public async Task<IActionResult> GetAllViolation([FromQuery] ViolationRequestParam param)
         {
@@ -39,9 +39,9 @@ namespace ACFIP.Core.Controllers
             return Ok(result);
         }
         [HttpGet("{id}")]
-        //[Authorize(Roles = AppConstants.Role.Monitor.NAME
-        //                    + ","
-        //                    + AppConstants.Role.Manager.NAME)]
+        [Authorize(Roles = AppConstants.Role.Monitor.NAME
+                            + ","
+                            + AppConstants.Role.Manager.NAME)]
         public async Task<IActionResult> GetDetailViolation(int id)
         {
             var result = await _violationCaseService.GetDetailViolation(id);
@@ -52,9 +52,9 @@ namespace ACFIP.Core.Controllers
             return Ok(result);
         }
 
-        //[Authorize(Roles = AppConstants.Role.Monitor.NAME
-        //                    + ","
-        //                    + AppConstants.Role.Manager.NAME)]
+        [Authorize(Roles = AppConstants.Role.Monitor.NAME
+                            + ","
+                            + AppConstants.Role.Manager.NAME)]
         [HttpPost]
         public async Task<IActionResult> CreateViolation(ViolationCreateParam param)
         {
@@ -73,9 +73,9 @@ namespace ACFIP.Core.Controllers
             }
         }
 
-        //[Authorize(Roles = AppConstants.Role.Monitor.NAME
-        //                    + ","
-        //                    + AppConstants.Role.Manager.NAME)]
+        [Authorize(Roles = AppConstants.Role.Monitor.NAME
+                            + ","
+                            + AppConstants.Role.Manager.NAME)]
         [HttpGet("latest")]
         public async Task<IActionResult> GetLatest(int cameraId)
         {
