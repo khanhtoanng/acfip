@@ -12,5 +12,6 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
         public Task<IEnumerable<ViolationCaseDto>> GetAllViolation(ViolationRequestParam param);
         public Task<ViolationCaseDto> GetDetailViolation(int id);
         public Task<ViolationCaseDto> GetLast(int cameraId);
+        public Task<ViolationCaseDto> DeleteViolation(int id);
     }
 }

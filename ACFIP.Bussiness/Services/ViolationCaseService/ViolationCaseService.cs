@@ -59,6 +59,19 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
 
         }
 
+        public async Task<ViolationCaseDto> DeleteViolation(int id)
+        {
+            IEnumerable<ViolationCaseType> violationCaseTypes = await _uow.ViolationCaseTypeRepository.Get(filter: el => el.CaseId == id);
+            foreach (ViolationCaseType type in violationCaseTypes)
+            {
+                _uow.ViolationCaseTypeRepository.Delete(type);
+            }
+            ViolationCase violationCase = await _uow.ViolationCaseRepository.GetById(id);
+            _uow.ViolationCaseRepository.Delete(violationCase);
+            return await _uow.SaveAsync() > 0 ? _mapper.Map<ViolationCaseDto>(violationCase) : null;
+
+        }
+
         public async Task<IEnumerable<ViolationCaseDto>> GetAllViolation(ViolationRequestParam param)
         {
             IEnumerable<ViolationCaseDto> result = null;
