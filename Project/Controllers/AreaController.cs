@@ -35,6 +35,17 @@ namespace ACFIP.Core.Controllers
             return Ok(result);
         }
         [Authorize(Roles = AppConstants.Role.Monitor.NAME + "," + AppConstants.Role.Manager.NAME)]
+        [HttpGet("filter")]
+        public async Task<IActionResult> GetAreaFilter()
+        {
+            var result = await _areaService.GetAllAreaForFilter();
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
+        }
+        [Authorize(Roles = AppConstants.Role.Monitor.NAME + "," + AppConstants.Role.Manager.NAME)]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] AreaCreateParam param)
         {

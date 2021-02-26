@@ -33,6 +33,11 @@ namespace ACFIP.Bussiness.Services.AreaService
             return await _uow.SaveAsync() > 0 ? _mapper.Map<AreaDto>(area) : null;
         }
 
+        public async Task<IEnumerable<AreaDto>> GetAllAreaForFilter()
+        {
+            return _mapper.Map<IEnumerable<AreaDto>>(await _uow.AreaRepository.Get(filter: el => !el.DeletedFlag));
+        }
+
         public async Task<IEnumerable<AreaDto>> GetAllArea()
         {
             IEnumerable<Area> listArea = await _uow.AreaRepository.Get(filter: el => !el.DeletedFlag);
