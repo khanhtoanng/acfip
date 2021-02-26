@@ -113,7 +113,7 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
                         CameraId = vCase.CameraId,
                         CameraName = vCase.Camera.Name,
                         AreaId    = vCase.Camera.AreaId,
-                        AreaName = vCase.Camera.Area.Name,
+                        AreaName = vCase.Camera.Area == null ? "" : vCase.Camera.Area.Name,
                         CameraManufactureId = vCase.Camera.ManufactureId,
                         ViolationTypes = vCase.ViolationCaseTypes.Select(el => new ViolationTypeDto() {Id = el.Type.Id, Name = el.Type.Name }).ToList(),
                       });
