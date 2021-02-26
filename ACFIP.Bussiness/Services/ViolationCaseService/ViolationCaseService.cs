@@ -82,11 +82,12 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
             var memberAccessCamera = Expression.Property(parameter, "CameraId");
 
             var memberAccessCreateTime = Expression.Property(parameter, "CreatedTime");
+            memberAccessCreateTime = Expression.Property(memberAccessCreateTime, typeof(DateTime).GetProperty("Date"));
 
             Expression memberAccessArea = Expression.Property(parameter,typeof(ViolationCase).GetProperty("Camera"));
             memberAccessArea = Expression.Property(memberAccessArea, typeof(Camera).GetProperty("AreaId"));
             // setting default value if AreaId is null
-            memberAccessArea = Expression.Coalesce(memberAccessArea,Expression.Constant(param.AreaId));
+            memberAccessArea = Expression.Coalesce(memberAccessArea,Expression.Constant(0));
 
 
             // init
@@ -101,9 +102,9 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
             {
                 expr = Expression.AndAlso(expr, Expression.Equal(memberAccessCamera, Expression.Constant(param.CameraId)));
             }
-            if (param.CreateTime != null)
+            if (param.CreateTime != default )
             {
-                expr = Expression.AndAlso(expr, Expression.GreaterThanOrEqual(memberAccessCreateTime, Expression.Constant(param.CreateTime)));
+                expr = Expression.AndAlso(expr, Expression.Equal(memberAccessCreateTime, Expression.Constant(param.CreateTime.Date)));
             }
             if (param.ViolationTypeId != 0)
             {
