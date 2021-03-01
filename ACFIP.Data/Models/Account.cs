@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace ACFIP.Data.Models
 {
     [Table("account")]
-    public partial class Account 
+    public partial class Account : BaseModel
     {
         [Key]
         [Column("id", Order = 0)]
@@ -29,8 +29,5 @@ namespace ACFIP.Data.Models
         [Required]
         [Column("deleted_flag", Order = 5)]
         public bool DeletedFlag { get; set; } = false;
-        [Required]
-        [Column("created_time")]
-        public DateTime CreatedTime { get; set; }
     }
 }

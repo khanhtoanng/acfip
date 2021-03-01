@@ -6,7 +6,7 @@ namespace ACFIP.Data.Dtos.ViolationCase
 {
     public class ViolationRequestParam : PagingRequestParam
     {
-        public int CameraId { get; set; }
+        public int GroupId { get; set; }
         public int AreaId { get; set; }
         public int ViolationTypeId {get;set;}
         public DateTime CreateTime { get; set; }

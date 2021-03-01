@@ -13,6 +13,7 @@ namespace ACFIP.Data.UnitOfWork
         private ApplicationContext _context;
         private bool disposed = false;
         private IGenericRepository<Account> _accountRepository;
+        private IGenericRepository<GroupCamera> _groupCameraRepository;
         private IGenericRepository<Role> _roleRepository;
         private IGenericRepository<Area> _areaRepository;
         private IGenericRepository<Camera> _cameraRepository;
@@ -64,6 +65,11 @@ namespace ACFIP.Data.UnitOfWork
         {
             get { return _violationCaseTypeRepository ??= new GenericRepository<ViolationCaseType>(_context); }
         }
+        public IGenericRepository<GroupCamera> GroupCameraRepository
+        {
+            get { return _groupCameraRepository ??= new GenericRepository<GroupCamera>(_context); }
+        }
+
 
         public async Task<int> SaveAsync()
         {

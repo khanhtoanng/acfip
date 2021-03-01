@@ -47,7 +47,6 @@ namespace ACFIP.Data.AppContext
                         || e.State == EntityState.Modified));
             foreach (var entityEntry in entries)
             {
-                ((BaseModel)entityEntry.Entity).LastModifiedTime = DateTime.UtcNow;
                 if (entityEntry.State == EntityState.Added)
                 {
                     ((BaseModel)entityEntry.Entity).CreatedTime = DateTime.UtcNow;

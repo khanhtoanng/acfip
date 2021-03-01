@@ -17,6 +17,8 @@ namespace ACFIP.Data.UnitOfWork
         IGenericRepository<ViolationCase> ViolationCaseRepository { get; }
         IGenericRepository<ViolationType> ViolationTypeRepository { get; }
         IGenericRepository<ViolationCaseType> ViolationCaseTypeRepository { get; }
+        IGenericRepository<GroupCamera> GroupCameraRepository { get; }
+
         Task<int> SaveAsync();
     }
 }

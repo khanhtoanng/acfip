@@ -40,17 +40,15 @@ namespace ACFIP.Bussiness.Services.AreaService
 
         public async Task<IEnumerable<AreaDto>> GetAllArea()
         {
-            IEnumerable<Area> listArea = await _uow.AreaRepository.Get(filter: el => !el.DeletedFlag);
-            foreach (var area in listArea)
+            IEnumerable<Area> listArea = await _uow.AreaRepository.Get(filter: el => !el.DeletedFlag,includeProperties: "GroupCameras");
+            foreach (Area area in listArea)
             {
-                area.Cameras =( await _uow.CameraRepository.Get(filter: el => el.AreaId == area.Id && !el.DeletedFlag, includeProperties: "Config")).ToList();
+                foreach (GroupCamera group in area.GroupCameras)
+                {
+                    group.Cameras = (await _uow.CameraRepository.Get(filter: el => el.GroupId == group.Id && !el.DeletedFlag, includeProperties: "Config")).ToList();
+                }
             }
             return _mapper.Map<IEnumerable<AreaDto>>(listArea);
-        }
-
-        public Task<AreaDto> GetAreaById(int id)
-        {
-            throw new NotImplementedException();
         }
 
         public async Task<AreaDto> DeleteArea(int id)
