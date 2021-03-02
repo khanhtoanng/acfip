@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace ACFIP.Core.Controllers
 {
-    [Route("api/roles")]
+    [Route("api/v1/roles")]
     [ApiVersion("1.0")]
     [ApiController]
     public class RoleController : ControllerBase

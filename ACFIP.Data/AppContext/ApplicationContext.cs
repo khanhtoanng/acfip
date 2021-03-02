@@ -49,7 +49,7 @@ namespace ACFIP.Data.AppContext
             {
                 if (entityEntry.State == EntityState.Added)
                 {
-                    ((BaseModel)entityEntry.Entity).CreatedTime = DateTime.UtcNow;
+                    ((BaseModel)entityEntry.Entity).CreatedTime = DateTime.Now;
                 }
             }
             return base.SaveChangesAsync();
