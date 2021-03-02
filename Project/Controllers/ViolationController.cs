@@ -25,9 +25,9 @@ namespace ACFIP.Core.Controllers
         }
 
 
-        [Authorize(Roles = AppConstants.Role.Monitor.NAME
-                            + ","
-                            + AppConstants.Role.Manager.NAME)]
+        //[Authorize(Roles = AppConstants.Role.Monitor.NAME
+        //                    + ","
+        //                    + AppConstants.Role.Manager.NAME)]
         [HttpGet]
         public async Task<IActionResult> GetAllViolation([FromQuery] ViolationRequestParam param)
         {
