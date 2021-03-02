@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ACFIP_Server.Models
@@ -22,8 +23,8 @@ namespace ACFIP_Server.Models
         public int RoleId { get; set; }
         public Role Role { get; set; }
         [Required]
-        [Column("status", Order = 4)]
-        public bool Status { get; set; } = true;
+        [Column("is_active", Order = 4)]
+        public bool IsActive { get; set; } = true;
         [Required]
         [Column("deleted_flag", Order = 5)]
         public bool DeletedFlag { get; set; } = false;

@@ -1,7 +1,6 @@
-﻿using ACFIP_Server.Datasets.Area;
+﻿using ACFIP_Server.Datasets;
 using ACFIP_Server.Repositories;
 using AutoMapper;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,7 +10,7 @@ namespace ACFIP_Server.Services.Area
     public interface IAreaService
     {
         Task<List<AreaDataset>> GetAll();
-        Task<AreaDataset> Create(AreaCreateDataset dataset);
+        Task<AreaDataset> CreateArea(AreaCreateDataset dataset);
     }
 
     public class AreaService : IAreaService
@@ -24,12 +23,14 @@ namespace ACFIP_Server.Services.Area
             _mapper = mapper;
         }
 
-        public async Task<AreaDataset> Create(AreaCreateDataset dataset)
+        public async Task<AreaDataset> CreateArea(AreaCreateDataset dataset)
         {
-            Models.Area area = new Models.Area() { Description = dataset.Description };
+            Models.Area area = new Models.Area() { Name = dataset.Name, Description = dataset.Description };
             _uow.AreaRepo.Insert(area);
             if (await _uow.CommitAsync() > 0)
             {
+                _uow.GroupCameraRepo.Insert(new Models.GroupCamera() { AreaId = area.Id, Description = "Default group" });
+                await _uow.CommitAsync();
                 return _mapper.Map<AreaDataset>(area);
             }
             return null;
@@ -37,14 +38,12 @@ namespace ACFIP_Server.Services.Area
 
         public async Task<List<AreaDataset>> GetAll()
         {
-            IEnumerable<Models.Area> areas = await _uow.AreaRepo.Get(filter: a => !a.DeletedFlag);
-            foreach (Models.Area area in areas)
+            List<AreaDataset> areas = _mapper.Map < List < AreaDataset >> (await _uow.AreaRepo.Get(filter: a => !a.DeletedFlag));
+            foreach (AreaDataset area in areas)
             {
-                IEnumerable<Models.Camera> cams = await _uow.CameraRepo.Get(filter: c => c.AreaId == area.Id && !c.DeletedFlag, includeProperties: "Config");
-                area.Cameras = cams.ToList();
+                area.Cameras = _mapper.Map<List<CameraDataset>>(await _uow.CameraRepo.Get(includeProperties: "GroupCamera,Config", filter: c => !c.DeletedFlag && c.GroupCamera.AreaId == area.Id));
             }
-            List<AreaDataset> result = _mapper.Map<List<AreaDataset>>(areas);
-            return result;
+            return areas;
         }
     }
 }

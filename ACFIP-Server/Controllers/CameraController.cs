@@ -1,10 +1,7 @@
-﻿using ACFIP_Server.Datasets.Camera;
+﻿using ACFIP_Server.Datasets;
 using ACFIP_Server.Services.Camera;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ACFIP_Server.Controllers
@@ -21,22 +18,24 @@ namespace ACFIP_Server.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet]
-        public async Task<IActionResult> Get(bool isActive)
-        {
-            return Ok(await _cameraService.Get(isActive));
-        }
-
-        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Create(CameraDataset dataset)
         {
-            var result = await _cameraService.Create(dataset);
+            var result = await _cameraService.CreateCamera(dataset);
             if (result != null)
             {
                 return Created("", result);
             }
             return BadRequest();
+        }
+
+        [AllowAnonymous]
+        [HttpPut("{id}/status")]
+        public async Task<IActionResult> UpdateStatus([FromRoute] int id,[FromBody] CameraUpdateDataset dataset)
+        {
+            if (id != dataset.CamId) return BadRequest();
+            await _cameraService.UpdateStatus(id, dataset.Status);
+            return NoContent();
         }
     }
 }

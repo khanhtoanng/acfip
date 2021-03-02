@@ -1,10 +1,8 @@
-﻿using ACFIP_Server.Datasets.Area;
+﻿using ACFIP_Server.Datasets;
 using ACFIP_Server.Services.Area;
+using ACFIP_Server.Services.Camera;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ACFIP_Server.Controllers
@@ -15,9 +13,11 @@ namespace ACFIP_Server.Controllers
     public class AreaController : Controller
     {
         private readonly IAreaService _areaService;
-        public AreaController(IAreaService areaService)
+        private readonly ICameraService _cameraService;
+        public AreaController(IAreaService areaService, ICameraService cameraService)
         {
             _areaService = areaService;
+            _cameraService = cameraService;
         }
         [AllowAnonymous]
         [HttpGet]
@@ -29,12 +29,18 @@ namespace ACFIP_Server.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] AreaCreateDataset dataset)
         {
-            AreaDataset result = await _areaService.Create(dataset);
+            AreaDataset result = await _areaService.CreateArea(dataset);
             if (result != null)
             {
                 return Created("", result);
             }
             return BadRequest();
+        }
+        [AllowAnonymous]
+        [HttpGet("{id}/groups")]
+        public async Task<IActionResult> GetGroups([FromRoute]int id)
+        {
+            return Ok(await _cameraService.GetGroups(id));
         }
     }
 }

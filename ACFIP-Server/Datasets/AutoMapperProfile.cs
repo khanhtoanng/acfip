@@ -1,8 +1,4 @@
-﻿using ACFIP_Server.Datasets.Account;
-using ACFIP_Server.Datasets.Area;
-using ACFIP_Server.Datasets.Camera;
-using ACFIP_Server.Datasets.ViolationCase;
-using AutoMapper;
+﻿using AutoMapper;
 
 namespace ACFIP_Server.Datasets
 {
@@ -13,7 +9,9 @@ namespace ACFIP_Server.Datasets
             CreateMap<Models.Account, AccountDataset>();
             CreateMap<Models.Camera, CameraDataset>()
                 .ForMember(des => des.Height, src => src.MapFrom(t => t.Config.Height))
-                .ForMember(des => des.Angle, src => src.MapFrom(t => t.Config.Angle));
+                .ForMember(des => des.Angle, src => src.MapFrom(t => t.Config.Angle))
+                .ForMember(des => des.AreaId, src => src.MapFrom(t => t.GroupCamera.AreaId));
+            CreateMap<Models.GroupCamera, GroupCamDataset>();
             CreateMap<Models.Area, AreaDataset>();
             CreateMap<Models.ViolationCase, ViolationDataset>();
         }

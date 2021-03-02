@@ -1,10 +1,7 @@
-﻿using ACFIP_Server.Datasets.ViolationCase;
+﻿using ACFIP_Server.Datasets;
 using ACFIP_Server.Services.Violation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ACFIP_Server.Controllers

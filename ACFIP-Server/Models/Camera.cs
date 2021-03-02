@@ -16,19 +16,19 @@ namespace ACFIP_Server.Models
         [Required]
         [Column("is_active", Order = 2)]
         public bool IsActive { get; set; } = false;
-        [ForeignKey(nameof(Area))]
-        [Column("area_id", Order = 3)]
-        public int? AreaId { get; set; }
-        public Area Area { get; set; }
+        [ForeignKey(nameof(GroupCamera))]
+        [Column("group_id", Order = 3)]
+        public int? GroupId { get; set; }
+        public GroupCamera GroupCamera { get; set; }
         [Column("connection_string", Order = 4)]
         public string ConnectionString { get; set; }
         [Required]
         [ForeignKey(nameof(CameraConfiguration))]
         [Column("configuration_id", Order = 5)]
         public int ConfigId { get; set; }
+        public CameraConfiguration Config { get; set; }
         [Required]
         [Column("deleted_flag")]
-        public bool DeletedFlag { get; set; } = false;
-        public CameraConfiguration Config { get; set; }
+        public bool DeletedFlag { get; set; } = false;   
     }
 }

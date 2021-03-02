@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ACFIP_Server.Migrations
 {
     [DbContext(typeof(MainContext))]
-    [Migration("20210221033639_t3")]
-    partial class t3
+    [Migration("20210228130559_t")]
+    partial class t
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -42,9 +42,9 @@ namespace ACFIP_Server.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("hashed_password");
 
-                    b.Property<DateTime>("LastModifiedTime")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("last_modified_time");
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit")
+                        .HasColumnName("is_active");
 
                     b.Property<int>("RoleId")
                         .HasColumnType("int")
@@ -55,15 +55,23 @@ namespace ACFIP_Server.Migrations
                         .HasColumnType("binary(16)")
                         .HasColumnName("salt");
 
-                    b.Property<bool>("Status")
-                        .HasColumnType("bit")
-                        .HasColumnName("status");
-
                     b.HasKey("Id");
 
                     b.HasIndex("RoleId");
 
                     b.ToTable("account");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DeletedFlag = false,
+                            HashedPassword = "yntcko9S08SPcAriNcWPPlFDEuRD92F82IbcGNqj9duPFxX4P36TR/OtoHgP0oHtsvAxIeV/7FRS4c025LfhKw==",
+                            IsActive = true,
+                            RoleId = 1,
+                            Salt = new byte[] { 72, 74, 29, 133, 5, 228, 63, 114, 149, 56, 6, 17, 4, 251, 12, 105 }
+                        });
                 });
 
             modelBuilder.Entity("ACFIP_Server.Models.Area", b =>
@@ -74,17 +82,18 @@ namespace ACFIP_Server.Migrations
                         .HasColumnName("id")
                         .UseIdentityColumn();
 
-                    b.Property<DateTime>("CreatedTime")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("created_time");
+                    b.Property<bool>("DeletedFlag")
+                        .HasColumnType("bit")
+                        .HasColumnName("deleted_flag");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("description");
 
-                    b.Property<DateTime>("LastModifiedTime")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("last_modified_time");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("name");
 
                     b.HasKey("Id");
 
@@ -99,10 +108,6 @@ namespace ACFIP_Server.Migrations
                         .HasColumnName("id")
                         .UseIdentityColumn();
 
-                    b.Property<int>("AreaId")
-                        .HasColumnType("int")
-                        .HasColumnName("area_id");
-
                     b.Property<int>("ConfigId")
                         .HasColumnType("int")
                         .HasColumnName("configuration_id");
@@ -115,13 +120,17 @@ namespace ACFIP_Server.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("created_time");
 
+                    b.Property<bool>("DeletedFlag")
+                        .HasColumnType("bit")
+                        .HasColumnName("deleted_flag");
+
+                    b.Property<int?>("GroupId")
+                        .HasColumnType("int")
+                        .HasColumnName("group_id");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit")
-                        .HasColumnName("status");
-
-                    b.Property<DateTime>("LastModifiedTime")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("last_modified_time");
+                        .HasColumnName("is_active");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -130,9 +139,9 @@ namespace ACFIP_Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AreaId");
-
                     b.HasIndex("ConfigId");
+
+                    b.HasIndex("GroupId");
 
                     b.ToTable("camera");
                 });
@@ -149,21 +158,41 @@ namespace ACFIP_Server.Migrations
                         .HasColumnType("real")
                         .HasColumnName("angle");
 
-                    b.Property<DateTime>("CreatedTime")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("created_time");
-
                     b.Property<float>("Height")
                         .HasColumnType("real")
                         .HasColumnName("height");
 
-                    b.Property<DateTime>("LastModifiedTime")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("last_modified_time");
-
                     b.HasKey("Id");
 
                     b.ToTable("camera_configuration");
+                });
+
+            modelBuilder.Entity("ACFIP_Server.Models.GroupCamera", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("group_id")
+                        .UseIdentityColumn();
+
+                    b.Property<int>("AreaId")
+                        .HasColumnType("int")
+                        .HasColumnName("area_id");
+
+                    b.Property<bool>("DeletedFlag")
+                        .HasColumnType("bit")
+                        .HasColumnName("deleted_flag");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("description");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AreaId");
+
+                    b.ToTable("group_camera");
                 });
 
             modelBuilder.Entity("ACFIP_Server.Models.Role", b =>
@@ -209,21 +238,17 @@ namespace ACFIP_Server.Migrations
                         .HasColumnName("id")
                         .UseIdentityColumn();
 
-                    b.Property<int>("CameraId")
-                        .HasColumnType("int")
-                        .HasColumnName("camera_id");
-
                     b.Property<DateTime>("CreatedTime")
                         .HasColumnType("datetime2")
                         .HasColumnName("created_time");
 
+                    b.Property<int>("GroupCamId")
+                        .HasColumnType("int")
+                        .HasColumnName("group_cam_id");
+
                     b.Property<string>("ImgUrl")
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("image_url");
-
-                    b.Property<DateTime>("LastModifiedTime")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("last_modified_time");
 
                     b.Property<string>("VideoUrl")
                         .HasColumnType("nvarchar(max)")
@@ -231,7 +256,7 @@ namespace ACFIP_Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CameraId");
+                    b.HasIndex("GroupCamId");
 
                     b.ToTable("violation_case");
                 });
@@ -296,32 +321,41 @@ namespace ACFIP_Server.Migrations
 
             modelBuilder.Entity("ACFIP_Server.Models.Camera", b =>
                 {
-                    b.HasOne("ACFIP_Server.Models.Area", "Area")
-                        .WithMany("Cameras")
-                        .HasForeignKey("AreaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("ACFIP_Server.Models.CameraConfiguration", "Config")
                         .WithMany()
                         .HasForeignKey("ConfigId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Area");
+                    b.HasOne("ACFIP_Server.Models.GroupCamera", "GroupCamera")
+                        .WithMany("Cameras")
+                        .HasForeignKey("GroupId");
 
                     b.Navigation("Config");
+
+                    b.Navigation("GroupCamera");
+                });
+
+            modelBuilder.Entity("ACFIP_Server.Models.GroupCamera", b =>
+                {
+                    b.HasOne("ACFIP_Server.Models.Area", "Area")
+                        .WithMany("GroupCameras")
+                        .HasForeignKey("AreaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Area");
                 });
 
             modelBuilder.Entity("ACFIP_Server.Models.ViolationCase", b =>
                 {
-                    b.HasOne("ACFIP_Server.Models.Camera", "Camera")
+                    b.HasOne("ACFIP_Server.Models.GroupCamera", "GroupCamera")
                         .WithMany()
-                        .HasForeignKey("CameraId")
+                        .HasForeignKey("GroupCamId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Camera");
+                    b.Navigation("GroupCamera");
                 });
 
             modelBuilder.Entity("ACFIP_Server.Models.ViolationCaseType", b =>
@@ -344,6 +378,11 @@ namespace ACFIP_Server.Migrations
                 });
 
             modelBuilder.Entity("ACFIP_Server.Models.Area", b =>
+                {
+                    b.Navigation("GroupCameras");
+                });
+
+            modelBuilder.Entity("ACFIP_Server.Models.GroupCamera", b =>
                 {
                     b.Navigation("Cameras");
                 });

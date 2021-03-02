@@ -5,6 +5,19 @@ using System.Threading.Tasks;
 
 namespace ACFIP_Server.Repositories
 {
+    public interface IUnitOfWork
+    {
+        IGenericRepository<Account> AccountRepo { get; }
+        IGenericRepository<Role> RoleRepo { get; }
+        IGenericRepository<Area> AreaRepo { get; }
+        IGenericRepository<Camera> CameraRepo { get; }
+        IGenericRepository<CameraConfiguration> ConfigRepo { get; }
+        IGenericRepository<ViolationCase> ViolationCaseRepo { get; }
+        IGenericRepository<ViolationType> ViolationTypeRepo { get; }
+        IGenericRepository<ViolationCaseType> ViolationCaseTypeRepo { get; }
+        IGenericRepository<GroupCamera> GroupCameraRepo { get; }
+        Task<int> CommitAsync();
+    }
     public class UnitOfWork : IUnitOfWork, IDisposable
     {
         private readonly MainContext _context;
@@ -17,6 +30,7 @@ namespace ACFIP_Server.Repositories
         private IGenericRepository<ViolationCase> _violationCaseRepo;
         private IGenericRepository<ViolationType> _violationTypeRepo;
         private IGenericRepository<ViolationCaseType> _violationCaseTypeRepo;
+        private IGenericRepository<GroupCamera> _groupCamRepo;
         public UnitOfWork(MainContext context)
         {
             _context = context;
@@ -49,6 +63,10 @@ namespace ACFIP_Server.Repositories
         public IGenericRepository<ViolationCase> ViolationCaseRepo
         {
             get { return _violationCaseRepo ??= new GenericRepository<ViolationCase>(_context); }
+        }
+        public IGenericRepository<GroupCamera> GroupCameraRepo
+        {
+            get { return _groupCamRepo ??= new GenericRepository<GroupCamera>(_context); }
         }
 
         public IGenericRepository<ViolationType> ViolationTypeRepo

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace ACFIP_Server.Models
 {
     [Table("camera_configuration")]
-    public class CameraConfiguration : BaseModel
+    public class CameraConfiguration
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]

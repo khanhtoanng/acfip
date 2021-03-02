@@ -1,4 +1,5 @@
-﻿using ACFIP_Server.Models;
+﻿using ACFIP_Server.Helpers;
+using ACFIP_Server.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
@@ -18,6 +19,7 @@ namespace ACFIP_Server.Context
         public DbSet<ViolationCase> ViolationCases { get; set; }
         public DbSet<ViolationType> ViolationTypes { get; set; }
         public DbSet<ViolationCaseType> ViolationCaseTypes { get; set; }
+        public DbSet<GroupCamera> GroupCameras { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -33,23 +35,22 @@ namespace ACFIP_Server.Context
             builder.Entity<ViolationCaseType>().HasKey(
                     t => new { t.CaseId, t.TypeId }
                 );
+            var salt = PasswordHelper.generateSalt();
+            var admin_password = PasswordHelper.hashSHA512("12345678", salt);
+            builder.Entity<Account>().HasData(
+                    
+                    new Account() { Id = 1, RoleId = 1, DeletedFlag = false, IsActive = true, Salt = salt, HashedPassword = admin_password}
+                );
         }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            // update time when create or update
             var entries = ChangeTracker
                 .Entries()
-                .Where(e => e.Entity is BaseModel && (
-                        e.State == EntityState.Added
-                        || e.State == EntityState.Modified));
+                .Where(e => e.State == EntityState.Added && e.Entity is BaseModel);
             foreach (var entityEntry in entries)
             {
-                ((BaseModel)entityEntry.Entity).LastModifiedTime = DateTime.UtcNow;
-                if (entityEntry.State == EntityState.Added)
-                {
-                    ((BaseModel)entityEntry.Entity).CreatedTime = DateTime.UtcNow;
-                }
+                ((BaseModel)entityEntry.Entity).CreatedTime = DateTime.UtcNow; 
             }
             return base.SaveChangesAsync();
         }

@@ -1,4 +1,4 @@
-﻿using ACFIP_Server.Datasets.Account;
+﻿using ACFIP_Server.Datasets;
 using ACFIP_Server.Repositories;
 using AutoMapper;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
-
+using ACFIP_Server.Helpers;
 namespace ACFIP_Server.Services.Account
 {
     public interface IAccountService
@@ -41,13 +41,8 @@ namespace ACFIP_Server.Services.Account
         public async Task<AccountDataset> Create(RegisterDataset dataset)
         {
             Models.Account account = new Models.Account();
-            byte[] salt = new byte[16];
-            using (var rng = RandomNumberGenerator.Create())
-            {
-                rng.GetBytes(salt);
-            }
-            account.Salt = salt;
-            account.HashedPassword = hashSHA512(dataset.Password, salt);
+            account.Salt = PasswordHelper.generateSalt();
+            account.HashedPassword = PasswordHelper.hashSHA512(dataset.Password, account.Salt);
             account.RoleId = dataset.RoleId;
             _uow.AccountRepo.Insert(account);
             if (await _uow.CommitAsync() > 0)
@@ -59,7 +54,7 @@ namespace ACFIP_Server.Services.Account
 
         public async Task<AccountDataset> GetAccount(int id)
         {
-            return _mapper.Map<AccountDataset>(await _uow.AccountRepo.GetFirst(filter: t => t.Id == id && t.Status && !t.DeletedFlag, includeProperties: "Role"));
+            return _mapper.Map<AccountDataset>(await _uow.AccountRepo.GetFirst(filter: t => t.Id == id && t.IsActive && !t.DeletedFlag, includeProperties: "Role"));
         }
 
         public Task<List<AccountDataset>> GetAccounts()
@@ -69,23 +64,14 @@ namespace ACFIP_Server.Services.Account
 
         public async Task<AccountDataset> Login(LoginDataset dataset)
         {
-            Models.Account account = await _uow.AccountRepo.GetFirst(filter: t => t.Id == dataset.Id && t.Status && !t.DeletedFlag, includeProperties: "Role");
-            if (account != null && hashSHA512(dataset.Password, account.Salt) == account.HashedPassword)
+            Models.Account account = await _uow.AccountRepo.GetFirst(filter: t => t.Id == dataset.Id && t.IsActive && !t.DeletedFlag, includeProperties: "Role");
+            if (account != null && PasswordHelper.hashSHA512(dataset.Password, account.Salt) == account.HashedPassword)
             {
                 return _mapper.Map<AccountDataset>(account);
             }
             return null;
         }
 
-        // hash function, using SHA512
-        private string hashSHA512(string password, byte[] salt)
-        {
-            return Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                password: password,
-                salt: salt,
-                prf: KeyDerivationPrf.HMACSHA512,
-                iterationCount: 10,
-                numBytesRequested: 512 / 8));
-        }
+        
     }
 }
