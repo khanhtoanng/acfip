@@ -25,9 +25,9 @@ namespace ACFIP.Core.Controllers
         }
 
 
-        //[Authorize(Roles = AppConstants.Role.Monitor.NAME
-        //                    + ","
-        //                    + AppConstants.Role.Manager.NAME)]
+        [Authorize(Roles = AppConstants.Role.Monitor.NAME
+                            + ","
+                            + AppConstants.Role.Manager.NAME)]
         [HttpGet]
         public async Task<IActionResult> GetAllViolation([FromQuery] ViolationRequestParam param)
         {
@@ -77,9 +77,9 @@ namespace ACFIP.Core.Controllers
                             + ","
                             + AppConstants.Role.Manager.NAME)]
         [HttpGet("latest")]
-        public async Task<IActionResult> GetLatest(int cameraId)
+        public async Task<IActionResult> GetLatest(int groupId)
         {
-            var result = await _violationCaseService.GetLast(cameraId);
+            var result = await _violationCaseService.GetLast(groupId);
             if (result == null)
             {
                 return NotFound();

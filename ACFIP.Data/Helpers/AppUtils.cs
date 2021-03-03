@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace ACFIP.Data.Helpers
@@ -26,6 +27,15 @@ namespace ACFIP.Data.Helpers
                 iterationCount: 10,
                 numBytesRequested: 512 / 8));
             return dbPasswordHash == hashedPassword;
+        }
+        public static byte[] generateSalt()
+        {
+            byte[] salt = new byte[16];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(salt);
+            }
+            return salt;
         }
     }
 }

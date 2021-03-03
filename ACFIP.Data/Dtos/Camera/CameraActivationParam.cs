@@ -6,7 +6,7 @@ namespace ACFIP.Data.Dtos.Camera
 {
     public class CameraActivationParam
     {
-        public int Id { get; set; }
+        public int CameraId { get; set; }
         public bool IsActive { get; set; }
     }
 }

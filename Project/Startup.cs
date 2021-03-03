@@ -26,6 +26,7 @@ using ACFIP.Core.Settings;
 using Newtonsoft.Json;
 using ACFIP.Bussiness.Services.Role;
 using ACFIP.Bussiness.Services.ViolationType;
+using ACFIP.Bussiness.Services.GroupCamera;
 
 namespace ACFIP.Core
 {
@@ -141,6 +142,8 @@ namespace ACFIP.Core
             services.AddScoped<IAreaService, AreaService>();
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IViolationTypeService, ViolationTypeService>();
+            services.AddScoped<IGroupCameraService, GroupCameraService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

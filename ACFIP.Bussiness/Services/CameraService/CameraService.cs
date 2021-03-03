@@ -142,7 +142,7 @@ namespace ACFIP.Bussiness.Services.CameraService
                 _uow.CameraRepository.Update(camera);
 
                 // get Area
-                GroupCamera groupCamera = await _uow.GroupCameraRepository.GetFirst(filter: el => el.Id == camera.GroupId);
+                Data.Models.GroupCamera groupCamera = await _uow.GroupCameraRepository.GetFirst(filter: el => el.Id == camera.GroupId);
                 return await _uow.SaveAsync() > 0
                             ? _mapper.Map<CameraDto>(camera)
                             : throw new Exception("Update to [camera] fails");
@@ -161,9 +161,9 @@ namespace ACFIP.Bussiness.Services.CameraService
                 includeProperties: "GroupCamera,GroupCamera.Area,Config"));
         }
 
-        public async Task<CameraDto> UpdateStatusCamera(CameraActivationParam cameraUpdate)
+        public async Task<CameraDto> UpdateStatusCamera(int id,CameraActivationParam cameraUpdate)
         {
-            Camera camera = await _uow.CameraRepository.GetById(cameraUpdate.Id);
+            Camera camera = await _uow.CameraRepository.GetById(id);
             if (camera != null)
             {
                 camera.IsActive = cameraUpdate.IsActive;

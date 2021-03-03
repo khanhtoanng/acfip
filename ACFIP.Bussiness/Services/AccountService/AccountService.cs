@@ -54,15 +54,9 @@ namespace ACFIP.Bussiness.Services.AccountService
             int suffixId = index + 1;
             string prefixId = (await _uow.RoleRepository.GetById(param.RoleId)).Name;
             Data.Models.Account account = new Data.Models.Account();
-            byte[] salt = new byte[16];
-            using (var rng = RandomNumberGenerator.Create())
-            {
-                rng.GetBytes(salt);
-            }
-
             account.Id = prefixId + suffixId;
-            account.Salt = salt;
-            account.HashedPassword = AppUtils.hashSHA512(param.Password, salt);
+            account.Salt = AppUtils.generateSalt();
+            account.HashedPassword = AppUtils.hashSHA512(param.Password, account.Salt);
             account.RoleId = param.RoleId;
             _uow.AccountRepository.Add(account);
             if (await _uow.SaveAsync() > 0)
@@ -78,13 +72,8 @@ namespace ACFIP.Bussiness.Services.AccountService
             if (account == null) throw new Exception("this account is not exist");
             if (AppUtils.VerifyPassword(param.OldPassword, account.HashedPassword, account.Salt))
             {
-                byte[] salt = new byte[16];
-                using (var rng = RandomNumberGenerator.Create())
-                {
-                    rng.GetBytes(salt);
-                }
-                account.Salt = salt;
-                account.HashedPassword = AppUtils.hashSHA512(param.NewPassword, salt);
+                account.Salt = AppUtils.generateSalt();
+                account.HashedPassword = AppUtils.hashSHA512(param.NewPassword, account.Salt);
                 account.RoleId = AppConstants.Role.Monitor.ID;
                 _uow.AccountRepository.Update(account);
                 return await _uow.SaveAsync() > 0

@@ -13,7 +13,7 @@ namespace ACFIP.Data.Dtos.Area
         public string Name { get; set; }
         public string Description { get; set; }
         public bool DeletedFlag { get; set; }
-        public List<GroupCameraDto> GroupCameras { get; set; }
+        public List<CameraDto> Cameras { get; set; }
 
     }
 }

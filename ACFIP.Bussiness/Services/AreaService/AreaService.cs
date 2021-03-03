@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
+using ACFIP.Data.Dtos.Camera;
 
 namespace ACFIP.Bussiness.Services.AreaService
 {
@@ -30,7 +31,13 @@ namespace ACFIP.Bussiness.Services.AreaService
                 Description = param.Description
             };
             _uow.AreaRepository.Add(area);
-            return await _uow.SaveAsync() > 0 ? _mapper.Map<AreaDto>(area) : null;
+            if (await _uow.SaveAsync() > 0)
+            {
+                _uow.GroupCameraRepository.Add(new Data.Models.GroupCamera() { AreaId = area.Id, Description = "Default group" });
+                await _uow.SaveAsync();
+                return _mapper.Map<AreaDto>(area);
+            }
+            return null;
         }
 
         public async Task<IEnumerable<AreaDto>> GetAllAreaForFilter()
@@ -40,15 +47,13 @@ namespace ACFIP.Bussiness.Services.AreaService
 
         public async Task<IEnumerable<AreaDto>> GetAllArea()
         {
-            IEnumerable<Area> listArea = await _uow.AreaRepository.Get(filter: el => !el.DeletedFlag,includeProperties: "GroupCameras");
-            foreach (Area area in listArea)
+            IEnumerable<AreaDto> result = _mapper.Map<IEnumerable<AreaDto>>(await _uow.AreaRepository.Get(filter: el => !el.DeletedFlag));
+            foreach (var area in result)
             {
-                foreach (GroupCamera group in area.GroupCameras)
-                {
-                    group.Cameras = (await _uow.CameraRepository.Get(filter: el => el.GroupId == group.Id && !el.DeletedFlag, includeProperties: "Config")).ToList();
-                }
-            }
-            return _mapper.Map<IEnumerable<AreaDto>>(listArea);
+                area.Cameras = _mapper.Map<List<CameraDto>>
+                    (await _uow.CameraRepository.Get(filter: el => !el.DeletedFlag && el.GroupCamera.AreaId == area.Id, includeProperties: "GroupCamera,Config"));
+            }        
+            return result;
         }
 
         public async Task<AreaDto> DeleteArea(int id)

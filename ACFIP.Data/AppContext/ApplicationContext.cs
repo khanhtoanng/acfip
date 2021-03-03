@@ -1,4 +1,5 @@
-﻿using ACFIP.Data.Models;
+﻿using ACFIP.Data.Helpers;
+using ACFIP.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -32,9 +33,15 @@ namespace ACFIP.Data.AppContext
                     new ViolationType() { Id = 1, Name = "Vest" },
                     new ViolationType() { Id = 2, Name = "Helmet" }
                 );
+            var salt = AppUtils.generateSalt();
+            var admin_password = AppUtils.hashSHA512("123", salt);
+            builder.Entity<Account>().HasData(
+                    new Account() { Id = "Admin1", RoleId = 1, DeletedFlag = false, IsActive = true, Salt = salt, HashedPassword = admin_password }
+                );
             builder.Entity<ViolationCaseType>().HasKey(
                     t => new { t.CaseId, t.TypeId }
                 );
+
         }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

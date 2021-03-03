@@ -36,15 +36,10 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
             _uow.ViolationCaseRepository.Add(violationCase);
             if (await _uow.SaveAsync() > 0)
             {
-                List<int> listType = param.ViolationTypes;
-                foreach (int type in listType)
+                foreach (string type in param.ViolationTypes)
                 {
-                    ViolationCaseType caseType = new ViolationCaseType()
-                    {
-                        CaseId = violationCase.Id,
-                        TypeId = type
-                    };
-                    _uow.ViolationCaseTypeRepository.Add(caseType);
+                    int typeId = (await _uow.ViolationTypeRepository.GetFirst(filter: el => el.Name.ToLower() == type.ToLower())).Id;
+                    _uow.ViolationCaseTypeRepository.Add(new ViolationCaseType() { CaseId = violationCase.Id, TypeId = typeId });
                 }
                 return await _uow.SaveAsync() > 0
                     ? _mapper.Map<ViolationCaseDto>(violationCase)
@@ -83,7 +78,7 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
             memberAccessCreateTime = Expression.Property(memberAccessCreateTime, typeof(DateTime).GetProperty("Date"));
 
             Expression memberAccessArea = Expression.Property(parameter,typeof(ViolationCase).GetProperty("GroupCamera"));
-            memberAccessArea = Expression.Property(memberAccessArea, typeof(GroupCamera).GetProperty("AreaId"));
+            memberAccessArea = Expression.Property(memberAccessArea, typeof(Data.Models.GroupCamera).GetProperty("AreaId"));
             // setting default value if AreaId is null
             //memberAccessArea = Expression.Coalesce(memberAccessArea,Expression.Constant(0));
 
@@ -161,10 +156,9 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
             return result;
         }
 
-        public Task<ViolationCaseDto> GetLast(int cameraId)
+        public async Task<ViolationCaseDto> GetLast(int groupId)
         {
-            //return _mapper.Map<ViolationCaseDto>((await _uow.ViolationCaseRepository.Get(filter: v => v.CameraId == cameraId, orderBy: v => v.OrderByDescending(t => t.CreatedTime))).FirstOrDefault());
-            return null;
+            return _mapper.Map<ViolationCaseDto>((await _uow.ViolationCaseRepository.Get(filter: el => el.GroupId == groupId, orderBy: el => el.OrderByDescending(t => t.CreatedTime))).FirstOrDefault());
         }
     }
 }

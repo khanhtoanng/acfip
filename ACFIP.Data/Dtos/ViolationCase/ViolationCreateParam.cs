@@ -11,6 +11,6 @@ namespace ACFIP.Data.Dtos.ViolationCase
         public string VideoUrl { get; set; }
         public int GroupId { get; set; }
 
-        public virtual List<int> ViolationTypes { get; set; }
+        public virtual List<string> ViolationTypes { get; set; }
     }
 }

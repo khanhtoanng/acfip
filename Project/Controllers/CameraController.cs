@@ -103,12 +103,12 @@ namespace ACFIP.Core.Controllers
         }
 
         [Authorize(Roles = AppConstants.Role.Monitor.NAME)]
-        [HttpPut("status")]
-        public async Task<IActionResult> UpdateStatusCamera([FromBody] CameraActivationParam param)
+        [HttpPut("{id}/status")]
+        public async Task<IActionResult> UpdateStatusCamera([FromRoute] int id,[FromBody] CameraActivationParam param)
         {
             try
             {
-                var result = await _cameraService.UpdateStatusCamera(param);
+                var result = await _cameraService.UpdateStatusCamera(id,param);
                 return Ok(result);
             }
             catch (Exception e)
