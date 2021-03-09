@@ -63,5 +63,17 @@ namespace ACFIP.Bussiness.Services.AreaService
             _uow.AreaRepository.Update(area);
             return await _uow.SaveAsync() > 0 ? _mapper.Map<AreaDto>(area) : null;
         }
+
+        public async Task<AreaDto> UpdateArea(AreaUpdateParam param)
+        {
+            Area area = await _uow.AreaRepository.GetById(param.Id);
+            if (area != null) 
+            {
+                area.Name = param.Name;
+                area.Description = param.Description;
+
+            }
+            return await _uow.SaveAsync() > 0 ?  _mapper.Map<AreaDto>(area) : null;
+        }
     }
 }

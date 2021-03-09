@@ -71,11 +71,23 @@ namespace ACFIP.Core.Controllers
             return Ok(result);
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = AppConstants.Role.Monitor.NAME + "," + AppConstants.Role.Manager.NAME)]
         [HttpGet("{id}/groups")]
         public async Task<IActionResult> GetGroups([FromRoute] int id)
         {
             var result = await _groupService.GetAllGroupCamera(id);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
+        }
+
+        [Authorize(Roles = AppConstants.Role.Monitor.NAME + "," + AppConstants.Role.Manager.NAME)]
+        [HttpPut]
+        public async Task<IActionResult> Update([FromBody] AreaUpdateParam param)
+        {
+            var result = await _areaService.UpdateArea(param);
             if (result == null)
             {
                 return NotFound();

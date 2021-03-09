@@ -21,7 +21,7 @@ namespace ACFIP.Data.Models
 
         [ForeignKey(nameof(Area))]
         [Column("area_id", Order = 3)]
-        public int AreaId { get; set; }
+        public int? AreaId { get; set; }
         public Area Area { get; set; }
         public virtual List<Camera> Cameras{ get; set; }
 

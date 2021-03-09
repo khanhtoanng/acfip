@@ -10,5 +10,8 @@ namespace ACFIP.Bussiness.Services.GroupCamera
     {
         public Task<IEnumerable<GroupCameraDto>> GetAllGroupCamera(int areaId);
         public Task<GroupCameraDto> CreateGroupCamera(GroupCameraCreateParam param);
+        public Task<GroupCameraDto> UpdateGroupCamera(GroupCameraUpdateParam param);
+        public Task<GroupCameraDto> DeleteGroupCamera(int id);
+
     }
 }

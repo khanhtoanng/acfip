@@ -16,7 +16,7 @@ namespace ACFIP.Data.Dtos.ViolationCase
         public string VideoUrl { get; set; }
         public int GroupId { get; set; }
         public string GroupDescription { get; set; }
-        public int AreaId { get; set; }
+        public int? AreaId { get; set; }
         public string AreaName { get; set; }
         public string AreaDescription { get; set; }
         public virtual List<ViolationTypeDto> ViolationTypes { get; set; }

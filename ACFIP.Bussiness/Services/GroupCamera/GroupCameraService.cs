@@ -26,9 +26,32 @@ namespace ACFIP.Bussiness.Services.GroupCamera
             return await _uow.SaveAsync() > 0 ? _mapper.Map<GroupCameraDto>(camera) : null;
         }
 
+        public async Task<GroupCameraDto> DeleteGroupCamera(int id)
+        {
+            Data.Models.GroupCamera groupCamera = await _uow.GroupCameraRepository.GetById(id);
+            if (groupCamera != null)
+            {
+                groupCamera.DeletedFlag = true;
+                groupCamera.AreaId = null;
+                _uow.GroupCameraRepository.Update(groupCamera);
+            }
+            return await _uow.SaveAsync() > 0 ? _mapper.Map<GroupCameraDto>(groupCamera) : null;
+        }
+
         public async Task<IEnumerable<GroupCameraDto>> GetAllGroupCamera(int areaId)
         {
             return _mapper.Map<IEnumerable<GroupCameraDto>>(await _uow.GroupCameraRepository.Get(filter: el => !el.DeletedFlag && el.AreaId == areaId));
+        }
+
+        public async Task<GroupCameraDto> UpdateGroupCamera(GroupCameraUpdateParam param)
+        {
+            Data.Models.GroupCamera groupCamera = await _uow.GroupCameraRepository.GetById(param.Id);
+            if (groupCamera != null) 
+            {
+                groupCamera.Description = param.Description;
+                groupCamera.AreaId = param.AreaId == null ? groupCamera.AreaId : param.AreaId;
+            }
+            return await _uow.SaveAsync() > 0 ? _mapper.Map<GroupCameraDto>(groupCamera) : null;
         }
     }
 }
