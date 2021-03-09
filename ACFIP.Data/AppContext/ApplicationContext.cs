@@ -48,16 +48,11 @@ namespace ACFIP.Data.AppContext
         {
             // update time when create or update
             var entries = ChangeTracker
-                .Entries()
-                .Where(e => e.Entity is BaseModel && (
-                        e.State == EntityState.Added
-                        || e.State == EntityState.Modified));
+                 .Entries()
+                 .Where(e => e.State == EntityState.Added && e.Entity is BaseModel);
             foreach (var entityEntry in entries)
             {
-                if (entityEntry.State == EntityState.Added)
-                {
-                    ((BaseModel)entityEntry.Entity).CreatedTime = DateTime.Now;
-                }
+                ((BaseModel)entityEntry.Entity).CreatedTime = DateTime.UtcNow;
             }
             return base.SaveChangesAsync();
         }

@@ -58,8 +58,8 @@ namespace ACFIP.Core.Controllers
             return Ok(result);
         }
         [HttpPut("password")]
-        [Authorize(Roles = AppConstants.Role.Manager.NAME 
-                    + "," + AppConstants.Role.Admin.NAME 
+        [Authorize(Roles = AppConstants.Role.Manager.NAME
+                    + "," + AppConstants.Role.Admin.NAME
                     + "," + AppConstants.Role.Monitor.NAME)]
         public async Task<IActionResult> ChangePassword([FromBody] AccountPasswordParam param)
         {
@@ -82,13 +82,13 @@ namespace ACFIP.Core.Controllers
             return Ok(result);
 
         }
-        [HttpPut("status")]
+        [HttpPut("{id}/status")]
         [Authorize(Roles = AppConstants.Role.Manager.NAME + "," + AppConstants.Role.Admin.NAME)]
-        public async Task<IActionResult> UpdateStatusAccount([FromBody] AccountActivationParam param)
+        public async Task<IActionResult> UpdateStatusAccount(int id , [FromBody] AccountActivationParam param)
         {
             try
             {
-                var result = await _accountService.UpdateStatusAccount(param);
+                var result = await _accountService.UpdateStatusAccount(id,param);
                 return Ok(result);
             }
             catch (Exception e)
