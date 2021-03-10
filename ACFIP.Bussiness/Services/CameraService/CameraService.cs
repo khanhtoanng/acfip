@@ -98,7 +98,7 @@ namespace ACFIP.Bussiness.Services.CameraService
         public async Task<IEnumerable<CameraDto>> GetAllCamera(bool isActive)
         {
             IEnumerable<Camera> listCamera = await _uow.CameraRepository
-                        .Get(filter: el => !el.DeletedFlag && el.GroupId != null);
+                        .Get(filter: el => !el.DeletedFlag && el.GroupId != null, includeProperties: "Config,GroupCamera,GroupCamera.Area");
             return _mapper.Map<IEnumerable<CameraDto>>(listCamera);
         }
 
