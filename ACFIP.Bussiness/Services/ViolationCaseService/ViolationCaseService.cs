@@ -80,7 +80,7 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
             Expression memberAccessArea = Expression.Property(parameter,typeof(ViolationCase).GetProperty("GroupCamera"));
             memberAccessArea = Expression.Property(memberAccessArea, typeof(Data.Models.GroupCamera).GetProperty("AreaId"));
             // setting default value if AreaId is null
-            //memberAccessArea = Expression.Coalesce(memberAccessArea,Expression.Constant(0));
+            memberAccessArea = Expression.Coalesce(memberAccessArea, Expression.Constant(0));
 
 
             // init
