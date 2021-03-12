@@ -9,6 +9,7 @@ namespace ACFIP.Data.Dtos.ViolationCase
         public int GroupId { get; set; }
         public int AreaId { get; set; }
         public int ViolationTypeId {get;set;}
+        public int? Status { get; set; }
         public DateTime CreateTime { get; set; }
     }
 }

@@ -74,6 +74,8 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
 
             var memberAccessGroup = Expression.Property(parameter, "GroupId");
 
+            var memberAccesStatus = Expression.Property(parameter, "Status");
+
             var memberAccessCreateTime = Expression.Property(parameter, "CreatedTime");
             memberAccessCreateTime = Expression.Property(memberAccessCreateTime, typeof(DateTime).GetProperty("Date"));
 
@@ -98,6 +100,10 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
             if (param.CreateTime != default)
             {
                 expr = Expression.AndAlso(expr, Expression.Equal(memberAccessCreateTime, Expression.Constant(param.CreateTime.Date)));
+            }
+            if (param.Status != null) 
+            {
+                expr = Expression.AndAlso(expr, Expression.Equal(memberAccesStatus, Expression.Constant(param.Status)));
             }
             if (param.ViolationTypeId != 0)
             {
