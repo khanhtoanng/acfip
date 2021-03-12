@@ -21,6 +21,8 @@ namespace ACFIP.Data.AppContext
         public DbSet<ViolationCase> ViolationCases { get; set; }
         public DbSet<ViolationType> ViolationTypes { get; set; }
         public DbSet<ViolationCaseType> ViolationCaseTypes { get; set; }
+        public DbSet<Guard> Guards { get; set; }
+        public DbSet<Policy> Policies { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

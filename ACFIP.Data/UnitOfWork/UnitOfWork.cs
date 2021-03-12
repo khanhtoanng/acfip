@@ -21,6 +21,8 @@ namespace ACFIP.Data.UnitOfWork
         private IGenericRepository<ViolationCase> _violationCaseRepository;
         private IGenericRepository<ViolationType> _violationTypeRepository;
         private IGenericRepository<ViolationCaseType> _violationCaseTypeRepository;
+        private IGenericRepository<Policy> _policyRepository;
+        private IGenericRepository<Guard> _guardRepository;
         public UnitOfWork(ApplicationContext context)
         {
             _context = context;
@@ -69,7 +71,14 @@ namespace ACFIP.Data.UnitOfWork
         {
             get { return _groupCameraRepository ??= new GenericRepository<GroupCamera>(_context); }
         }
-
+        public IGenericRepository<Policy> PolicyRepository
+        {
+            get { return _policyRepository ??= new GenericRepository<Policy>(_context); }
+        }
+        public IGenericRepository<Guard> GuardRepository
+        {
+            get { return _guardRepository ??= new GenericRepository<Guard>(_context); }
+        }
 
         public async Task<int> SaveAsync()
         {
