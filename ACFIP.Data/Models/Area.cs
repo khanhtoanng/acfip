@@ -20,6 +20,6 @@ namespace ACFIP.Data.Models
         [Required]
         [Column("deleted_flag", Order = 3)]
         public bool DeletedFlag { get; set; } = false;
-        public virtual List<GroupCamera> GroupCameras { get; set; }
+        public virtual List<Location> Locations { get; set; }
     }
 }

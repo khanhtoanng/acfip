@@ -26,9 +26,10 @@ using ACFIP.Core.Settings;
 using Newtonsoft.Json;
 using ACFIP.Bussiness.Services.Role;
 using ACFIP.Bussiness.Services.ViolationType;
-using ACFIP.Bussiness.Services.GroupCamera;
+using ACFIP.Bussiness.Services.Location;
 using ACFIP.Bussiness.Services.EmailSender;
 using ACFIP.Bussiness.Services.PolicyService;
+using ACFIP.Bussiness.Services.GuardService;
 
 namespace ACFIP.Core
 {
@@ -151,9 +152,10 @@ namespace ACFIP.Core
             services.AddScoped<IAreaService, AreaService>();
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IViolationTypeService, ViolationTypeService>();
-            services.AddScoped<IGroupCameraService, GroupCameraService>();
+            services.AddScoped<ILocationService, LocationService>();
             services.AddScoped<IEmailSenderService, EmailSenderService>();
             services.AddScoped<IPolicyService, PolicyService>();
+            services.AddScoped<IGuardService, GuardService>();
 
         }
 

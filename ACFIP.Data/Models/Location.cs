@@ -6,8 +6,8 @@ using System.Text;
 
 namespace ACFIP.Data.Models
 {
-    [Table("group_camera")]
-    public class GroupCamera
+    [Table("location")]
+    public class Location
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]

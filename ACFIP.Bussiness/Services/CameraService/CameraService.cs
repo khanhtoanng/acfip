@@ -29,7 +29,7 @@ namespace ACFIP.Bussiness.Services.CameraService
             Camera camera = new Camera()
             {
                 Name = param.Name,
-                GroupId = param.GroupId,
+                LocationId = param.LocationId,
                 ConnectionString = param.ConnectionString
             };
             _uow.CameraRepository.Add(camera);
@@ -89,7 +89,7 @@ namespace ACFIP.Bussiness.Services.CameraService
         {
             Camera camera = await _uow.CameraRepository.GetFirst(filter: el => el.Id == id);
             camera.DeletedFlag = true;
-            camera.GroupId = null;
+            camera.LocationId = null;
             camera.ConfigId = null;
             _uow.CameraRepository.Update(camera);
             return await _uow.SaveAsync() > 0 ? _mapper.Map<CameraDto>(camera) : throw new Exception("Delete to [camera] fails");
@@ -101,12 +101,12 @@ namespace ACFIP.Bussiness.Services.CameraService
             if (isActive == null)
             {
                 listCamera = await _uow.CameraRepository
-                     .Get(filter: el => !el.DeletedFlag && el.GroupId != null, includeProperties: "Config,GroupCamera,GroupCamera.Area");
+                     .Get(filter: el => !el.DeletedFlag && el.LocationId != null, includeProperties: "Config,Location,Location.Area");
             }
             else
             {
                 listCamera = await _uow.CameraRepository
-                      .Get(filter: el => el.IsActive == isActive & !el.DeletedFlag && el.GroupId != null, includeProperties: "Config,GroupCamera,GroupCamera.Area");
+                      .Get(filter: el => el.IsActive == isActive & !el.DeletedFlag && el.LocationId != null, includeProperties: "Config,Location,Location.Area");
             }
 
             return _mapper.Map<IEnumerable<CameraDto>>(listCamera);
@@ -118,7 +118,7 @@ namespace ACFIP.Bussiness.Services.CameraService
             Camera camera = await _uow.CameraRepository.GetById(param.Id);
             camera.Name = param.Name;
             camera.IsActive = param.IsActive;
-            camera.GroupId = param.GroupId;
+            camera.LocationId = param.LocationId;
             camera.ConnectionString = param.ConnectionString;
             _uow.CameraRepository.Update(camera);
 
@@ -151,8 +151,7 @@ namespace ACFIP.Bussiness.Services.CameraService
                 camera.ConfigId = cameraConfiguration.Id;
                 _uow.CameraRepository.Update(camera);
 
-                // get Area
-                Data.Models.GroupCamera groupCamera = await _uow.GroupCameraRepository.GetFirst(filter: el => el.Id == camera.GroupId);
+                Data.Models.Location location = await _uow.LocationRepository.GetFirst(filter: el => el.Id == camera.LocationId);
                 return await _uow.SaveAsync() > 0
                             ? _mapper.Map<CameraDto>(camera)
                             : throw new Exception("Update to [camera] fails");
@@ -168,7 +167,7 @@ namespace ACFIP.Bussiness.Services.CameraService
         {
             return _mapper.Map<CameraDto>(await _uow.CameraRepository.GetFirst(
                 filter: el => el.Id == id,
-                includeProperties: "GroupCamera,GroupCamera.Area,Config"));
+                includeProperties: "Location,Location.Area,Config"));
         }
 
         public async Task<CameraDto> UpdateStatusCamera(int id, CameraActivationParam cameraUpdate)

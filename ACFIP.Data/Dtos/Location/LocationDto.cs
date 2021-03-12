@@ -4,9 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ACFIP.Data.Dtos.GroupCamera
+namespace ACFIP.Data.Dtos.Location
 {
-    public class GroupCameraDto
+    public class LocationDto
     {
         public int Id { get; set; }
         public string Description { get; set; }

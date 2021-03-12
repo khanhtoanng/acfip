@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ACFIP.Data.Dtos.GroupCamera
+namespace ACFIP.Data.Dtos.Location
 {
-    public class GroupCameraUpdateParam
+    public class LocationUpdateParam
     {
         public int Id { get; set; }
         public string Description { get; set; }

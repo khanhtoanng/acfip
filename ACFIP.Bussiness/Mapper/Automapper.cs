@@ -8,8 +8,9 @@ using ACFIP.Data.Models;
 using ACFIP.Data.Dtos.Area;
 using ACFIP.Data.Dtos.ViolationCaseType;
 using ACFIP.Data.Dtos.CameConfiguration;
-using ACFIP.Data.Dtos.GroupCamera;
+using ACFIP.Data.Dtos.Location;
 using ACFIP.Data.Dtos.Policy;
+using ACFIP.Data.Dtos.Guard;
 
 namespace ACFIP.Bussiness.Mapper
 {
@@ -26,17 +27,17 @@ namespace ACFIP.Bussiness.Mapper
             CreateMap<Camera, CameraDto>()
                 .ForMember(des => des.Height, src => src.MapFrom(t => t.Config.Height))
                 .ForMember(des => des.Angle, src => src.MapFrom(t => t.Config.Angle))
-                .ForMember(des => des.GroupDescription, src => src.MapFrom(t => t.GroupCamera.Description))
-                .ForMember(des => des.AreaName, src => src.MapFrom(t => t.GroupCamera.Area.Name))
-                .ForMember(des => des.AreaId, src => src.MapFrom(t => t.GroupCamera.AreaId));
+                .ForMember(des => des.LocationDescription, src => src.MapFrom(t => t.Location.Description))
+                .ForMember(des => des.AreaName, src => src.MapFrom(t => t.Location.Area.Name))
+                .ForMember(des => des.AreaId, src => src.MapFrom(t => t.Location.AreaId));
 
             CreateMap<CameraDto, Camera>();
 
             CreateMap<Area, AreaDto>();
             CreateMap<AreaDto, Area>();
 
-            CreateMap<GroupCamera, GroupCameraDto>();
-            CreateMap<GroupCameraDto, GroupCamera>();
+            CreateMap<Location, LocationDto>();
+            CreateMap<LocationDto, Location>();
 
             CreateMap<ViolationCase, ViolationCaseDto>();
             CreateMap<ViolationCaseDto, ViolationCase>();
@@ -52,6 +53,9 @@ namespace ACFIP.Bussiness.Mapper
 
             CreateMap<Policy, PolicyDto>();
             CreateMap<PolicyDto, Policy>();
+
+            CreateMap<Guard, GuardDto>();
+            CreateMap<GuardDto, Guard>();
         }
 
     }

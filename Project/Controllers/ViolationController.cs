@@ -77,9 +77,9 @@ namespace ACFIP.Core.Controllers
                             + ","
                             + AppConstants.Role.Manager.NAME)]
         [HttpGet("latest")]
-        public async Task<IActionResult> GetLatest(int groupId)
+        public async Task<IActionResult> GetLatest(int locationId)
         {
-            var result = await _violationCaseService.GetLast(groupId);
+            var result = await _violationCaseService.GetLast(locationId);
             if (result == null)
             {
                 return NotFound();

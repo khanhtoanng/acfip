@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.Json.Serialization;
 using ACFIP.Data.Dtos.Camera;
-using ACFIP.Data.Dtos.GroupCamera;
+using ACFIP.Data.Dtos.Location;
 
 namespace ACFIP.Data.Dtos.Area
 {

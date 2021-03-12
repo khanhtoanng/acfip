@@ -33,7 +33,7 @@ namespace ACFIP.Bussiness.Services.AreaService
             _uow.AreaRepository.Add(area);
             if (await _uow.SaveAsync() > 0)
             {
-                _uow.GroupCameraRepository.Add(new Data.Models.GroupCamera() { AreaId = area.Id, Description = "Default group" });
+                _uow.LocationRepository.Add(new Data.Models.Location() { AreaId = area.Id, Description = "Default location" });
                 await _uow.SaveAsync();
                 return _mapper.Map<AreaDto>(area);
             }
@@ -51,7 +51,7 @@ namespace ACFIP.Bussiness.Services.AreaService
             foreach (var area in result)
             {
                 area.Cameras = _mapper.Map<List<CameraDto>>
-                    (await _uow.CameraRepository.Get(filter: el => !el.DeletedFlag && el.GroupCamera.AreaId == area.Id, includeProperties: "GroupCamera,Config"));
+                    (await _uow.CameraRepository.Get(filter: el => !el.DeletedFlag && el.Location.AreaId == area.Id, includeProperties: "Location,Config"));
             }        
             return result;
         }

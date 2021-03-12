@@ -31,7 +31,7 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
             {
                 ImgUrl = param.ImageUrl,
                 VideoUrl = param.VideoUrl,
-                GroupId = param.GroupId,
+                LocationId = param.LocationId,
             };
             _uow.ViolationCaseRepository.Add(violationCase);
             if (await _uow.SaveAsync() > 0)
@@ -72,15 +72,15 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
 
             var parameter = Expression.Parameter(typeof(ViolationCase), "vCase");
 
-            var memberAccessGroup = Expression.Property(parameter, "GroupId");
+            var memberAccessGroup = Expression.Property(parameter, "LocationId");
 
             var memberAccesStatus = Expression.Property(parameter, "Status");
 
             var memberAccessCreateTime = Expression.Property(parameter, "CreatedTime");
             memberAccessCreateTime = Expression.Property(memberAccessCreateTime, typeof(DateTime).GetProperty("Date"));
 
-            Expression memberAccessArea = Expression.Property(parameter, typeof(ViolationCase).GetProperty("GroupCamera"));
-            memberAccessArea = Expression.Property(memberAccessArea, typeof(Data.Models.GroupCamera).GetProperty("AreaId"));
+            Expression memberAccessArea = Expression.Property(parameter, typeof(ViolationCase).GetProperty("Location"));
+            memberAccessArea = Expression.Property(memberAccessArea, typeof(Data.Models.Location).GetProperty("AreaId"));
             // setting default value if AreaId is null
             memberAccessArea = Expression.Coalesce(memberAccessArea, Expression.Constant(0));
 
@@ -93,9 +93,9 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
                 expr = Expression.AndAlso(expr, Expression.Equal(memberAccessArea, Expression.Constant(param.AreaId)));
 
             }
-            if (param.GroupId != 0)
+            if (param.LocationId != 0)
             {
-                expr = Expression.AndAlso(expr, Expression.Equal(memberAccessGroup, Expression.Constant(param.GroupId)));
+                expr = Expression.AndAlso(expr, Expression.Equal(memberAccessGroup, Expression.Constant(param.LocationId)));
             }
             if (param.CreateTime != default)
             {
@@ -114,7 +114,7 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
             var filter = Expression.Lambda<Func<ViolationCase, bool>>(expr, parameter);
 
             IEnumerable<ViolationCase> violationCases = (await _uow.ViolationCaseRepository
-                .Get(filter: filter, includeProperties: "GroupCamera,GroupCamera.Area,ViolationCaseTypes,ViolationCaseTypes.Type"))
+                .Get(filter: filter, includeProperties: "Location,Location.Area,ViolationCaseTypes,ViolationCaseTypes.Type"))
                 .Where(el => el.ViolationCaseTypes.ToList().FindIndex(predicateType) >= 0);
 
 
@@ -125,11 +125,11 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
                           CreatedTime = vCase.CreatedTime,
                           ImgUrl = vCase.ImgUrl,
                           VideoUrl = vCase.VideoUrl,
-                          GroupId = vCase.GroupId,
-                          GroupDescription = vCase.GroupCamera.Description,
-                          AreaId = vCase.GroupCamera.AreaId,
-                          AreaName = vCase.GroupCamera.Area.Name,
-                          AreaDescription = vCase.GroupCamera.Area.Description,
+                          LocationId = vCase.LocationId,
+                          LocationDescription = vCase.Location.Description,
+                          AreaId = vCase.Location.AreaId,
+                          AreaName = vCase.Location.Area.Name,
+                          AreaDescription = vCase.Location.Area.Description,
                           GuardName = vCase.GuardName,
                           Status = vCase.Status,
                           ViolationTypes = vCase.ViolationCaseTypes.Select(el => new ViolationTypeDto() { Id = el.Type.Id, Name = el.Type.Name }).ToList(),
@@ -143,7 +143,7 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
         {
             ViolationCaseDto result = null;
             ViolationCase violationCases = (await _uow.ViolationCaseRepository
-                .GetFirst(includeProperties: "GroupCamera,GroupCamera.Area,ViolationCaseTypes,ViolationCaseTypes.Type"));
+                .GetFirst(includeProperties: "Location,Location.Area,ViolationCaseTypes,ViolationCaseTypes.Type"));
             if (violationCases != null)
             {
                 result = new ViolationCaseDto()
@@ -152,11 +152,11 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
                     CreatedTime = violationCases.CreatedTime,
                     ImgUrl = violationCases.ImgUrl,
                     VideoUrl = violationCases.VideoUrl,
-                    GroupId = violationCases.GroupId,
-                    GroupDescription = violationCases.GroupCamera.Description,
-                    AreaId = violationCases.GroupCamera.AreaId,
-                    AreaName = violationCases.GroupCamera.Area.Name,
-                    AreaDescription = violationCases.GroupCamera.Area.Description,
+                    LocationId = violationCases.LocationId,
+                    LocationDescription = violationCases.Location.Description,
+                    AreaId = violationCases.Location.AreaId,
+                    AreaName = violationCases.Location.Area.Name,
+                    AreaDescription = violationCases.Location.Area.Description,
                     GuardName = violationCases.GuardName,
                     Status = violationCases.Status,
                     ViolationTypes = violationCases.ViolationCaseTypes.Select(el => new ViolationTypeDto() { Id = el.Type.Id, Name = el.Type.Name }).ToList(),
@@ -168,7 +168,7 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
 
         public async Task<ViolationCaseDto> GetLast(int groupId)
         {
-            return _mapper.Map<ViolationCaseDto>((await _uow.ViolationCaseRepository.Get(filter: el => el.GroupId == groupId, orderBy: el => el.OrderByDescending(t => t.CreatedTime))).FirstOrDefault());
+            return _mapper.Map<ViolationCaseDto>((await _uow.ViolationCaseRepository.Get(filter: el => el.LocationId == groupId, orderBy: el => el.OrderByDescending(t => t.CreatedTime))).FirstOrDefault());
         }
 
         public async Task<ViolationCaseDto> UpdateStatus(int id, ViolationCaseUpdateStatusParam param)

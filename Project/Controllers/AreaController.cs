@@ -1,5 +1,5 @@
 ﻿using ACFIP.Bussiness.Services.AreaService;
-using ACFIP.Bussiness.Services.GroupCamera;
+using ACFIP.Bussiness.Services.Location;
 using ACFIP.Data.Dtos;
 using ACFIP.Data.Dtos.Area;
 using ACFIP.Data.Helpers;
@@ -19,12 +19,12 @@ namespace ACFIP.Core.Controllers
     public class AreaController : ControllerBase
     {
         private readonly IAreaService _areaService;
-        private readonly IGroupCameraService _groupService;
+        private readonly ILocationService _locationService;
 
-        public AreaController(IAreaService areaService, IGroupCameraService groupService)
+        public AreaController(IAreaService areaService, ILocationService locationService)
         {
             _areaService = areaService;
-            _groupService = groupService;
+            _locationService = locationService;
         }
         [Authorize(Roles = AppConstants.Role.Monitor.NAME + "," + AppConstants.Role.Manager.NAME)]
         [HttpGet]
@@ -75,7 +75,7 @@ namespace ACFIP.Core.Controllers
         [HttpGet("{id}/groups")]
         public async Task<IActionResult> GetGroups([FromRoute] int id)
         {
-            var result = await _groupService.GetAllGroupCamera(id);
+            var result = await _locationService.GetAllLocation(id);
             if (result == null)
             {
                 return NotFound();

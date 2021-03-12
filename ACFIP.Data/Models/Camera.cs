@@ -16,10 +16,10 @@ namespace ACFIP.Data.Models
         [Required]
         [Column("name", Order = 1)]
         public string Name { get; set; }
-        [ForeignKey(nameof(GroupCamera))]
-        [Column("group_id", Order = 2)]
-        public int? GroupId { get; set; }
-        public GroupCamera GroupCamera { get; set; }
+        [ForeignKey(nameof(Location))]
+        [Column("location_id", Order = 2)]
+        public int? LocationId { get; set; }
+        public Location Location { get; set; }
         [ForeignKey(nameof(CameraConfiguration))]
         [Column("configuration_id", Order = 3)]
         public int? ConfigId { get; set; }

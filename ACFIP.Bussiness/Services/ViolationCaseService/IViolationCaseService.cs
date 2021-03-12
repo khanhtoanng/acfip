@@ -11,7 +11,7 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
         public Task<ViolationCaseDto> CreateViolation(ViolationCreateParam param);
         public Task<IEnumerable<ViolationCaseDto>> GetAllViolation(ViolationRequestParam param);
         public Task<ViolationCaseDto> GetDetailViolation(int id);
-        public Task<ViolationCaseDto> GetLast(int groupId);
+        public Task<ViolationCaseDto> GetLast(int locationId);
         public Task<ViolationCaseDto> DeleteViolation(int id);
         public Task<ViolationCaseDto> UpdateStatus(int id,ViolationCaseUpdateStatusParam param);
     }

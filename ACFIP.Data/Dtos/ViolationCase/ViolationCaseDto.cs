@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.Json.Serialization;
 using ACFIP.Data.Dtos.Camera;
-using ACFIP.Data.Dtos.GroupCamera;
+using ACFIP.Data.Dtos.Location;
 using ACFIP.Data.Dtos.ViolationCaseType;
 using ACFIP.Data.Dtos.ViolationType;
 
@@ -16,8 +16,8 @@ namespace ACFIP.Data.Dtos.ViolationCase
         public string VideoUrl { get; set; }
         public int Status { get; set; }
         public string GuardName { get; set; }
-        public int GroupId { get; set; }
-        public string GroupDescription { get; set; }
+        public int LocationId { get; set; }
+        public string LocationDescription { get; set; }
         public int? AreaId { get; set; }
         public string AreaName { get; set; }
         public string AreaDescription { get; set; }
