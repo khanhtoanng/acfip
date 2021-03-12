@@ -99,5 +99,18 @@ namespace ACFIP.Core.Controllers
             }
             return Ok(result);
         }
+        [HttpPut("{id}/status")]
+        [Authorize(Roles = AppConstants.Role.Monitor.NAME
+                           + ","
+                           + AppConstants.Role.Manager.NAME)]
+        public async Task<IActionResult> UpdateStatus(int id,ViolationCaseUpdateStatusParam param)
+        {
+            var result = await _violationCaseService.UpdateStatus(id,param);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
+        }
     }
 }

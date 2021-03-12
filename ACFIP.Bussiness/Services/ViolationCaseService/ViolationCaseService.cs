@@ -77,7 +77,7 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
             var memberAccessCreateTime = Expression.Property(parameter, "CreatedTime");
             memberAccessCreateTime = Expression.Property(memberAccessCreateTime, typeof(DateTime).GetProperty("Date"));
 
-            Expression memberAccessArea = Expression.Property(parameter,typeof(ViolationCase).GetProperty("GroupCamera"));
+            Expression memberAccessArea = Expression.Property(parameter, typeof(ViolationCase).GetProperty("GroupCamera"));
             memberAccessArea = Expression.Property(memberAccessArea, typeof(Data.Models.GroupCamera).GetProperty("AreaId"));
             // setting default value if AreaId is null
             memberAccessArea = Expression.Coalesce(memberAccessArea, Expression.Constant(0));
@@ -95,7 +95,7 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
             {
                 expr = Expression.AndAlso(expr, Expression.Equal(memberAccessGroup, Expression.Constant(param.GroupId)));
             }
-            if (param.CreateTime != default )
+            if (param.CreateTime != default)
             {
                 expr = Expression.AndAlso(expr, Expression.Equal(memberAccessCreateTime, Expression.Constant(param.CreateTime.Date)));
             }
@@ -103,7 +103,7 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
             {
                 filterType = f => f.TypeId == param.ViolationTypeId;
             }
-        
+
             Predicate<ViolationCaseType> predicateType = new Predicate<ViolationCaseType>(filterType);
             var filter = Expression.Lambda<Func<ViolationCase, bool>>(expr, parameter);
 
@@ -113,18 +113,20 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
 
 
             result = (from vCase in violationCases
-                      select new ViolationCaseDto() 
+                      select new ViolationCaseDto()
                       {
-                        Id = vCase.Id,
-                        CreatedTime = vCase.CreatedTime,
-                        ImgUrl = vCase.ImgUrl,
-                        VideoUrl = vCase.VideoUrl,
-                        GroupId = vCase.GroupId,
-                        GroupDescription = vCase.GroupCamera.Description,
-                        AreaId = vCase.GroupCamera.AreaId,
-                        AreaName = vCase.GroupCamera.Area.Name,
-                        AreaDescription = vCase.GroupCamera.Area.Description,
-                        ViolationTypes = vCase.ViolationCaseTypes.Select(el => new ViolationTypeDto() {Id = el.Type.Id, Name = el.Type.Name }).ToList(),
+                          Id = vCase.Id,
+                          CreatedTime = vCase.CreatedTime,
+                          ImgUrl = vCase.ImgUrl,
+                          VideoUrl = vCase.VideoUrl,
+                          GroupId = vCase.GroupId,
+                          GroupDescription = vCase.GroupCamera.Description,
+                          AreaId = vCase.GroupCamera.AreaId,
+                          AreaName = vCase.GroupCamera.Area.Name,
+                          AreaDescription = vCase.GroupCamera.Area.Description,
+                          GuardName = vCase.GuardName,
+                          Status = vCase.Status,
+                          ViolationTypes = vCase.ViolationCaseTypes.Select(el => new ViolationTypeDto() { Id = el.Type.Id, Name = el.Type.Name }).ToList(),
                       });
 
             return result;
@@ -149,6 +151,8 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
                     AreaId = violationCases.GroupCamera.AreaId,
                     AreaName = violationCases.GroupCamera.Area.Name,
                     AreaDescription = violationCases.GroupCamera.Area.Description,
+                    GuardName = violationCases.GuardName,
+                    Status = violationCases.Status,
                     ViolationTypes = violationCases.ViolationCaseTypes.Select(el => new ViolationTypeDto() { Id = el.Type.Id, Name = el.Type.Name }).ToList(),
                 };
             }
@@ -159,6 +163,17 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
         public async Task<ViolationCaseDto> GetLast(int groupId)
         {
             return _mapper.Map<ViolationCaseDto>((await _uow.ViolationCaseRepository.Get(filter: el => el.GroupId == groupId, orderBy: el => el.OrderByDescending(t => t.CreatedTime))).FirstOrDefault());
+        }
+
+        public async Task<ViolationCaseDto> UpdateStatus(int id, ViolationCaseUpdateStatusParam param)
+        {
+            ViolationCase violationCase = await _uow.ViolationCaseRepository.GetById(id);
+            if (violationCase != null)
+            {
+                violationCase.Status = param.Status;
+                _uow.ViolationCaseRepository.Update(violationCase);
+            }
+            return await _uow.SaveAsync() > 0 ? _mapper.Map<ViolationCaseDto>(violationCase) : null;
         }
     }
 }

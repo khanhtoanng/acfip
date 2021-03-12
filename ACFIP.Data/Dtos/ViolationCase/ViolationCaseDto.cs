@@ -14,6 +14,8 @@ namespace ACFIP.Data.Dtos.ViolationCase
         public int Id { get; set; }
         public string ImgUrl { get; set; }
         public string VideoUrl { get; set; }
+        public int Status { get; set; }
+        public string GuardName { get; set; }
         public int GroupId { get; set; }
         public string GroupDescription { get; set; }
         public int? AreaId { get; set; }
