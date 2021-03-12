@@ -19,7 +19,7 @@ namespace ACFIP.Data.Models
         [Column("salt", Order = 2, TypeName = "binary(16)")]
         public byte[] Salt { get; set; }
         [Column("email", Order = 3)]
-        public string email { get; set; }
+        public string Email { get; set; }
         [Required]
         [ForeignKey(nameof(Role))]
         [Column("role_id", Order = 4)]

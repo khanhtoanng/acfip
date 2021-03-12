@@ -27,6 +27,7 @@ using Newtonsoft.Json;
 using ACFIP.Bussiness.Services.Role;
 using ACFIP.Bussiness.Services.ViolationType;
 using ACFIP.Bussiness.Services.GroupCamera;
+using ACFIP.Bussiness.Services.EmailSender;
 
 namespace ACFIP.Core
 {
@@ -41,10 +42,17 @@ namespace ACFIP.Core
 
         public void ConfigureServices(IServiceCollection services)
         {
+
             // Add Configuration Singleton
             var config = new AppSettings();
             Configuration.Bind("AppSettings", config);
             services.AddSingleton(config);
+
+            // Add email configuration
+            var emailConfig = Configuration
+                                .GetSection("EmailConfiguration")
+                                .Get<EmailConfiguration>();
+            services.AddSingleton(emailConfig);
 
             // Cors configure
             services.AddCors(opts =>
@@ -143,6 +151,7 @@ namespace ACFIP.Core
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IViolationTypeService, ViolationTypeService>();
             services.AddScoped<IGroupCameraService, GroupCameraService>();
+            services.AddScoped<IEmailSenderService, EmailSenderService>();
 
         }
 
