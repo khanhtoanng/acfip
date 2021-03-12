@@ -28,6 +28,7 @@ using ACFIP.Bussiness.Services.Role;
 using ACFIP.Bussiness.Services.ViolationType;
 using ACFIP.Bussiness.Services.GroupCamera;
 using ACFIP.Bussiness.Services.EmailSender;
+using ACFIP.Bussiness.Services.PolicyService;
 
 namespace ACFIP.Core
 {
@@ -152,6 +153,7 @@ namespace ACFIP.Core
             services.AddScoped<IViolationTypeService, ViolationTypeService>();
             services.AddScoped<IGroupCameraService, GroupCameraService>();
             services.AddScoped<IEmailSenderService, EmailSenderService>();
+            services.AddScoped<IPolicyService, PolicyService>();
 
         }
 

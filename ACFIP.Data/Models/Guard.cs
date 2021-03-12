@@ -19,7 +19,7 @@ namespace ACFIP.Data.Models
         public int AreaId { get; set; }
         public Area Area { get; set; }
         [Column("fullname", Order = 2)]
-        public int FullName { get; set; }
+        public string FullName { get; set; }
         [Column("time_start", Order = 3)]
         public TimeSpan TimeStart { get; set; }
         [Column("time_end", Order = 4)]

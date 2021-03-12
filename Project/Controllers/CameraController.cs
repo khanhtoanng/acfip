@@ -25,7 +25,7 @@ namespace ACFIP.Core.Controllers
         }
         [Authorize(Roles = AppConstants.Role.Monitor.NAME)]
         [HttpGet]
-        public async Task<IActionResult> Get(bool isActive)
+        public async Task<IActionResult> Get(bool? isActive)
         {
             var result = await _cameraService.GetAllCamera(isActive);
             if (result == null)

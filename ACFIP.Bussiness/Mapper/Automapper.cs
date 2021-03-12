@@ -9,6 +9,7 @@ using ACFIP.Data.Dtos.Area;
 using ACFIP.Data.Dtos.ViolationCaseType;
 using ACFIP.Data.Dtos.CameConfiguration;
 using ACFIP.Data.Dtos.GroupCamera;
+using ACFIP.Data.Dtos.Policy;
 
 namespace ACFIP.Bussiness.Mapper
 {
@@ -48,6 +49,9 @@ namespace ACFIP.Bussiness.Mapper
 
             CreateMap<CameraConfiguration, CameraConfigurationDto>();
             CreateMap<CameraConfigurationDto, CameraConfiguration>();
+
+            CreateMap<Policy, PolicyDto>();
+            CreateMap<PolicyDto, Policy>();
         }
 
     }
