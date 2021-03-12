@@ -95,10 +95,20 @@ namespace ACFIP.Bussiness.Services.CameraService
             return await _uow.SaveAsync() > 0 ? _mapper.Map<CameraDto>(camera) : throw new Exception("Delete to [camera] fails");
         }
 
-        public async Task<IEnumerable<CameraDto>> GetAllCamera(bool isActive)
+        public async Task<IEnumerable<CameraDto>> GetAllCamera(bool? isActive)
         {
-            IEnumerable<Camera> listCamera = await _uow.CameraRepository
-                        .Get(filter: el => el.IsActive == isActive & !el.DeletedFlag && el.GroupId != null, includeProperties: "Config,GroupCamera,GroupCamera.Area");
+            IEnumerable<Camera> listCamera = null;
+            if (isActive == null)
+            {
+                listCamera = await _uow.CameraRepository
+                     .Get(filter: el => !el.DeletedFlag && el.GroupId != null, includeProperties: "Config,GroupCamera,GroupCamera.Area");
+            }
+            else
+            {
+                listCamera = await _uow.CameraRepository
+                      .Get(filter: el => el.IsActive == isActive & !el.DeletedFlag && el.GroupId != null, includeProperties: "Config,GroupCamera,GroupCamera.Area");
+            }
+
             return _mapper.Map<IEnumerable<CameraDto>>(listCamera);
         }
 
@@ -131,12 +141,12 @@ namespace ACFIP.Bussiness.Services.CameraService
                 else
                 {
                     cameraConfiguration = await _uow.CameraConfigurationRepository.GetById(param.ConfigId);
-                    if (cameraConfiguration.Id == 0) 
+                    if (cameraConfiguration.Id == 0)
                     {
                         throw new Exception("Can not find Id Configuration");
                     }
                 }
-               
+
                 // update camera with config id in request param
                 camera.ConfigId = cameraConfiguration.Id;
                 _uow.CameraRepository.Update(camera);
@@ -161,7 +171,7 @@ namespace ACFIP.Bussiness.Services.CameraService
                 includeProperties: "GroupCamera,GroupCamera.Area,Config"));
         }
 
-        public async Task<CameraDto> UpdateStatusCamera(int id,CameraActivationParam cameraUpdate)
+        public async Task<CameraDto> UpdateStatusCamera(int id, CameraActivationParam cameraUpdate)
         {
             Camera camera = await _uow.CameraRepository.GetById(id);
             if (camera != null)
