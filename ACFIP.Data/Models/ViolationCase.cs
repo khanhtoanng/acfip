@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ACFIP.Data.Helpers;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -6,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace ACFIP.Data.Models
 {
     [Table("violation_case")]
-    public class ViolationCase 
+    public class ViolationCase : BaseModel
     {
         public ViolationCase()
         {
@@ -25,9 +26,10 @@ namespace ACFIP.Data.Models
         public string ImgUrl { get; set; }
         [Column("video_url", Order = 3)]
         public string VideoUrl { get; set; }
-        [Required]
-        [Column("created_time")]
-        public DateTime CreatedTime { get; set; }
+        [Column("status", Order = 4)]
+        public int Status { get; set; } = AppConstants.ViolationStatus.DETECTED;
+        [Column("guard_name", Order = 5)]
+        public string GuardName { get; set; }
         public virtual ICollection<ViolationCaseType> ViolationCaseTypes { get; set; }
     }
 }

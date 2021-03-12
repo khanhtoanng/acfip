@@ -18,16 +18,18 @@ namespace ACFIP.Data.Models
         [Required]
         [Column("salt", Order = 2, TypeName = "binary(16)")]
         public byte[] Salt { get; set; }
+        [Column("email", Order = 3)]
+        public string email { get; set; }
         [Required]
         [ForeignKey(nameof(Role))]
-        [Column("role_id", Order = 3)]
+        [Column("role_id", Order = 4)]
         public int RoleId { get; set; }
         public Role Role { get; set; }
         [Required]
-        [Column("is_active", Order = 4)]
+        [Column("is_active", Order = 5)]
         public bool IsActive { get; set; } = true;
         [Required]
-        [Column("deleted_flag", Order = 5)]
+        [Column("deleted_flag", Order = 6)]
         public bool DeletedFlag { get; set; } = false;
     }
 }

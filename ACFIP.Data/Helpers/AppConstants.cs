@@ -29,5 +29,10 @@ namespace ACFIP.Data.Helpers
                 public const int ID = 2;
             }
         }
+        public struct ViolationStatus 
+        {
+            public const int DETECTED = 1;
+            public const int NON_DETECTED = 0;
+        }
     }
 }
