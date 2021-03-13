@@ -50,8 +50,12 @@ namespace ACFIP.Bussiness.Services.AreaService
             IEnumerable<AreaDto> result = _mapper.Map<IEnumerable<AreaDto>>(await _uow.AreaRepository.Get(filter: el => !el.DeletedFlag));
             foreach (var area in result)
             {
-                area.Cameras = _mapper.Map<List<CameraDto>>
+                List<CameraDto> listCam = _mapper.Map<List<CameraDto>>
                     (await _uow.CameraRepository.Get(filter: el => !el.DeletedFlag && el.Location.AreaId == area.Id, includeProperties: "Location,Config"));
+                IEnumerable<Data.Models.Location> listLocation = await _uow.LocationRepository.Get(filter: el => el.AreaId == area.Id);
+                area.Cameras = listCam;
+                area.NumberOfCameras = listCam.Count();
+                area.NumberOfLocations = listLocation.Count();
             }        
             return result;
         }
