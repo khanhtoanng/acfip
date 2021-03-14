@@ -33,6 +33,8 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
                 VideoUrl = param.VideoUrl,
                 LocationId = param.LocationId,
             };
+            //Guard guard = await _uow.GuardRepository.ge
+
             _uow.ViolationCaseRepository.Add(violationCase);
             if (await _uow.SaveAsync() > 0)
             {
@@ -143,7 +145,7 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
         {
             ViolationCaseDto result = null;
             ViolationCase violationCases = (await _uow.ViolationCaseRepository
-                .GetFirst(includeProperties: "Location,Location.Area,ViolationCaseTypes,ViolationCaseTypes.Type"));
+                .GetFirst(filter:el => el.Id == id, includeProperties: "Location,Location.Area,ViolationCaseTypes,ViolationCaseTypes.Type"));
             if (violationCases != null)
             {
                 result = new ViolationCaseDto()
