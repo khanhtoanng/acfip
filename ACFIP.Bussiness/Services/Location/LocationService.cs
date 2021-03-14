@@ -40,7 +40,7 @@ namespace ACFIP.Bussiness.Services.Location
 
         public async Task<IEnumerable<LocationDto>> GetAllLocation(int areaId)
         {
-            return _mapper.Map<IEnumerable<LocationDto>>(await _uow.LocationRepository.Get(filter: el => !el.DeletedFlag && el.AreaId == areaId));
+            return _mapper.Map<IEnumerable<LocationDto>>(await _uow.LocationRepository.Get(filter: el => !el.DeletedFlag && el.AreaId == areaId,includeProperties:"Cameras"));
         }
 
         public async Task<LocationDto> UpdateLocation(LocationUpdateParam param)

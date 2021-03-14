@@ -72,7 +72,7 @@ namespace ACFIP.Core.Controllers
         }
 
         [Authorize(Roles = AppConstants.Role.Monitor.NAME + "," + AppConstants.Role.Manager.NAME)]
-        [HttpGet("{id}/groups")]
+        [HttpGet("{id}/locations")]
         public async Task<IActionResult> GetGroups([FromRoute] int id)
         {
             var result = await _locationService.GetAllLocation(id);

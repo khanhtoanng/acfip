@@ -36,7 +36,8 @@ namespace ACFIP.Bussiness.Mapper
             CreateMap<Area, AreaDto>();
             CreateMap<AreaDto, Area>();
 
-            CreateMap<Location, LocationDto>();
+            CreateMap<Location, LocationDto>()
+                 .ForMember(des => des.NumberOfCameras, src => src.MapFrom(t => t.Cameras.Count));
             CreateMap<LocationDto, Location>();
 
             CreateMap<ViolationCase, ViolationCaseDto>();
