@@ -33,7 +33,11 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
                 VideoUrl = param.VideoUrl,
                 LocationId = param.LocationId,
             };
-            //Guard guard = await _uow.GuardRepository.ge
+            Data.Models.Location location = await _uow.LocationRepository.GetFirst(filter: el => el.Id == param.LocationId);
+
+            Guard guard = await _uow.GuardRepository.GetFirst(
+                filter: el => el.TimeStart <= DateTime.Now.TimeOfDay && el.TimeEnd >= DateTime.Now.TimeOfDay && el.AreaId == location.AreaId);
+            violationCase.GuardName = guard.FullName;
 
             _uow.ViolationCaseRepository.Add(violationCase);
             if (await _uow.SaveAsync() > 0)
