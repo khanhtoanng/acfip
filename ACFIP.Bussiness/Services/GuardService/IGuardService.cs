@@ -10,6 +10,7 @@ namespace ACFIP.Bussiness.Services.GuardService
     public interface IGuardService
     {
         Task<IEnumerable<GuardDto>> GetAll();
+        Task<IEnumerable<GuardDto>> CreateGuards(List<GuardCreateParam> listParam);
 
     }
 }

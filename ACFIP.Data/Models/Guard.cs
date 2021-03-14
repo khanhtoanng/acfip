@@ -21,9 +21,9 @@ namespace ACFIP.Data.Models
         [Column("fullname", Order = 2)]
         public string FullName { get; set; }
         [Column("time_start", Order = 3)]
-        public TimeSpan TimeStart { get; set; }
+        public TimeSpan? TimeStart { get; set; }
         [Column("time_end", Order = 4)]
-        public TimeSpan TimeEnd { get; set; }
+        public TimeSpan? TimeEnd { get; set; }
 
     }
 }

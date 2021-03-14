@@ -7,6 +7,5 @@ namespace ACFIP.Data.Dtos
     public class BaseDto
     {
         public DateTime CreatedTime { get; set; }
-        public DateTime LastModifiedTime { get; set; }
     }
 }

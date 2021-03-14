@@ -4,14 +4,16 @@ using ACFIP.Data.AppContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ACFIP.Data.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20210314024035_removePolicy")]
+    partial class removePolicy
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -67,10 +69,10 @@ namespace ACFIP.Data.Migrations
                             Id = "Admin1",
                             CreatedTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DeletedFlag = false,
-                            HashedPassword = "SQFBJY2JUWIYq54l+phJbGsPmcF6fLV0h29ubCEERdIbr6NP075JMb+VktPCImaj7gQdp0Jyq0goj+4KwTtNQQ==",
+                            HashedPassword = "ciuDIJcA+7TfMDh/W3Xb7gcdFiGs3VdRfsvv+YrEuaFEUazDQo5u3w5KyRChYPsP/g17C3RY+Ueqb5k8ANub4A==",
                             IsActive = true,
                             RoleId = 1,
-                            Salt = new byte[] { 16, 153, 238, 41, 91, 134, 62, 183, 194, 178, 143, 27, 2, 72, 149, 175 }
+                            Salt = new byte[] { 36, 13, 95, 226, 254, 22, 147, 81, 156, 175, 173, 106, 81, 62, 107, 187 }
                         });
                 });
 

@@ -1,5 +1,6 @@
 ﻿
 using ACFIP.Bussiness.Services.GuardService;
+using ACFIP.Data.Dtos.Guard;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -25,6 +26,16 @@ namespace ACFIP.Core.Controllers
         public async Task<IActionResult> GetAll()
         {
             var result = await _guardService.GetAll();
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] List<GuardCreateParam> listParam)
+        {
+            var result = await _guardService.CreateGuards(listParam);
             if (result == null)
             {
                 return NotFound();

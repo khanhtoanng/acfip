@@ -1,4 +1,5 @@
 ﻿using ACFIP.Data.Dtos.Guard;
+using ACFIP.Data.Models;
 using ACFIP.Data.UnitOfWork;
 using AutoMapper;
 using System;
@@ -18,6 +19,33 @@ namespace ACFIP.Bussiness.Services.GuardService
         {
             _uow = uow;
             _mapper = mapper;
+        }
+
+        public async Task<IEnumerable<GuardDto>> CreateGuards(List<GuardCreateParam> listParam)
+        {
+            List<Guard> guards = (List<Guard>)await _uow.GuardRepository.Get();
+            // if have data. Delete
+            if (guards.Count > 0)
+            {
+                foreach (var item in guards)
+                {
+                    _uow.GuardRepository.Delete(item);
+                }
+                await _uow.SaveAsync();
+            }
+
+            foreach (var item in listParam)
+            {
+                Guard guard = new Guard()
+                {
+                    FullName = item.FullName,
+                    AreaId = (await _uow.AreaRepository.GetFirst(filter: el => el.Name == item.AreaName)).Id,
+                    TimeStart = item.TimeStart,
+                    TimeEnd = item.TimeEnd
+                };
+                _uow.GuardRepository.Add(guard);
+            }
+            return await _uow.SaveAsync() > 0 ? _mapper.Map<IEnumerable<GuardDto>>(await _uow.GuardRepository.Get()) : null;
         }
 
         public async Task<IEnumerable<GuardDto>> GetAll()

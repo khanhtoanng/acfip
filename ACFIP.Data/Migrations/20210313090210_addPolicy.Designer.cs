@@ -4,14 +4,16 @@ using ACFIP.Data.AppContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ACFIP.Data.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20210313090210_addPolicy")]
+    partial class addPolicy
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -67,10 +69,10 @@ namespace ACFIP.Data.Migrations
                             Id = "Admin1",
                             CreatedTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DeletedFlag = false,
-                            HashedPassword = "SQFBJY2JUWIYq54l+phJbGsPmcF6fLV0h29ubCEERdIbr6NP075JMb+VktPCImaj7gQdp0Jyq0goj+4KwTtNQQ==",
+                            HashedPassword = "MaPjBbDKcTdvHy4guh5HP4EW3xTQVQ44RwSW9NsPLYDpaMwJ21wTAIwyQ/KnkuUZOZrgVK0i6f+aDjSsm0qbzQ==",
                             IsActive = true,
                             RoleId = 1,
-                            Salt = new byte[] { 16, 153, 238, 41, 91, 134, 62, 183, 194, 178, 143, 27, 2, 72, 149, 175 }
+                            Salt = new byte[] { 173, 143, 4, 115, 220, 112, 211, 219, 43, 134, 157, 27, 157, 24, 21, 49 }
                         });
                 });
 
@@ -240,8 +242,16 @@ namespace ACFIP.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("NumberOfViolation")
-                        .HasColumnName("number_of_violation")
+                    b.Property<int>("NumberOfViolationInDay")
+                        .HasColumnName("number_of_violation_in_day")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NumberOfViolationInMonth")
+                        .HasColumnName("number_of_violation_in_month")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NumberOfViolationInYear")
+                        .HasColumnName("number_of_violation_in_year")
                         .HasColumnType("int");
 
                     b.HasKey("Id");

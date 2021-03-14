@@ -68,7 +68,7 @@ namespace ACFIP.Core
             });
 
             // configure controller
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson();
             //services.AddControllers().AddNewtonsoftJson(
             //options =>
             //{

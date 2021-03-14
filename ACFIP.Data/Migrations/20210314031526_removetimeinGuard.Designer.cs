@@ -4,14 +4,16 @@ using ACFIP.Data.AppContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ACFIP.Data.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20210314031526_removetimeinGuard")]
+    partial class removetimeinGuard
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -67,10 +69,10 @@ namespace ACFIP.Data.Migrations
                             Id = "Admin1",
                             CreatedTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DeletedFlag = false,
-                            HashedPassword = "SQFBJY2JUWIYq54l+phJbGsPmcF6fLV0h29ubCEERdIbr6NP075JMb+VktPCImaj7gQdp0Jyq0goj+4KwTtNQQ==",
+                            HashedPassword = "IJOC8Dve1kQEIqWKFJboCqR5l2QU1Iw+TKEnwA7ASFl0NRBK2f9bI1bD/xeu5n74x+Lw/2rhRSlo7kuBDzZwfQ==",
                             IsActive = true,
                             RoleId = 1,
-                            Salt = new byte[] { 16, 153, 238, 41, 91, 134, 62, 183, 194, 178, 143, 27, 2, 72, 149, 175 }
+                            Salt = new byte[] { 232, 103, 149, 245, 98, 118, 74, 69, 185, 2, 44, 148, 43, 215, 148, 192 }
                         });
                 });
 
@@ -189,14 +191,6 @@ namespace ACFIP.Data.Migrations
                     b.Property<string>("FullName")
                         .HasColumnName("fullname")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<TimeSpan>("TimeEnd")
-                        .HasColumnName("time_end")
-                        .HasColumnType("time");
-
-                    b.Property<TimeSpan>("TimeStart")
-                        .HasColumnName("time_start")
-                        .HasColumnType("time");
 
                     b.HasKey("Id");
 
