@@ -25,8 +25,18 @@ namespace ACFIP.Core.Controllers
         [HttpGet]
         public async Task<bool> SendEmail()
         {
-            IEnumerable<string> listEmailAccountManager = (await _accountService.GetAsync(filter: el => el.RoleId == AppConstants.Role.Manager.ID && !el.DeletedFlag)).Select(el => el.Email);
-            var message = new Message(listEmailAccountManager, "Test email async", "This is the content from our async email.");
+            List<string> listEmailAccountManager = (await _accountService.GetAsync(filter: el => el.RoleId == AppConstants.Role.Manager.ID && !el.DeletedFlag)).Select(el => el.Email).ToList();
+            IEnumerable<string>  listEmail = listEmailAccountManager.ToArray();
+            var message = new Message(listEmail, "Report Violations", @"
+                      <html>
+                      <body>
+                      <h2>Dear Manager,</h2>
+                      <p>This is a automatic email </p><br/>
+                      <h4  style='color:red;'>Some areas have violated the policy.</h4>
+                      <h5>Sincerely</h5>
+                      </body>
+                      </html>
+                     ");
             return await _emailSenderService.SendEmailAsync(message);
         }
 

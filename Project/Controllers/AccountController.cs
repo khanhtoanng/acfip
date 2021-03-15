@@ -24,11 +24,23 @@ namespace ACFIP.Core.Controllers
         {
             _accountService = accountService;
         }
-        [HttpGet]
-        [Authorize(Roles = AppConstants.Role.Manager.NAME + "," + AppConstants.Role.Admin.NAME)]
-        public async Task<IActionResult> Get([FromQuery] PagingRequestParam param)
+        [HttpGet("admin")]
+        [Authorize(Roles = AppConstants.Role.Admin.NAME)]
+        public async Task<IActionResult> GetByAdmin([FromQuery] PagingRequestParam param)
         {
-            var result = await _accountService.GetAsync(pageIndex: param.PageIndex, pageSize: param.PageSize, includeProperties: "Role");
+            var result = await _accountService
+                .GetAsync(pageIndex: param.PageIndex, pageSize: param.PageSize, filter: el => !el.DeletedFlag, includeProperties: "Role");
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
+        }
+        [HttpGet("manager")]
+        [Authorize(Roles = AppConstants.Role.Manager.NAME )]
+        public async Task<IActionResult> GetByManager([FromQuery] PagingRequestParam param)
+        {
+            var result = await _accountService.GetAsync(pageIndex: param.PageIndex, pageSize: param.PageSize, filter: el => !el.DeletedFlag && el.RoleId == AppConstants.Role.Monitor.ID, includeProperties: "Role");
             if (result == null)
             {
                 return NotFound();
@@ -82,13 +94,13 @@ namespace ACFIP.Core.Controllers
             return Ok(result);
 
         }
-        [HttpPut("{id}/status")]
+        [HttpPut("status")]
         [Authorize(Roles = AppConstants.Role.Manager.NAME + "," + AppConstants.Role.Admin.NAME)]
-        public async Task<IActionResult> UpdateStatusAccount(int id , [FromBody] AccountActivationParam param)
+        public async Task<IActionResult> UpdateStatusAccount([FromBody] AccountActivationParam param)
         {
             try
             {
-                var result = await _accountService.UpdateStatusAccount(id,param);
+                var result = await _accountService.UpdateStatusAccount(param);
                 return Ok(result);
             }
             catch (Exception e)

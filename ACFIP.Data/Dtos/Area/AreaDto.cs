@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using ACFIP.Data.Dtos.Camera;
 using ACFIP.Data.Dtos.Location;
+using ACFIP.Data.Helpers;
 
 namespace ACFIP.Data.Dtos.Area
 {
@@ -15,6 +16,9 @@ namespace ACFIP.Data.Dtos.Area
         public bool DeletedFlag { get; set; }
         public int NumberOfLocations { get; set; }
         public int NumberOfCameras { get; set; } 
+        public int NumberOfViolations { get; set; }
+        public int ViolatedStatus { get; set; } = AppConstants.AreaViolated.LOWER_POLICY;
+        public DateTime? DateOfViolation { get; set; }
         public List<CameraDto> Cameras { get; set; }
 
     }

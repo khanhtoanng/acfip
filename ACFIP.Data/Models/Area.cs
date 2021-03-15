@@ -20,6 +20,8 @@ namespace ACFIP.Data.Models
         [Required]
         [Column("deleted_flag", Order = 3)]
         public bool DeletedFlag { get; set; } = false;
+        [Column("date_of_violation", Order = 4)]
+        public DateTime? DateOfViolation { get; set; }
         public virtual List<Location> Locations { get; set; }
     }
 }

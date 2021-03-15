@@ -49,6 +49,39 @@ namespace ACFIP.Core.Controllers
             return Ok(result);
         }
         [Authorize(Roles = AppConstants.Role.Monitor.NAME + "," + AppConstants.Role.Manager.NAME)]
+        [HttpGet("report")]
+        public async Task<IActionResult> GetReport([FromQuery] ReportParam param)
+        {
+            var result = await _areaService.GetReportArea(param);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
+        }
+        [Authorize(Roles = AppConstants.Role.Monitor.NAME + "," + AppConstants.Role.Manager.NAME)]
+        [HttpGet("policy-violation/report")]
+        public async Task<IActionResult> GetAreaViolated([FromQuery] ReportParam param)
+        {
+            var result = await _areaService.GetAreaViolatedPolicyInMonth(param);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
+        }
+        [Authorize(Roles = AppConstants.Role.Monitor.NAME + "," + AppConstants.Role.Manager.NAME)]
+        [HttpGet("top-three/report")]
+        public async Task<IActionResult> GetTopThreeArea([FromQuery] ReportParam param)
+        {
+            var result = await _areaService.GetTopThreeAreaViolatedInMonth(param);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
+        }
+        [Authorize(Roles = AppConstants.Role.Monitor.NAME + "," + AppConstants.Role.Manager.NAME)]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] AreaCreateParam param)
         {
@@ -73,7 +106,7 @@ namespace ACFIP.Core.Controllers
 
         [Authorize(Roles = AppConstants.Role.Monitor.NAME + "," + AppConstants.Role.Manager.NAME)]
         [HttpGet("{id}/locations")]
-        public async Task<IActionResult> GetGroups([FromRoute] int id)
+        public async Task<IActionResult> GetLocations([FromRoute] int id)
         {
             var result = await _locationService.GetAllLocation(id);
             if (result == null)

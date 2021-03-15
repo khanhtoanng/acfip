@@ -1,4 +1,5 @@
-﻿using ACFIP.Data.Dtos.Policy;
+﻿using ACFIP.Data.Dtos.Area;
+using ACFIP.Data.Dtos.Policy;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,5 +11,7 @@ namespace ACFIP.Bussiness.Services.PolicyService
     {
         Task<PolicyDto> GetFirstPolicy();
         Task<PolicyDto> AddPolicy(PolicyRequestParam param);
+        Task<AreaDto> IsInValidArea(int locationId);
+
     }
 }

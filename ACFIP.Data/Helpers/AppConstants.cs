@@ -13,12 +13,12 @@ namespace ACFIP.Data.Helpers
         }
         public struct Role
         {
-            public struct Admin 
+            public struct Admin
             {
                 public const string NAME = "Admin";
                 public const int ID = 1;
             }
-            public struct Monitor 
+            public struct Monitor
             {
                 public const string NAME = "Monitor";
                 public const int ID = 3;
@@ -29,10 +29,23 @@ namespace ACFIP.Data.Helpers
                 public const int ID = 2;
             }
         }
-        public struct ViolationStatus 
+        public struct ViolationStatus
         {
             public const int DETECTED = 1;
             public const int NON_DETECTED = 0;
+        }
+        public struct ViolationType
+        {
+            public const int VEST = 1;
+            public const int HELMET = 2;
+
+        }
+        public struct AreaViolated
+        {
+            public const int LOWER_POLICY = 0;
+            public const int EQUAL_TO_POLICY = 1;
+            public const int EXCEED_POLICY = 2;
+
         }
     }
 }

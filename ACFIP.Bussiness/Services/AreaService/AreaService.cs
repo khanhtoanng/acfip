@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
 using ACFIP.Data.Dtos.Camera;
+using ACFIP.Data.Helpers;
 
 namespace ACFIP.Bussiness.Services.AreaService
 {
@@ -56,7 +57,7 @@ namespace ACFIP.Bussiness.Services.AreaService
                 area.Cameras = listCam;
                 area.NumberOfCameras = listCam.Count();
                 area.NumberOfLocations = listLocation.Count();
-            }        
+            }
             return result;
         }
 
@@ -71,13 +72,102 @@ namespace ACFIP.Bussiness.Services.AreaService
         public async Task<AreaDto> UpdateArea(AreaUpdateParam param)
         {
             Area area = await _uow.AreaRepository.GetById(param.Id);
-            if (area != null) 
+            if (area != null)
             {
                 area.Name = param.Name;
                 area.Description = param.Description;
 
             }
-            return await _uow.SaveAsync() > 0 ?  _mapper.Map<AreaDto>(area) : null;
+            return await _uow.SaveAsync() > 0 ? _mapper.Map<AreaDto>(area) : null;
+        }
+
+        public async Task<IEnumerable<AreaDto>> GetReportArea(ReportParam param)
+        {
+            IEnumerable<AreaDto> result = _mapper.Map<IEnumerable<AreaDto>>(await _uow.AreaRepository.Get(filter: el => !el.DeletedFlag));
+            if (param.AreaId != 0)
+            {
+                result = result.Where(el => el.Id == param.AreaId);
+            }
+            foreach (var area in result)
+            {
+                IEnumerable<ViolationCase> list = await _uow.ViolationCaseRepository
+                    .Get(filter: el => el.Status == AppConstants.ViolationStatus.DETECTED && el.Location.AreaId == area.Id
+                    , includeProperties: "Location");
+                if (list != null || list.Count() != 0)
+                {
+                    if (param.Month != 0)
+                    {
+                        list = list.Where(el => el.CreatedTime.Month == param.Month);
+                    }
+                    area.NumberOfViolations = list.Count();
+                }
+
+            }
+            Policy policy = await _uow.PolicyRepository.GetFirst();
+            result = result.Where(el => el.NumberOfViolations != 0).OrderByDescending(el => el.NumberOfViolations);
+            foreach (var item in result)
+            {
+                if (item.NumberOfViolations > policy.NumberOfViolation) item.ViolatedStatus = AppConstants.AreaViolated.EXCEED_POLICY;
+                else if (item.NumberOfViolations == policy.NumberOfViolation) item.ViolatedStatus = AppConstants.AreaViolated.EQUAL_TO_POLICY;
+            }
+            return result;
+        }
+
+        public async Task<int> CountAllArea()
+        {
+            return (await _uow.AreaRepository.Get(filter: el=> !el.DeletedFlag)).Count();
+        }
+
+        public async Task<IEnumerable<AreaDto>> GetAreaViolatedPolicyInMonth(ReportParam param)
+        {
+            IEnumerable<AreaDto> result = _mapper.Map<IEnumerable<AreaDto>>(await _uow.AreaRepository.Get(filter: el => !el.DeletedFlag));
+            if (param.AreaId != 0)
+            {
+                result = result.Where(el => el.Id == param.AreaId);
+            }
+            foreach (var area in result)
+            {
+                IEnumerable<ViolationCase> list = await _uow.ViolationCaseRepository
+                    .Get(filter: el => el.Status == AppConstants.ViolationStatus.DETECTED && el.Location.AreaId == area.Id
+                    , includeProperties: "Location");
+                if (list != null || list.Count() != 0)
+                {
+                    if (param.Month != 0)
+                    {
+                        list = list.Where(el => el.CreatedTime.Month == param.Month);
+                    }
+                    area.NumberOfViolations = list.Count();
+                }
+
+            }
+            Policy policy = await _uow.PolicyRepository.GetFirst();
+            result = result.Where(el => el.NumberOfViolations > policy.NumberOfViolation).OrderBy(el => el.NumberOfViolations);
+            return result;
+        }
+        public async Task<IEnumerable<AreaDto>> GetTopThreeAreaViolatedInMonth(ReportParam param)
+        {
+            IEnumerable<AreaDto> result = _mapper.Map<IEnumerable<AreaDto>>(await _uow.AreaRepository.Get(filter: el => !el.DeletedFlag));
+            if (param.AreaId != 0)
+            {
+                result = result.Where(el => el.Id == param.AreaId);
+            }
+            foreach (var area in result)
+            {
+                IEnumerable<ViolationCase> list = await _uow.ViolationCaseRepository
+                    .Get(filter: el => el.Status == AppConstants.ViolationStatus.DETECTED && el.Location.AreaId == area.Id
+                    , includeProperties: "Location");
+                if (list != null || list.Count() != 0)
+                {
+                    if (param.Month != 0)
+                    {
+                        list = list.Where(el => el.CreatedTime.Month == param.Month);
+                    }
+                    area.NumberOfViolations = list.Count();
+                }
+
+            }
+            result = result.Where(el => el.NumberOfViolations != 0).OrderBy(el => el.NumberOfViolations).ToList().GetRange(0,3);
+            return result;
         }
     }
 }

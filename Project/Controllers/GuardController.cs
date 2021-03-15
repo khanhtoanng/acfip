@@ -1,6 +1,8 @@
 ﻿
 using ACFIP.Bussiness.Services.GuardService;
 using ACFIP.Data.Dtos.Guard;
+using ACFIP.Data.Helpers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -11,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace ACFIP.Core.Controllers
 {
-    [Route("api/guards")]
+    [Route("api/v1/guards")]
     [ApiController]
     public class GuardController : ControllerBase
     {
@@ -21,6 +23,8 @@ namespace ACFIP.Core.Controllers
         {
             _guardService = guardService;
         }
+
+        [Authorize(Roles = AppConstants.Role.Monitor.NAME + "," + AppConstants.Role.Manager.NAME)]
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
@@ -32,6 +36,14 @@ namespace ACFIP.Core.Controllers
             }
             return Ok(result);
         }
+        [Authorize(Roles = AppConstants.Role.Monitor.NAME + "," + AppConstants.Role.Manager.NAME)]
+        [HttpGet("number-of-guard")]
+        public async Task<IActionResult> CountAllGuards()
+        {
+            var result = await _guardService.CountAllGuards();
+            return Ok(result);
+        }
+        [Authorize(Roles = AppConstants.Role.Monitor.NAME + "," + AppConstants.Role.Manager.NAME)]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] List<GuardCreateParam> listParam)
         {

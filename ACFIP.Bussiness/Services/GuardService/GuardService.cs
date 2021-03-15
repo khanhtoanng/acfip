@@ -5,6 +5,7 @@ using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,6 +20,11 @@ namespace ACFIP.Bussiness.Services.GuardService
         {
             _uow = uow;
             _mapper = mapper;
+        }
+
+        public async Task<int> CountAllGuards()
+        {
+            return (await _uow.GuardRepository.Get()).ToList().Count();
         }
 
         public async Task<IEnumerable<GuardDto>> CreateGuards(List<GuardCreateParam> listParam)
@@ -50,7 +56,7 @@ namespace ACFIP.Bussiness.Services.GuardService
 
         public async Task<IEnumerable<GuardDto>> GetAll()
         {
-            return _mapper.Map<IEnumerable<GuardDto>>(await _uow.GuardRepository.Get());
+            return _mapper.Map<IEnumerable<GuardDto>>(await _uow.GuardRepository.Get(includeProperties:"Area"));
         }
 
     }

@@ -11,6 +11,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using ACFIP.Data.Dtos.ViolationCaseType;
 using ACFIP.Data.Dtos.Camera;
+using ACFIP.Data.Helpers;
 
 namespace ACFIP.Bussiness.Services.ViolationCaseService
 {
@@ -85,6 +86,9 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
             var memberAccessCreateTime = Expression.Property(parameter, "CreatedTime");
             memberAccessCreateTime = Expression.Property(memberAccessCreateTime, typeof(DateTime).GetProperty("Date"));
 
+            var memberAccessMonth = Expression.Property(parameter, "CreatedTime");
+            memberAccessMonth = Expression.Property(memberAccessMonth, typeof(DateTime).GetProperty("Month"));
+
             Expression memberAccessArea = Expression.Property(parameter, typeof(ViolationCase).GetProperty("Location"));
             memberAccessArea = Expression.Property(memberAccessArea, typeof(Data.Models.Location).GetProperty("AreaId"));
             // setting default value if AreaId is null
@@ -107,9 +111,13 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
             {
                 expr = Expression.AndAlso(expr, Expression.Equal(memberAccessCreateTime, Expression.Constant(param.CreateTime.Date)));
             }
-            if (param.Status != null) 
+            if (param.Status != null)
             {
                 expr = Expression.AndAlso(expr, Expression.Equal(memberAccesStatus, Expression.Constant(param.Status)));
+            }
+            if (param.Month != 0) 
+            {
+                expr = Expression.AndAlso(expr, Expression.Equal(memberAccessMonth, Expression.Constant(param.Month)));
             }
             if (param.ViolationTypeId != 0)
             {
@@ -149,7 +157,7 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
         {
             ViolationCaseDto result = null;
             ViolationCase violationCases = (await _uow.ViolationCaseRepository
-                .GetFirst(filter:el => el.Id == id, includeProperties: "Location,Location.Area,ViolationCaseTypes,ViolationCaseTypes.Type"));
+                .GetFirst(filter: el => el.Id == id, includeProperties: "Location,Location.Area,ViolationCaseTypes,ViolationCaseTypes.Type"));
             if (violationCases != null)
             {
                 result = new ViolationCaseDto()
@@ -175,6 +183,26 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
         public async Task<ViolationCaseDto> GetLast(int groupId)
         {
             return _mapper.Map<ViolationCaseDto>((await _uow.ViolationCaseRepository.Get(filter: el => el.LocationId == groupId, orderBy: el => el.OrderByDescending(t => t.CreatedTime))).FirstOrDefault());
+        }
+
+        public async Task<IEnumerable<ViolationReport>> GetViolationReport()
+        {
+            IEnumerable<ViolationCase> violationCases = await _uow.ViolationCaseRepository.Get();
+            IEnumerable<ViolationReport> result = violationCases.GroupBy(el => el.CreatedTime.Month).Select(el => new ViolationReport { Month = el.Key, NumberOfViolations = el.Count() });
+            return result;
+        }
+
+        public async Task<ViolationReport> GetViolationReportInMonth(int month)
+        {
+            IEnumerable<ViolationCase> violationCases = await _uow.ViolationCaseRepository.Get(filter: el => el.CreatedTime.Month == month,includeProperties: "ViolationCaseTypes,ViolationCaseTypes.Type");
+            ViolationReport violationReport = new ViolationReport() { Month = month, NumberOfViolations = violationCases.Count() };
+            var listVest = violationCases.Where(el => el.ViolationCaseTypes.ToList().FindIndex(f => f.TypeId == AppConstants.ViolationType.VEST) >= 0);
+            TypeReport vestReport = new TypeReport() {Type = "Vest", NumberOfViolation = listVest.Count() };
+            var listHelmet = violationCases.Where(el => el.ViolationCaseTypes.ToList().FindIndex(f => f.TypeId == AppConstants.ViolationType.HELMET) >= 0);
+            TypeReport helmettReport = new TypeReport() { Type = "Helmet", NumberOfViolation = listHelmet.Count() };
+            violationReport.TypeReports.Add(vestReport);
+            violationReport.TypeReports.Add(helmettReport);
+            return violationReport;
         }
 
         public async Task<ViolationCaseDto> UpdateStatus(int id, ViolationCaseUpdateStatusParam param)

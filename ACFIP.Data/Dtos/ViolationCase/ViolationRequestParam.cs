@@ -11,5 +11,6 @@ namespace ACFIP.Data.Dtos.ViolationCase
         public int ViolationTypeId {get;set;}
         public int? Status { get; set; }
         public DateTime CreateTime { get; set; }
+        public int Month { get; set; }
     }
 }

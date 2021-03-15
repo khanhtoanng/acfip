@@ -14,5 +14,9 @@ namespace ACFIP.Bussiness.Services.AreaService
         public Task<AreaDto> CreateArea(AreaCreateParam param);
         public Task<AreaDto> DeleteArea(int id);
         public Task<AreaDto> UpdateArea(AreaUpdateParam param);
+        public Task<IEnumerable<AreaDto>> GetReportArea(ReportParam param);
+        public Task<int> CountAllArea();
+        public Task<IEnumerable<AreaDto>> GetAreaViolatedPolicyInMonth(ReportParam param);
+        public Task<IEnumerable<AreaDto>> GetTopThreeAreaViolatedInMonth(ReportParam param);
     }
 }

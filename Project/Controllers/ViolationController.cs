@@ -87,6 +87,33 @@ namespace ACFIP.Core.Controllers
             return Ok(result);
         }
         [Authorize(Roles = AppConstants.Role.Monitor.NAME
+                     + ","
+                     + AppConstants.Role.Manager.NAME)]
+        [HttpGet("report")]
+        public async Task<IActionResult> GetViolationReport()
+        {
+            var result = await _violationCaseService.GetViolationReport();
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
+        }
+
+        [HttpGet("report/{month}")]
+        [Authorize(Roles = AppConstants.Role.Monitor.NAME
+                        + ","
+                        + AppConstants.Role.Manager.NAME)]
+        public async Task<IActionResult> GetViolationReportInMonth(int month)
+        {
+            var result = await _violationCaseService.GetViolationReportInMonth(month);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
+        }
+        [Authorize(Roles = AppConstants.Role.Monitor.NAME
                            + ","
                            + AppConstants.Role.Manager.NAME)]
         [HttpDelete]

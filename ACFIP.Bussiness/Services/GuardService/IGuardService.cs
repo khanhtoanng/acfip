@@ -11,6 +11,7 @@ namespace ACFIP.Bussiness.Services.GuardService
     {
         Task<IEnumerable<GuardDto>> GetAll();
         Task<IEnumerable<GuardDto>> CreateGuards(List<GuardCreateParam> listParam);
+        Task<int> CountAllGuards();
 
     }
 }
