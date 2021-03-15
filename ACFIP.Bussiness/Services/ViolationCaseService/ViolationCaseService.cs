@@ -38,6 +38,7 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
 
             Guard guard = await _uow.GuardRepository.GetFirst(
                 filter: el => el.TimeStart <= DateTime.Now.TimeOfDay && el.TimeEnd >= DateTime.Now.TimeOfDay && el.AreaId == location.AreaId);
+            if (guard == null) { throw new Exception("There is no guard");}
             violationCase.GuardName = guard.FullName;
 
             _uow.ViolationCaseRepository.Add(violationCase);
