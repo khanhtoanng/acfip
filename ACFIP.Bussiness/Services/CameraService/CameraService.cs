@@ -170,15 +170,15 @@ namespace ACFIP.Bussiness.Services.CameraService
                 includeProperties: "Location,Location.Area,Config"));
         }
 
-        public async Task<CameraStatus> UpdateStatusCamera(int id, CameraActivationParam cameraUpdate)
+        public async Task<CameraDto> UpdateStatusCamera(int id, CameraActivationParam cameraUpdate)
         {
-            Camera camera = await _uow.CameraRepository.GetById(id);
+            Camera camera = await _uow.CameraRepository.GetFirst(filter : el => el.Id == id ,includeProperties: "Location,Config");
             if (camera != null)
             {
                 camera.IsActive = cameraUpdate.IsActive;
                 _uow.CameraRepository.Update(camera);
                 return await _uow.SaveAsync() > 0
-                    ? _mapper.Map<CameraStatus>(camera)
+                    ? _mapper.Map<CameraDto>(camera)
                     : throw new Exception("Update Camera Status Active fails");
             }
             return null;
