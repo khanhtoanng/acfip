@@ -114,6 +114,24 @@ namespace ACFIP.Core.Controllers
             return Ok(result);
         }
         [Authorize(Roles = AppConstants.Role.Monitor.NAME
+                         + ","
+                         + AppConstants.Role.Manager.NAME)]
+        [HttpGet("number-of-violations")]
+        public async Task<IActionResult> CountAll()
+        {
+            var result = await _violationCaseService.CountAlViolaition();
+            return Ok(result);
+        }
+        [Authorize(Roles = AppConstants.Role.Monitor.NAME
+                          + ","
+                          + AppConstants.Role.Manager.NAME)]
+        [HttpGet("number-of-non-detected-violations")]
+        public async Task<IActionResult> CountAllNonDetected()
+        {
+            var result = await _violationCaseService.CountNonDetectedViolation();
+            return Ok(result);
+        }
+        [Authorize(Roles = AppConstants.Role.Monitor.NAME
                            + ","
                            + AppConstants.Role.Manager.NAME)]
         [HttpDelete]

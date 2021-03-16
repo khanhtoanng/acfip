@@ -60,6 +60,13 @@ namespace ACFIP.Core.Controllers
             return Ok(result);
         }
         [Authorize(Roles = AppConstants.Role.Monitor.NAME + "," + AppConstants.Role.Manager.NAME)]
+        [HttpGet("number-of-areas")]
+        public async Task<IActionResult> Count()
+        {
+            var result = await _areaService.CountAllArea();
+            return Ok(result);
+        }
+        [Authorize(Roles = AppConstants.Role.Monitor.NAME + "," + AppConstants.Role.Manager.NAME)]
         [HttpGet("policy-violation/report")]
         public async Task<IActionResult> GetAreaViolated([FromQuery] ReportParam param)
         {

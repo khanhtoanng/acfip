@@ -26,6 +26,17 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
             _mapper = mapper;
         }
 
+        public async Task<int> CountAlViolaition()
+        {
+            return (await _uow.ViolationCaseRepository.Get()).Count();
+        }
+
+        public async Task<int> CountNonDetectedViolation()
+        {
+            return (await _uow.ViolationCaseRepository.Get(filter: el => el.Status == AppConstants.ViolationStatus.NON_DETECTED)).Count();
+
+        }
+
         public async Task<ViolationCaseDto> CreateViolation(ViolationCreateParam param)
         {
             ViolationCase violationCase = new ViolationCase()
@@ -189,7 +200,7 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
         public async Task<IEnumerable<ViolationReport>> GetViolationReport()
         {
             IEnumerable<ViolationCase> violationCases = await _uow.ViolationCaseRepository.Get();
-            IEnumerable<ViolationReport> result = violationCases.GroupBy(el => el.CreatedTime.Month).Select(el => new ViolationReport { Month = el.Key, NumberOfViolations = el.Count() });
+            IEnumerable<ViolationReport> result = violationCases.GroupBy(el => el.CreatedTime.Month).Select(el => new ViolationReport { Month = el.Key, NumberOfViolations = el.Count()}).OrderBy(el => el.Month);
             return result;
         }
 

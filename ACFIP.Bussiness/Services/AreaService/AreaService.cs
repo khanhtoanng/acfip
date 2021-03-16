@@ -142,15 +142,15 @@ namespace ACFIP.Bussiness.Services.AreaService
             }
             Policy policy = await _uow.PolicyRepository.GetFirst();
             result = result.Where(el => el.NumberOfViolations > policy.NumberOfViolation).OrderBy(el => el.NumberOfViolations);
+            foreach (var item in result)
+            {
+               item.ViolatedStatus = AppConstants.AreaViolated.EXCEED_POLICY;
+            }
             return result;
         }
         public async Task<IEnumerable<AreaDto>> GetTopThreeAreaViolatedInMonth(ReportParam param)
         {
             IEnumerable<AreaDto> result = _mapper.Map<IEnumerable<AreaDto>>(await _uow.AreaRepository.Get(filter: el => !el.DeletedFlag));
-            if (param.AreaId != 0)
-            {
-                result = result.Where(el => el.Id == param.AreaId);
-            }
             foreach (var area in result)
             {
                 IEnumerable<ViolationCase> list = await _uow.ViolationCaseRepository
@@ -166,7 +166,7 @@ namespace ACFIP.Bussiness.Services.AreaService
                 }
 
             }
-            result = result.Where(el => el.NumberOfViolations != 0).OrderBy(el => el.NumberOfViolations).ToList().GetRange(0,3);
+            result = result.Where(el => el.NumberOfViolations != 0).OrderByDescending(el => el.NumberOfViolations).ToList().GetRange(0,3);
             return result;
         }
     }

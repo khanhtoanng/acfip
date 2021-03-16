@@ -16,6 +16,8 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
         public Task<ViolationCaseDto> UpdateStatus(int id,ViolationCaseUpdateStatusParam param);
         public Task<IEnumerable<ViolationReport>> GetViolationReport();
         public Task<ViolationReport> GetViolationReportInMonth(int month);
+        public Task<int> CountAlViolaition();
+        public Task<int> CountNonDetectedViolation();
 
     }
 }
