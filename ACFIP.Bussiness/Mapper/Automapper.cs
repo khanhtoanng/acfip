@@ -32,6 +32,7 @@ namespace ACFIP.Bussiness.Mapper
                 .ForMember(des => des.AreaId, src => src.MapFrom(t => t.Location.AreaId));
 
             CreateMap<CameraDto, Camera>();
+            CreateMap<Camera, CameraStatus>();
 
             CreateMap<Area, AreaDto>();
             CreateMap<AreaDto, Area>();
