@@ -55,7 +55,7 @@ namespace ACFIP.Data.AppContext
                  .Where(e => e.State == EntityState.Added && e.Entity is BaseModel);
             foreach (var entityEntry in entries)
             {
-                ((BaseModel)entityEntry.Entity).CreatedTime = DateTime.UtcNow;
+                ((BaseModel)entityEntry.Entity).CreatedTime = DateTime.UtcNow.AddHours(7);
             }
             return base.SaveChangesAsync();
         }
