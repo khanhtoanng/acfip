@@ -172,7 +172,7 @@ namespace ACFIP.Bussiness.Services.CameraService
 
         public async Task<CameraDto> UpdateStatusCamera(int id, CameraActivationParam cameraUpdate)
         {
-            Camera camera = await _uow.CameraRepository.GetFirst(filter : el => el.Id == id ,includeProperties: "Location,Config");
+            Camera camera = await _uow.CameraRepository.GetFirst(filter : el => el.Id == id ,includeProperties: "Location,Config,Area");
             if (camera != null)
             {
                 camera.IsActive = cameraUpdate.IsActive;
