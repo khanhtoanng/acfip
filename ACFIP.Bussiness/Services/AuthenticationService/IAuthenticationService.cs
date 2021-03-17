@@ -6,6 +6,7 @@ namespace ACFIP.Bussiness.Services.AuthenticationService
 {
     public interface IAuthenticationService
     {
-        public Task<AccountDto> Login(AccountLoginParam param);
+        public Task<AccountDto> LoginWeb(AccountLoginParam param);
+        public Task<AccountDto> LoginDestop(AccountLoginParam param);
     }
 }

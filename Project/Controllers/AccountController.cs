@@ -29,7 +29,7 @@ namespace ACFIP.Core.Controllers
         public async Task<IActionResult> GetByAdmin([FromQuery] PagingRequestParam param)
         {
             var result = await _accountService
-                .GetAsync(pageIndex: param.PageIndex, pageSize: param.PageSize, filter: el => !el.DeletedFlag
+                .GetAsync(pageIndex: param.PageIndex, pageSize: param.PageSize, filter: el => !el.DeletedFlag && el.IsActive
                  &&( el.RoleId == AppConstants.Role.Manager.ID || el.RoleId == AppConstants.Role.Monitor.ID )
                 , includeProperties: "Role");
             if (result == null)
@@ -42,7 +42,7 @@ namespace ACFIP.Core.Controllers
         [Authorize(Roles = AppConstants.Role.Manager.NAME)]
         public async Task<IActionResult> GetByManager([FromQuery] PagingRequestParam param)
         {
-            var result = await _accountService.GetAsync(pageIndex: param.PageIndex, pageSize: param.PageSize, filter: el => !el.DeletedFlag && el.RoleId == AppConstants.Role.Monitor.ID, includeProperties: "Role");
+            var result = await _accountService.GetAsync(pageIndex: param.PageIndex, pageSize: param.PageSize, filter: el => !el.DeletedFlag && el.IsActive && el.RoleId == AppConstants.Role.Monitor.ID, includeProperties: "Role");
             if (result == null)
             {
                 return NotFound();

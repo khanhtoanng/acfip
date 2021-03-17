@@ -32,13 +32,58 @@ namespace ACFIP.Core.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost]
+        [HttpPost("web")]
         public async Task<IActionResult> Login(AccountLoginParam param)
         {
             try
             {
-                AccountDto accountDto = await _authenticationService.Login(param);
-                if (accountDto != null)
+                AccountDto accountDto = await _authenticationService.LoginWeb(param);
+                if (accountDto != null && accountDto.Role.Id != AppConstants.Role.Monitor.ID )
+                {
+                    var claims = new[]
+                    {
+                        new Claim(JwtRegisteredClaimNames.Sub, accountDto.Id.ToString()),
+                        new Claim(ClaimTypes.Role, accountDto.Role.Name),
+                        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    };
+                    var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_appSettings.JwtSecret));
+                    var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+                    var token = new JwtSecurityToken(
+                        _appSettings.Issuer,
+                        _appSettings.Audience,
+                        claims,
+                        signingCredentials: creds
+                        );
+                    return Ok(
+                        new
+                        {
+                            id = accountDto.Id,
+                            role = accountDto.Role.Name,
+                            tokenType = "bearer",
+                            createAt = DateTime.UtcNow,
+                            token = new JwtSecurityTokenHandler().WriteToken(token)
+                        });
+                }
+                else
+                {
+                    return Unauthorized(new { message = "id or password is incorrect" });
+                }
+
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { message = e.Message });
+            }
+
+        }
+        [AllowAnonymous]
+        [HttpPost("destop")]
+        public async Task<IActionResult> LoginDestop(AccountLoginParam param)
+        {
+            try
+            {
+                AccountDto accountDto = await _authenticationService.LoginDestop(param);
+                if (accountDto != null && accountDto.Role.Id == AppConstants.Role.Monitor.ID)
                 {
                     var claims = new[]
                     {
@@ -75,5 +120,4 @@ namespace ACFIP.Core.Controllers
                 return BadRequest(new { message = e.Message });
             }
         }
-    }
 }
