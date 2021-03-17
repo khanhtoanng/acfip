@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.Json.Serialization;
 using ACFIP.Data.Dtos.Camera;
+using ACFIP.Data.Dtos.Guard;
 using ACFIP.Data.Dtos.Location;
 using ACFIP.Data.Helpers;
 
@@ -20,6 +21,7 @@ namespace ACFIP.Data.Dtos.Area
         public int ViolatedStatus { get; set; } = AppConstants.AreaViolated.LOWER_POLICY;
         public DateTime? DateOfViolation { get; set; }
         public List<CameraDto> Cameras { get; set; }
+        public List<GuardParam> Guards { get; set; }
 
     }
 }

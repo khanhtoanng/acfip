@@ -58,6 +58,8 @@ namespace ACFIP.Bussiness.Mapper
 
             CreateMap<Guard, GuardDto>();
             CreateMap<GuardDto, Guard>();
+            CreateMap<Guard, GuardParam>();
+
         }
 
     }

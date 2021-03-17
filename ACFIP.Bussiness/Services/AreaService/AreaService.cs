@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using ACFIP.Data.Dtos.Camera;
 using ACFIP.Data.Helpers;
+using ACFIP.Data.Dtos.Guard;
 
 namespace ACFIP.Bussiness.Services.AreaService
 {
@@ -107,6 +108,7 @@ namespace ACFIP.Bussiness.Services.AreaService
             result = result.Where(el => el.NumberOfViolations != 0).OrderByDescending(el => el.NumberOfViolations);
             foreach (var item in result)
             {
+                item.Guards = _mapper.Map<IEnumerable<GuardParam>>(await _uow.GuardRepository.Get(filter: el => el.AreaId == item.Id)).ToList();
                 if (item.NumberOfViolations > policy.NumberOfViolation) item.ViolatedStatus = AppConstants.AreaViolated.EXCEED_POLICY;
                 else if (item.NumberOfViolations == policy.NumberOfViolation) item.ViolatedStatus = AppConstants.AreaViolated.EQUAL_TO_POLICY;
             }
@@ -115,7 +117,7 @@ namespace ACFIP.Bussiness.Services.AreaService
 
         public async Task<int> CountAllArea()
         {
-            return (await _uow.AreaRepository.Get(filter: el=> !el.DeletedFlag)).Count();
+            return (await _uow.AreaRepository.Get(filter: el => !el.DeletedFlag)).Count();
         }
 
         public async Task<IEnumerable<AreaDto>> GetAreaViolatedPolicyInMonth(ReportParam param)
@@ -144,7 +146,7 @@ namespace ACFIP.Bussiness.Services.AreaService
             result = result.Where(el => el.NumberOfViolations > policy.NumberOfViolation).OrderBy(el => el.NumberOfViolations);
             foreach (var item in result)
             {
-               item.ViolatedStatus = AppConstants.AreaViolated.EXCEED_POLICY;
+                item.ViolatedStatus = AppConstants.AreaViolated.EXCEED_POLICY;
             }
             return result;
         }
@@ -166,7 +168,11 @@ namespace ACFIP.Bussiness.Services.AreaService
                 }
 
             }
-            result = result.Where(el => el.NumberOfViolations != 0).OrderByDescending(el => el.NumberOfViolations).ToList().GetRange(0,3);
+            result = result.Where(el => el.NumberOfViolations != 0).OrderByDescending(el => el.NumberOfViolations).ToList();
+            if (result.Count() >= 3) 
+            {
+                result = result.ToList().GetRange(0, 3);
+            }
             return result;
         }
     }
