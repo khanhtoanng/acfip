@@ -38,7 +38,7 @@ namespace ACFIP.Core.Controllers
             try
             {
                 AccountDto accountDto = await _authenticationService.LoginWeb(param);
-                if (accountDto != null && accountDto.Role.Id != AppConstants.Role.Monitor.ID )
+                if (accountDto != null && accountDto.Role.Id != AppConstants.Role.Monitor.ID)
                 {
                     var claims = new[]
                     {
@@ -120,4 +120,5 @@ namespace ACFIP.Core.Controllers
                 return BadRequest(new { message = e.Message });
             }
         }
+    } 
 }
