@@ -74,7 +74,6 @@ namespace ACFIP.Bussiness.Services.AccountService
             {
                 account.Salt = AppUtils.generateSalt();
                 account.HashedPassword = AppUtils.hashSHA512(param.NewPassword, account.Salt);
-                account.RoleId = AppConstants.Role.Monitor.ID;
                 _uow.AccountRepository.Update(account);
                 return await _uow.SaveAsync() > 0
                         ? _mapper.Map<AccountDto>(account)
