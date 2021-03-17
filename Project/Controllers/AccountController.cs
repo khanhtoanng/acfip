@@ -25,7 +25,7 @@ namespace ACFIP.Core.Controllers
             _accountService = accountService;
         }
         [HttpGet("admin")]
-        //[Authorize(Roles = AppConstants.Role.Admin.NAME)]
+        [Authorize(Roles = AppConstants.Role.Admin.NAME)]
         public async Task<IActionResult> GetByAdmin([FromQuery] PagingRequestParam param)
         {
             var result = await _accountService
@@ -39,7 +39,7 @@ namespace ACFIP.Core.Controllers
             return Ok(result);
         }
         [HttpGet("manager")]
-        //[Authorize(Roles = AppConstants.Role.Manager.NAME )]
+        [Authorize(Roles = AppConstants.Role.Manager.NAME)]
         public async Task<IActionResult> GetByManager([FromQuery] PagingRequestParam param)
         {
             var result = await _accountService.GetAsync(pageIndex: param.PageIndex, pageSize: param.PageSize, filter: el => !el.DeletedFlag && el.RoleId == AppConstants.Role.Monitor.ID, includeProperties: "Role");
