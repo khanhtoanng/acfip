@@ -44,11 +44,13 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
                 ImgUrl = param.ImageUrl,
                 VideoUrl = param.VideoUrl,
                 LocationId = param.LocationId,
+                CreatedTime = param.CreateTime
             };
             Data.Models.Location location = await _uow.LocationRepository.GetFirst(filter: el => el.Id == param.LocationId);
-
+            int a = 0;
             Guard guard = await _uow.GuardRepository.GetFirst(
-                filter: el => el.TimeStart <= DateTime.Now.TimeOfDay && el.TimeEnd >= DateTime.Now.TimeOfDay && el.AreaId == location.AreaId);
+                filter: el => (el.TimeStart <= DateTime.Now.TimeOfDay && el.TimeEnd >= DateTime.Now.TimeOfDay) && el.AreaId == location.AreaId);
+
             if (guard != null) { violationCase.GuardName = guard.FullName; }
             
 

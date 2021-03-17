@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace ACFIP.Data.Models
 {
     [Table("violation_case")]
-    public class ViolationCase : BaseModel
+    public class ViolationCase 
     {
         public ViolationCase()
         {
@@ -29,6 +29,9 @@ namespace ACFIP.Data.Models
         public int Status { get; set; } = AppConstants.ViolationStatus.DETECTED;
         [Column("guard_name", Order = 5)]
         public string GuardName { get; set; }
+        [Required]
+        [Column("created_time")]
+        public DateTime CreatedTime { get; set; }
         public virtual ICollection<ViolationCaseType> ViolationCaseTypes { get; set; }
     }
 }
