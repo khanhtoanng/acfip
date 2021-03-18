@@ -29,9 +29,9 @@ namespace ACFIP.Bussiness.Services.GuardService
 
         public async Task<IEnumerable<GuardDto>> CreateGuards(List<GuardCreateParam> listParam)
         {
-            List<Guard> guards = (List<Guard>)await _uow.GuardRepository.Get();
+            IEnumerable<Guard> guards = await _uow.GuardRepository.Get();
             // if have data. Delete
-            if (guards.Count > 0)
+            if (guards.Count() > 0)
             {
                 foreach (var item in guards)
                 {
@@ -39,7 +39,6 @@ namespace ACFIP.Bussiness.Services.GuardService
                 }
                 await _uow.SaveAsync();
             }
-
             foreach (var item in listParam)
             {
                 Guard guard = new Guard()
