@@ -18,6 +18,7 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
         public Task<ViolationReport> GetViolationReportInMonth(int month);
         public Task<int> CountAlViolaition();
         public Task<int> CountNonDetectedViolation();
+        public Task<float> CompareViolation(); 
 
     }
 }

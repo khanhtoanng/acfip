@@ -86,9 +86,37 @@ namespace ACFIP.Core.Controllers
             }
             return Ok(result);
         }
+
         [Authorize(Roles = AppConstants.Role.Monitor.NAME
-                     + ","
-                     + AppConstants.Role.Manager.NAME)]
+                           + ","
+                           + AppConstants.Role.Manager.NAME)]
+        [HttpDelete]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var result = await _violationCaseService.DeleteViolation(id);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
+        }
+        [HttpPut("{id}/status")]
+        [Authorize(Roles = AppConstants.Role.Monitor.NAME
+                           + ","
+                           + AppConstants.Role.Manager.NAME)]
+        public async Task<IActionResult> UpdateStatus(int id, ViolationCaseUpdateStatusParam param)
+        {
+            var result = await _violationCaseService.UpdateStatus(id, param);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
+        }
+
+        [Authorize(Roles = AppConstants.Role.Monitor.NAME
+                   + ","
+                   + AppConstants.Role.Manager.NAME)]
         [HttpGet("report")]
         public async Task<IActionResult> GetViolationReport()
         {
@@ -132,29 +160,12 @@ namespace ACFIP.Core.Controllers
             return Ok(result);
         }
         [Authorize(Roles = AppConstants.Role.Monitor.NAME
-                           + ","
-                           + AppConstants.Role.Manager.NAME)]
-        [HttpDelete]
-        public async Task<IActionResult> Delete(int id)
+                       + ","
+                       + AppConstants.Role.Manager.NAME)]
+        [HttpGet("current-month-comparation")]
+        public async Task<IActionResult> CompareViolation()
         {
-            var result = await _violationCaseService.DeleteViolation(id);
-            if (result == null)
-            {
-                return NotFound();
-            }
-            return Ok(result);
-        }
-        [HttpPut("{id}/status")]
-        [Authorize(Roles = AppConstants.Role.Monitor.NAME
-                           + ","
-                           + AppConstants.Role.Manager.NAME)]
-        public async Task<IActionResult> UpdateStatus(int id,ViolationCaseUpdateStatusParam param)
-        {
-            var result = await _violationCaseService.UpdateStatus(id,param);
-            if (result == null)
-            {
-                return NotFound();
-            }
+            var result = await _violationCaseService.CompareViolation();
             return Ok(result);
         }
     }

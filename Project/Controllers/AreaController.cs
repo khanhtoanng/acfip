@@ -48,46 +48,7 @@ namespace ACFIP.Core.Controllers
             }
             return Ok(result);
         }
-        [Authorize(Roles = AppConstants.Role.Monitor.NAME + "," + AppConstants.Role.Manager.NAME)]
-        [HttpGet("report")]
-        public async Task<IActionResult> GetReport([FromQuery] ReportParam param)
-        {
-            var result = await _areaService.GetReportArea(param);
-            if (result == null)
-            {
-                return NotFound();
-            }
-            return Ok(result);
-        }
-        [Authorize(Roles = AppConstants.Role.Monitor.NAME + "," + AppConstants.Role.Manager.NAME)]
-        [HttpGet("number-of-areas")]
-        public async Task<IActionResult> Count()
-        {
-            var result = await _areaService.CountAllArea();
-            return Ok(result);
-        }
-        [Authorize(Roles = AppConstants.Role.Monitor.NAME + "," + AppConstants.Role.Manager.NAME)]
-        [HttpGet("policy-violation/report")]
-        public async Task<IActionResult> GetAreaViolated([FromQuery] ReportParam param)
-        {
-            var result = await _areaService.GetAreaViolatedPolicyInMonth(param);
-            if (result == null)
-            {
-                return NotFound();
-            }
-            return Ok(result);
-        }
-        [Authorize(Roles = AppConstants.Role.Monitor.NAME + "," + AppConstants.Role.Manager.NAME)]
-        [HttpGet("top-three/report")]
-        public async Task<IActionResult> GetTopThreeArea([FromQuery] ReportParam param)
-        {
-            var result = await _areaService.GetTopThreeAreaViolatedInMonth(param);
-            if (result == null)
-            {
-                return NotFound();
-            }
-            return Ok(result);
-        }
+
         [Authorize(Roles = AppConstants.Role.Monitor.NAME + "," + AppConstants.Role.Manager.NAME)]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] AreaCreateParam param)
@@ -128,6 +89,59 @@ namespace ACFIP.Core.Controllers
         public async Task<IActionResult> Update([FromBody] AreaUpdateParam param)
         {
             var result = await _areaService.UpdateArea(param);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
+        }
+
+        [Authorize(Roles = AppConstants.Role.Monitor.NAME + "," + AppConstants.Role.Manager.NAME)]
+        [HttpGet("report")]
+        public async Task<IActionResult> GetReport([FromQuery] ReportParam param)
+        {
+            var result = await _areaService.GetReportArea(param);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
+        }
+        [Authorize(Roles = AppConstants.Role.Monitor.NAME + "," + AppConstants.Role.Manager.NAME)]
+        [HttpGet("number-of-areas")]
+        public async Task<IActionResult> Count()
+        {
+            var result = await _areaService.CountAllArea();
+            return Ok(result);
+        }
+        [Authorize(Roles = AppConstants.Role.Monitor.NAME + "," + AppConstants.Role.Manager.NAME)]
+        [HttpGet("policy-violation/report")]
+        public async Task<IActionResult> GetAreaViolated([FromQuery] ReportParam param)
+        {
+            var result = await _areaService.GetAreaViolatedPolicyInMonth(param);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
+        }
+        [Authorize(Roles = AppConstants.Role.Monitor.NAME + "," + AppConstants.Role.Manager.NAME)]
+        [HttpGet("top-three/report")]
+        public async Task<IActionResult> GetTopThreeArea([FromQuery] ReportParam param)
+        {
+            var result = await _areaService.GetTopThreeAreaViolatedInMonth(param);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
+        }
+
+        [Authorize(Roles = AppConstants.Role.Monitor.NAME + "," + AppConstants.Role.Manager.NAME)]
+        [HttpGet("non-policy-violation/report")]
+        public async Task<IActionResult> GetAreaNonViolated([FromQuery] ReportParam param)
+        {
+            var result = await _areaService.GetAreaNonViolatedPolicyInMonth(param);
             if (result == null)
             {
                 return NotFound();

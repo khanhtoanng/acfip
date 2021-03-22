@@ -175,5 +175,36 @@ namespace ACFIP.Bussiness.Services.AreaService
             }
             return result;
         }
+
+        public async Task<IEnumerable<AreaDto>> GetAreaNonViolatedPolicyInMonth(ReportParam param)
+        {
+            IEnumerable<AreaDto> result = _mapper.Map<IEnumerable<AreaDto>>(await _uow.AreaRepository.Get(filter: el => !el.DeletedFlag));
+            if (param.AreaId != 0)
+            {
+                result = result.Where(el => el.Id == param.AreaId);
+            }
+            foreach (var area in result)
+            {
+                IEnumerable<ViolationCase> list = await _uow.ViolationCaseRepository
+                    .Get(filter: el => el.Status == AppConstants.ViolationStatus.DETECTED && el.Location.AreaId == area.Id
+                    , includeProperties: "Location");
+                if (list != null)
+                {
+                    if (param.Month != 0)
+                    {
+                        list = list.Where(el => el.CreatedTime.Month == param.Month);
+                    }
+                    area.NumberOfViolations = list.Count();
+                }
+
+            }
+            Policy policy = await _uow.PolicyRepository.GetFirst();
+            result = result.Where(el => el.NumberOfViolations <= policy.NumberOfViolation).OrderBy(el => el.NumberOfViolations);
+            foreach (var item in result)
+            {
+               if (item.NumberOfViolations == policy.NumberOfViolation) item.ViolatedStatus = AppConstants.AreaViolated.EQUAL_TO_POLICY;
+            }
+            return result;
+        }
     }
 }

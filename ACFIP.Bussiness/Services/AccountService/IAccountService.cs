@@ -10,5 +10,6 @@ namespace ACFIP.Bussiness.Services.Account
         public Task<AccountDto> DeleteAccount(string id);
         public Task<AccountDto> CreateAccount(AccountCreateParam param);
         public Task<AccountDto> ChangePassword(AccountPasswordParam param);
+        public Task<AccountDto> UpdateEmail(AccountEmailParam param);
     }
 }

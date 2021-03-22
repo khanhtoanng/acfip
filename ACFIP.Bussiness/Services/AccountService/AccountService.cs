@@ -81,5 +81,16 @@ namespace ACFIP.Bussiness.Services.AccountService
             }
             return null;
         }
+
+        public async Task<AccountDto> UpdateEmail(AccountEmailParam param)
+        {
+            Data.Models.Account account = await _uow.AccountRepository.GetById(param.Id);
+            if (account == null) return null;
+            account.Email = param.Email;
+            _uow.AccountRepository.Update(account);
+            return await _uow.SaveAsync() > 0
+                    ? _mapper.Map<AccountDto>(account)
+                    : throw new Exception("Can not update email");
+        }
     }
 }

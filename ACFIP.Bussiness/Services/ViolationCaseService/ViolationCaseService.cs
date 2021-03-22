@@ -26,6 +26,13 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
             _mapper = mapper;
         }
 
+        public async Task<float> CompareViolation()
+        {
+            int currentMonth = (await _uow.ViolationCaseRepository.Get(filter: el => el.CreatedTime.Month == DateTime.UtcNow.AddHours(7).Month)).Count();
+            int preMonth = (await _uow.ViolationCaseRepository.Get(filter: el => el.CreatedTime.Month == DateTime.UtcNow.AddMonths(-1).AddHours(7).Month)).Count();
+            return (currentMonth / preMonth) * 100;
+        }
+
         public async Task<int> CountAlViolaition()
         {
             return (await _uow.ViolationCaseRepository.Get()).Count();
@@ -49,7 +56,7 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
             Data.Models.Location location = await _uow.LocationRepository.GetFirst(filter: el => el.Id == param.LocationId);
 
             Guard guard = await _uow.GuardRepository.GetFirst(
-                filter: el => (el.TimeStart <= DateTime.Now.TimeOfDay && el.TimeEnd >= DateTime.Now.TimeOfDay) && el.AreaId == location.AreaId);
+                filter: el => el.TimeStart <= DateTime.Now.TimeOfDay && el.TimeEnd >= DateTime.Now.TimeOfDay && el.AreaId == location.AreaId);
 
             if (guard != null) { violationCase.GuardName = guard.FullName; }
             
