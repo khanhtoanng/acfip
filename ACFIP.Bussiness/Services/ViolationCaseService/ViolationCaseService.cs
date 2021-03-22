@@ -28,8 +28,8 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
 
         public async Task<float> CompareViolation()
         {
-            int currentMonth = (await _uow.ViolationCaseRepository.Get(filter: el => el.CreatedTime.Month == DateTime.UtcNow.AddHours(7).Month)).Count();
-            int preMonth = (await _uow.ViolationCaseRepository.Get(filter: el => el.CreatedTime.Month == DateTime.UtcNow.AddMonths(-1).AddHours(7).Month)).Count();
+            float currentMonth = (await _uow.ViolationCaseRepository.Get(filter: el => el.CreatedTime.Month == DateTime.UtcNow.AddHours(7).Month)).Count();
+            float preMonth = (await _uow.ViolationCaseRepository.Get(filter: el => el.CreatedTime.Month == DateTime.UtcNow.AddMonths(-1).AddHours(7).Month)).Count();
             return preMonth != 0 ? (currentMonth / preMonth) * 100 : 0;
         }
 
