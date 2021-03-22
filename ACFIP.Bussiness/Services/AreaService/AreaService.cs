@@ -143,7 +143,7 @@ namespace ACFIP.Bussiness.Services.AreaService
 
             }
             Policy policy = await _uow.PolicyRepository.GetFirst();
-            result = result.Where(el => el.NumberOfViolations > policy.NumberOfViolation).OrderBy(el => el.NumberOfViolations);
+            result = result.Where(el => el.NumberOfViolations > policy.NumberOfViolation).OrderByDescending(el => el.NumberOfViolations);
             foreach (var item in result)
             {
                 item.ViolatedStatus = AppConstants.AreaViolated.EXCEED_POLICY;
@@ -199,7 +199,7 @@ namespace ACFIP.Bussiness.Services.AreaService
 
             }
             Policy policy = await _uow.PolicyRepository.GetFirst();
-            result = result.Where(el => el.NumberOfViolations <= policy.NumberOfViolation).OrderBy(el => el.NumberOfViolations);
+            result = result.Where(el => el.NumberOfViolations <= policy.NumberOfViolation).OrderByDescending(el => el.NumberOfViolations);
             foreach (var item in result)
             {
                if (item.NumberOfViolations == policy.NumberOfViolation) item.ViolatedStatus = AppConstants.AreaViolated.EQUAL_TO_POLICY;
