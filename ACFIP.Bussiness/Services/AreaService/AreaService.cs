@@ -105,7 +105,7 @@ namespace ACFIP.Bussiness.Services.AreaService
 
             }
             Policy policy = await _uow.PolicyRepository.GetFirst();
-            result = result.Where(el => el.NumberOfViolations != 0).OrderByDescending(el => el.NumberOfViolations);
+            result = result.OrderByDescending(el => el.NumberOfViolations);
             foreach (var item in result)
             {
                 item.Guards = _mapper.Map<IEnumerable<GuardParam>>(await _uow.GuardRepository.Get(filter: el => el.AreaId == item.Id)).ToList();
