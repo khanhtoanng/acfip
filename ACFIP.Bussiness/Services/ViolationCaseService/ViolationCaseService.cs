@@ -30,7 +30,7 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
         {
             float currentMonth = (await _uow.ViolationCaseRepository.Get(filter: el => el.CreatedTime.Month == DateTime.UtcNow.AddHours(7).Month)).Count();
             float preMonth = (await _uow.ViolationCaseRepository.Get(filter: el => el.CreatedTime.Month == DateTime.UtcNow.AddMonths(-1).AddHours(7).Month)).Count();
-            return preMonth != 0 ? (currentMonth / preMonth) * 100 : 0;
+            return preMonth != 0 ? 100 - (currentMonth / preMonth) * 100 : 0;
         }
 
         public async Task<int> CountAlViolaition()
