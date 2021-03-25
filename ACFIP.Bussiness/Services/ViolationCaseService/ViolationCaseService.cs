@@ -56,7 +56,7 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
             Data.Models.Location location = await _uow.LocationRepository.GetFirst(filter: el => el.Id == param.LocationId);
 
             Guard guard = await _uow.GuardRepository.GetFirst(
-                filter: el => el.TimeStart <= DateTime.Now.TimeOfDay && el.TimeEnd >= DateTime.Now.TimeOfDay && el.AreaId == location.AreaId);
+                filter: el => el.TimeStart <= DateTime.UtcNow.AddHours(7).TimeOfDay && el.TimeEnd >= DateTime.UtcNow.AddHours(7).TimeOfDay && el.AreaId == location.AreaId);
 
             if (guard != null) { violationCase.GuardName = guard.FullName; }
             
