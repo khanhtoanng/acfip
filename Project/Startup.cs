@@ -30,6 +30,8 @@ using ACFIP.Bussiness.Services.Location;
 using ACFIP.Bussiness.Services.EmailSender;
 using ACFIP.Bussiness.Services.PolicyService;
 using ACFIP.Bussiness.Services.GuardService;
+using Twilio.Clients;
+using ACFIP.Bussiness.Services.Sms;
 
 namespace ACFIP.Core
 {
@@ -56,6 +58,10 @@ namespace ACFIP.Core
                                 .Get<EmailConfiguration>();
             services.AddSingleton(emailConfig);
 
+            // Add sms configuration
+            services.AddHttpClient<ITwilioRestClient, TwilioClient>(client =>
+                 client.DefaultRequestHeaders.Add("ACFIP-System", "HttpClientFactory"));
+
             // Cors configure
             services.AddCors(opts =>
             {
@@ -69,11 +75,7 @@ namespace ACFIP.Core
 
             // configure controller
             services.AddControllers().AddNewtonsoftJson();
-            //services.AddControllers().AddNewtonsoftJson(
-            //options =>
-            //{
-            //    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-            //}); 
+
 
             // add config connection string to database
             services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(config.DbConnectionString));

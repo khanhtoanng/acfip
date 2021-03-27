@@ -10,6 +10,8 @@ namespace ACFIP.Data.Dtos.Accounts
     {
         public string Id { get; set; }
         public string Email { get; set; }
+        public string Phone { get; set; }
+
         public bool IsActive { get; set; }
         public bool DeletedFlag { get; set; }
         public DateTime CreatedTime { get; set; }

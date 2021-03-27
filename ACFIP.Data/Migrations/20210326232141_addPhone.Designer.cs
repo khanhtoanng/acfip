@@ -4,14 +4,16 @@ using ACFIP.Data.AppContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ACFIP.Data.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20210326232141_addPhone")]
+    partial class addPhone
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,7 +49,7 @@ namespace ACFIP.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Phone")
-                        .HasColumnName("phone")
+                        .HasColumnName("email")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("RoleId")
@@ -71,10 +73,10 @@ namespace ACFIP.Data.Migrations
                             Id = "Admin1",
                             CreatedTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DeletedFlag = false,
-                            HashedPassword = "u0K1PtBq1r/yjC2ZEg83QNwu+rUv8FC2aKLRiUkXnkFH5I27u5WVpmhw99NyUx5Cg3meQW5SDEK+FyYYyExaDg==",
+                            HashedPassword = "cXgOti2ntB3P3nXwW1F2/hnpMYu+mL/fsxejTiq4eojVqgnAVsEjdrgmwSgTVXX7ATaEgiecBiOcNikdHxvJlQ==",
                             IsActive = true,
                             RoleId = 1,
-                            Salt = new byte[] { 75, 79, 68, 221, 43, 187, 235, 79, 15, 245, 39, 108, 153, 198, 201, 141 }
+                            Salt = new byte[] { 249, 128, 203, 228, 130, 123, 178, 237, 25, 219, 180, 123, 114, 236, 253, 108 }
                         });
                 });
 

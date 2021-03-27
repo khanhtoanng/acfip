@@ -47,5 +47,13 @@ namespace ACFIP.Data.Helpers
             public const int EXCEED_POLICY = 2;
 
         }
+        public struct SmsSystem
+        {
+            public struct Religion
+            {
+                public const string VietNam = "+84";
+            }
+            public const string From = "+14159938635";
+        }
     }
 }

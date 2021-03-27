@@ -2,6 +2,7 @@
 using ACFIP.Bussiness.Services.EmailSender;
 using ACFIP.Bussiness.Services.Location;
 using ACFIP.Bussiness.Services.PolicyService;
+using ACFIP.Bussiness.Services.Sms;
 using ACFIP.Data.Dtos.Area;
 using ACFIP.Data.Dtos.Policy;
 using ACFIP.Data.Helpers;
@@ -13,6 +14,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Twilio.Clients;
+using Twilio.Rest.Api.V2010.Account;
 
 namespace ACFIP.Core.Controllers
 {
@@ -24,18 +27,20 @@ namespace ACFIP.Core.Controllers
         private readonly IEmailSenderService _emailSenderService;
         private readonly IAccountService _accountService;
         private readonly ILocationService _locationService;
+        private readonly ITwilioRestClient _client;
 
 
-        public PolicyController(IPolicyService policyService, IEmailSenderService emailSenderService, IAccountService accountService, ILocationService locationService)
+        public PolicyController(IPolicyService policyService, IEmailSenderService emailSenderService, IAccountService accountService, ILocationService locationService, ITwilioRestClient client)
         {
             _policyService = policyService;
             _emailSenderService = emailSenderService;
             _accountService = accountService;
             _locationService = locationService;
+            _client = client;
 
         }
         [HttpGet]
-        [Authorize(Roles = AppConstants.Role.Manager.NAME )]
+        [Authorize(Roles = AppConstants.Role.Manager.NAME)]
         public async Task<IActionResult> Get()
         {
             var result = await _policyService.GetFirstPolicy();
@@ -59,7 +64,7 @@ namespace ACFIP.Core.Controllers
                 return BadRequest(new { message = e.Message });
             }
         }
-        [HttpGet("validation/{locationId}")]
+        [HttpGet("{locationId}/validation")]
         [Authorize(Roles = AppConstants.Role.Monitor.NAME + "," + AppConstants.Role.Manager.NAME)]
         public async Task<IActionResult> IsValidPolicy(int locationId)
         {
@@ -68,20 +73,31 @@ namespace ACFIP.Core.Controllers
             {
                 return NotFound();
             }
-            List<string> listEmailAccountManager = (await _accountService.GetAsync(filter: el => el.RoleId == AppConstants.Role.Manager.ID && !el.DeletedFlag)).Select(el => el.Email).ToList();
-            IEnumerable<string> listEmail = listEmailAccountManager.ToArray();
-            var message = new Message(listEmail, "Report Violations", string.Format(@"
-                      <html>
-                      <body>
-                      <h2>Dear Manager,</h2>
-                      <p>This is a automatic email </p><br/>
-                      <h4  style='color:red;'>Area Name: {0} have violated the policy.</h4>
-                      <h4>Please check violations with <a href=""https://acfip-server-backup.azurewebsites.net/swagger/index.html"">ACFIP System Link</a> </h4>
-                      <h5>Sincerely</h5>
-                      </body>
-                      </html>
-                     ", invalidArea.Name));
-            await _emailSenderService.SendEmailAsync(message);
+            //List<string> listEmailAccountManager = (await _accountService.GetAsync(filter: el => el.RoleId == AppConstants.Role.Manager.ID && !el.DeletedFlag && el.IsActive)).Select(el => el.Email).ToList();
+            //IEnumerable<string> listEmail = listEmailAccountManager.ToArray();
+            //var message = new Message(listEmail, "Report Violations", string.Format(@"
+            //          <html>
+            //          <body>
+            //          <h2>Dear Manager,</h2>
+            //          <p>This is a automatic email </p><br/>
+            //          <h4  style='color:red;'>Area Name: {0} have violated the policy.</h4>
+            //          <h4>Please check violations with <a href=""https://acfip-server-backup.azurewebsites.net/swagger/index.html"">ACFIP System Link</a> </h4>
+            //          <h5>Sincerely</h5>
+            //          </body>
+            //          </html>
+            //         ", invalidArea.Name));
+            //await _emailSenderService.SendEmailAsync(message);
+            var listPhoneAccountManager = (await _accountService.GetAsync(filter: el => el.RoleId == AppConstants.Role.Manager.ID && !el.DeletedFlag && el.IsActive)).ToList();
+            foreach (var account in listPhoneAccountManager)
+            {
+
+                var sms = MessageResource.Create(
+                       to: AppConstants.SmsSystem.Religion.VietNam + account.Phone,
+                       from: AppConstants.SmsSystem.From,
+                       body: string.Format("Area Name: {0} have violated the policy.", invalidArea.Name),
+                       client: _client);
+            }
+
             return Ok(invalidArea);
         }
 

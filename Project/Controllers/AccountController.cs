@@ -111,14 +111,14 @@ namespace ACFIP.Core.Controllers
             }
 
         }
-        [HttpPut("email")]
+        [HttpPut]
         [Authorize(Roles = AppConstants.Role.Manager.NAME
                    + "," + AppConstants.Role.Admin.NAME)]
         public async Task<IActionResult> ChangeEmail([FromBody] AccountEmailParam param)
         {
             try
             {
-                var result = await _accountService.UpdateEmail(param);
+                var result = await _accountService.UpdateAccount(param);
                 if (result == null)
                 {
                     return NotFound();
