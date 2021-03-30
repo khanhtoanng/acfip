@@ -42,16 +42,15 @@ namespace ACFIP.Bussiness.Services.PolicyService
             return  _mapper.Map<PolicyDto>(await _uow.PolicyRepository.GetFirst());
         }
 
-        public async Task<AreaDto> IsInValidArea(int locationId)
+        public async Task<AreaDto> IsInValidArea(int cameraId)
         {
             int currentMonth = DateTime.Now.Month;
-            Data.Models.Location location = await _uow.LocationRepository.GetFirst(el => el.Id == locationId,includeProperties:"Area");
-            Area area = location.Area;
+            Area area = (await _uow.CameraRepository.GetFirst(filter: el => el.Id == cameraId,includeProperties: "Location,Location.Area")).Location.Area;
             if (area.DateOfViolation == null || area.DateOfViolation.Value.Month != currentMonth) 
             {
                 Policy policy = await _uow.PolicyRepository.GetFirst();
                 var numberOfViolationsInMonth = (await _uow.ViolationCaseRepository
-                    .Get(filter: el => el.Location.AreaId == area.Id && el.CreatedTime.Month == currentMonth)).Count();
+                    .Get(filter: el => el.Camera.Location.AreaId == area.Id && el.CreatedTime.Month == currentMonth)).Count();
 
                 if (numberOfViolationsInMonth > policy.NumberOfViolation)
                 {

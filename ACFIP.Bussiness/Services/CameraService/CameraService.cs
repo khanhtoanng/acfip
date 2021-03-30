@@ -8,6 +8,7 @@ using ACFIP.Data.UnitOfWork;
 using AutoMapper;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ACFIP.Bussiness.Services.CameraService
@@ -98,6 +99,7 @@ namespace ACFIP.Bussiness.Services.CameraService
         public async Task<IEnumerable<CameraDto>> GetAllCamera(bool? isActive)
         {
             IEnumerable<Camera> listCamera = null;
+            IEnumerable<CameraDto> result = null;
             if (isActive == null)
             {
                 listCamera = await _uow.CameraRepository
@@ -109,7 +111,15 @@ namespace ACFIP.Bussiness.Services.CameraService
                       .Get(filter: el => el.IsActive == isActive & !el.DeletedFlag && el.LocationId != null, includeProperties: "Config,Location,Location.Area");
             }
 
-            return _mapper.Map<IEnumerable<CameraDto>>(listCamera);
+            result = _mapper.Map<IEnumerable<CameraDto>>(listCamera);
+
+            foreach (var camera in result)
+            {
+                IEnumerable<ViolationCase> violationCases = await _uow.ViolationCaseRepository
+                                    .Get(filter: el => el.CameraId == camera.Id && el.CreatedTime.Date == DateTime.UtcNow.AddHours(7).Date);
+                camera.NumberOfViolationsInDay = violationCases.Count();
+            }
+            return result;
         }
 
         public async Task<CameraDto> UpdateCamera(CameraUpdateParam param)
@@ -172,16 +182,27 @@ namespace ACFIP.Bussiness.Services.CameraService
 
         public async Task<CameraDto> UpdateStatusCamera(int id, CameraActivationParam cameraUpdate)
         {
-            Camera camera = await _uow.CameraRepository.GetFirst(filter : el => el.Id == id ,includeProperties: "Location,Config,Location.Area");
+            Camera camera = await _uow.CameraRepository.GetFirst(filter: el => el.Id == id, includeProperties: "Location,Config,Location.Area");
+            CameraDto result = null;
             if (camera != null)
             {
                 camera.IsActive = cameraUpdate.IsActive;
                 _uow.CameraRepository.Update(camera);
-                return await _uow.SaveAsync() > 0
-                    ? _mapper.Map<CameraDto>(camera)
-                    : throw new Exception("Update Camera Status Active fails");
+
+                if (await _uow.SaveAsync() > 0)
+                {
+                    result = _mapper.Map<CameraDto>(camera);
+
+                    IEnumerable<ViolationCase> violationCases = await _uow.ViolationCaseRepository
+                                   .Get(filter: el => el.CameraId == camera.Id && el.CreatedTime.Date == DateTime.UtcNow.AddHours(7).Date);
+                    result.NumberOfViolationsInDay = violationCases.Count();
+                }
+                else
+                {
+                    throw new Exception("Update Camera Status Active fails");
+                }
             }
-            return null;
+            return result;
         }
     }
 }

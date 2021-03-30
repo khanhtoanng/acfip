@@ -38,6 +38,21 @@ namespace ACFIP.Core.Controllers
             }
             return Ok(result);
         }
+
+        [HttpGet("non-view")]
+        [Authorize(Roles = AppConstants.Role.Monitor.NAME
+                          + ","
+                          + AppConstants.Role.Manager.NAME)]
+        public async Task<IActionResult> GetNonViewViolation()
+        {
+            var result = await _violationCaseService.GetNonViewViolations();
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
+        }
+
         [HttpGet("{id}")]
         [Authorize(Roles = AppConstants.Role.Monitor.NAME
                             + ","
@@ -107,6 +122,20 @@ namespace ACFIP.Core.Controllers
         public async Task<IActionResult> UpdateStatus(int id, ViolationCaseUpdateStatusParam param)
         {
             var result = await _violationCaseService.UpdateStatus(id, param);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
+        }
+
+        [HttpPut("{id}/view")]
+        [Authorize(Roles = AppConstants.Role.Monitor.NAME
+                          + ","
+                          + AppConstants.Role.Manager.NAME)]
+        public async Task<IActionResult> UpdateView(int id, ViolationCaseupdateViewParam param)
+        {
+            var result = await _violationCaseService.UpdateView(id, param);
             if (result == null)
             {
                 return NotFound();

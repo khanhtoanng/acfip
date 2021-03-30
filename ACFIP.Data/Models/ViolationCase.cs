@@ -17,10 +17,10 @@ namespace ACFIP.Data.Models
         [Key]
         [Column("id", Order = 0)]
         public int Id { get; set; }
-        [ForeignKey(nameof(Location))]
-        [Column("location_id", Order = 1)]
-        public int LocationId { get; set; }
-        public Location Location { get; set; }
+        [ForeignKey(nameof(Camera))]
+        [Column("camera_id", Order = 1)]
+        public int CameraId { get; set; }
+        public Camera Camera { get; set; }
         [Column("image_url", Order = 2)]
         public string ImgUrl { get; set; }
         [Column("video_url", Order = 3)]
@@ -29,6 +29,8 @@ namespace ACFIP.Data.Models
         public int Status { get; set; } = AppConstants.ViolationStatus.DETECTED;
         [Column("guard_name", Order = 5)]
         public string GuardName { get; set; }
+        [Column("is_view", Order = 6)]
+        public bool IsView { get; set; } = false;
         [Required]
         [Column("created_time")]
         public DateTime CreatedTime { get; set; }

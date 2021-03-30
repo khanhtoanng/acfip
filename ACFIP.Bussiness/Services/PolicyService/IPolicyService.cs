@@ -11,7 +11,7 @@ namespace ACFIP.Bussiness.Services.PolicyService
     {
         Task<PolicyDto> GetFirstPolicy();
         Task<PolicyDto> AddPolicy(PolicyRequestParam param);
-        Task<AreaDto> IsInValidArea(int locationId);
+        Task<AreaDto> IsInValidArea(int cameraId);
 
     }
 }

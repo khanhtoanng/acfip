@@ -10,10 +10,12 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
     {
         public Task<ViolationCaseDto> CreateViolation(ViolationCreateParam param);
         public Task<IEnumerable<ViolationCaseDto>> GetAllViolation(ViolationRequestParam param);
+        public Task<IEnumerable<ViolationCaseDto>> GetNonViewViolations();
         public Task<ViolationCaseDto> GetDetailViolation(int id);
         public Task<ViolationCaseDto> GetLast(int locationId);
         public Task<ViolationCaseDto> DeleteViolation(int id);
         public Task<ViolationCaseDto> UpdateStatus(int id,ViolationCaseUpdateStatusParam param);
+        public Task<ViolationCaseDto> UpdateView(int id, ViolationCaseupdateViewParam param);
         public Task<IEnumerable<ViolationReport>> GetViolationReport();
         public Task<ViolationReport> GetViolationReportInMonth(int month);
         public Task<int> CountAlViolaition();

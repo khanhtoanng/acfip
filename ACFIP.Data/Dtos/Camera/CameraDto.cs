@@ -21,6 +21,7 @@ namespace ACFIP.Data.Dtos.Camera
         public int? ConfigId { get; set; }
         public float Height { get; set; }
         public float Angle { get; set; }
+        public int NumberOfViolationsInDay { get; set; }
 
     }
 }

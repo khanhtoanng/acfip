@@ -9,6 +9,8 @@
     <Compile Remove="Migrations\20210216014001_ACFIPContext.Designer.cs" />
     <Compile Remove="Migrations\20210216050013_ACFIPContext.cs" />
     <Compile Remove="Migrations\20210216050013_ACFIPContext.Designer.cs" />
+    <Compile Remove="Migrations\20210330053226_violationcase.cs" />
+    <Compile Remove="Migrations\20210330053226_violationcase.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

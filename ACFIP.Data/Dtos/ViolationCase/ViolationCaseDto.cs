@@ -16,11 +16,13 @@ namespace ACFIP.Data.Dtos.ViolationCase
         public string VideoUrl { get; set; }
         public int Status { get; set; }
         public string GuardName { get; set; }
-        public int LocationId { get; set; }
+        public int? LocationId { get; set; }
         public string LocationDescription { get; set; }
         public int? AreaId { get; set; }
         public string AreaName { get; set; }
         public string AreaDescription { get; set; }
+        public bool IsView { get; set; }
+
         public virtual List<ViolationTypeDto> ViolationTypes { get; set; }
         public DateTime CreatedTime { get; set; }
 

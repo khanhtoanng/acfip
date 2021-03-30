@@ -92,8 +92,8 @@ namespace ACFIP.Bussiness.Services.AreaService
             foreach (var area in result)
             {
                 IEnumerable<ViolationCase> list = await _uow.ViolationCaseRepository
-                    .Get(filter: el => el.Status == AppConstants.ViolationStatus.DETECTED && el.Location.AreaId == area.Id
-                    , includeProperties: "Location");
+                    .Get(filter: el => el.Status == AppConstants.ViolationStatus.DETECTED && el.Camera.Location.AreaId == area.Id
+                    , includeProperties: "Camera,Camera.Location");
                 if (list != null || list.Count() != 0)
                 {
                     if (param.Month != 0)
@@ -130,8 +130,8 @@ namespace ACFIP.Bussiness.Services.AreaService
             foreach (var area in result)
             {
                 IEnumerable<ViolationCase> list = await _uow.ViolationCaseRepository
-                    .Get(filter: el => el.Status == AppConstants.ViolationStatus.DETECTED && el.Location.AreaId == area.Id
-                    , includeProperties: "Location");
+                    .Get(filter: el => el.Status == AppConstants.ViolationStatus.DETECTED && el.Camera.Location.AreaId == area.Id
+                    , includeProperties: "Camera,Camera.Location");
                 if (list != null || list.Count() != 0)
                 {
                     if (param.Month != 0)
@@ -156,8 +156,8 @@ namespace ACFIP.Bussiness.Services.AreaService
             foreach (var area in result)
             {
                 IEnumerable<ViolationCase> list = await _uow.ViolationCaseRepository
-                    .Get(filter: el => el.Status == AppConstants.ViolationStatus.DETECTED && el.Location.AreaId == area.Id
-                    , includeProperties: "Location");
+                    .Get(filter: el => el.Status == AppConstants.ViolationStatus.DETECTED && el.Camera.Location.AreaId == area.Id
+                    , includeProperties: "Camera,Camera.Location");
                 if (list != null || list.Count() != 0)
                 {
                     if (param.Month != 0)
@@ -186,8 +186,8 @@ namespace ACFIP.Bussiness.Services.AreaService
             foreach (var area in result)
             {
                 IEnumerable<ViolationCase> list = await _uow.ViolationCaseRepository
-                    .Get(filter: el => el.Status == AppConstants.ViolationStatus.DETECTED && el.Location.AreaId == area.Id
-                    , includeProperties: "Location");
+                    .Get(filter: el => el.Status == AppConstants.ViolationStatus.DETECTED && el.Camera.Location.AreaId == area.Id
+                    , includeProperties: "Camera,Camera.Location");
                 if (list != null)
                 {
                     if (param.Month != 0)
