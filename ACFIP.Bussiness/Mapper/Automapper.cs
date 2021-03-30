@@ -11,6 +11,7 @@ using ACFIP.Data.Dtos.CameConfiguration;
 using ACFIP.Data.Dtos.Location;
 using ACFIP.Data.Dtos.Policy;
 using ACFIP.Data.Dtos.Guard;
+using System.Linq;
 
 namespace ACFIP.Bussiness.Mapper
 {
@@ -41,7 +42,15 @@ namespace ACFIP.Bussiness.Mapper
                  .ForMember(des => des.NumberOfCameras, src => src.MapFrom(t => t.Cameras.Count));
             CreateMap<LocationDto, Location>();
 
-            CreateMap<ViolationCase, ViolationCaseDto>();
+            CreateMap<ViolationCase, ViolationCaseDto>()
+                .ForMember(des => des.AreaId, src => src.MapFrom(t => t.Camera.Location.AreaId))
+                .ForMember(des => des.AreaName, src => src.MapFrom(t => t.Camera.Location.Area.Name))
+                .ForMember(des => des.AreaDescription, src => src.MapFrom(t => t.Camera.Location.Area.Description))
+                .ForMember(des => des.LocationId, src => src.MapFrom(t => t.Camera.LocationId))
+                .ForMember(des => des.LocationDescription, src => src.MapFrom(t => t.Camera.Location.Description))
+                .ForMember(des => des.CameraId, src => src.MapFrom(t => t.CameraId))
+                .ForMember(des => des.CameraName, src => src.MapFrom(t => t.Camera.Name))
+                .ForMember(des => des.ViolationTypes, src => src.MapFrom(t => t.ViolationCaseTypes.Select(el => new ViolationTypeDto() { Id = el.Type.Id, Name = el.Type.Name }).ToList()));
             CreateMap<ViolationCaseDto, ViolationCase>();
 
             CreateMap<ViolationType, ViolationTypeDto>();

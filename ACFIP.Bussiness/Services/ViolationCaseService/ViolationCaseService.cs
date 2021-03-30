@@ -51,6 +51,7 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
                 ImgUrl = param.ImageUrl,
                 VideoUrl = param.VideoUrl,
                 CameraId = param.CameraId,
+                FileName = param.FileName,
                 CreatedTime = param.CreateTime
             };
             Data.Models.Location location = (await _uow.CameraRepository.GetFirst(filter: el => el.Id == param.CameraId, includeProperties: "Location")).Location;
@@ -152,56 +153,16 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
             IEnumerable<ViolationCase> violationCases = (await _uow.ViolationCaseRepository
                 .Get(filter: filter, includeProperties: "Camera,Camera.Location,Camera.Location.Area,ViolationCaseTypes,ViolationCaseTypes.Type"))
                 .Where(el => el.ViolationCaseTypes.ToList().FindIndex(predicateType) >= 0);
-
-
-            result = (from vCase in violationCases
-                      select new ViolationCaseDto()
-                      {
-                          Id = vCase.Id,
-                          CreatedTime = vCase.CreatedTime,
-                          ImgUrl = vCase.ImgUrl,
-                          VideoUrl = vCase.VideoUrl,
-                          LocationId = vCase.Camera.LocationId,
-                          LocationDescription = vCase.Camera.Location.Description,
-                          AreaId = vCase.Camera.Location.AreaId,
-                          AreaName = vCase.Camera.Location.Area.Name,
-                          AreaDescription = vCase.Camera.Location.Area.Description,
-                          GuardName = vCase.GuardName,
-                          Status = vCase.Status,
-                          IsView = vCase.IsView,
-                          ViolationTypes = vCase.ViolationCaseTypes.Select(el => new ViolationTypeDto() { Id = el.Type.Id, Name = el.Type.Name }).ToList(),
-                      });
-
-            return result;
+            return _mapper.Map<IEnumerable<ViolationCaseDto>>(violationCases);
 
         }
 
         public async Task<ViolationCaseDto> GetDetailViolation(int id)
         {
-            ViolationCaseDto result = null;
-            ViolationCase violationCases = (await _uow.ViolationCaseRepository
+            //ViolationCaseDto result = null;
+            ViolationCase violationCase = (await _uow.ViolationCaseRepository
                 .GetFirst(filter: el => el.Id == id, includeProperties: "Camera,Camera.Location,Camera.Location.Area,ViolationCaseTypes,ViolationCaseTypes.Type"));
-            if (violationCases != null)
-            {
-                result = new ViolationCaseDto()
-                {
-                    Id = violationCases.Id,
-                    CreatedTime = violationCases.CreatedTime,
-                    ImgUrl = violationCases.ImgUrl,
-                    VideoUrl = violationCases.VideoUrl,
-                    LocationId = violationCases.Camera.LocationId,
-                    LocationDescription = violationCases.Camera.Location.Description,
-                    AreaId = violationCases.Camera.Location.AreaId,
-                    AreaName = violationCases.Camera.Location.Area.Name,
-                    AreaDescription = violationCases.Camera.Location.Area.Description,
-                    GuardName = violationCases.GuardName,
-                    Status = violationCases.Status,
-                    IsView= violationCases.IsView,
-                    ViolationTypes = violationCases.ViolationCaseTypes.Select(el => new ViolationTypeDto() { Id = el.Type.Id, Name = el.Type.Name }).ToList(),
-                };
-            }
-
-            return result;
+            return _mapper.Map<ViolationCaseDto>(violationCase);
         }
 
         public Task<ViolationCaseDto> GetLast(int groupId)
@@ -213,7 +174,7 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
         public async Task<IEnumerable<ViolationCaseDto>> GetNonViewViolations()
         {
             IEnumerable<ViolationCase> violationCases = await _uow.ViolationCaseRepository
-                .Get(filter: el => !el.IsView && el.Camera.IsActive, includeProperties: "Camera");
+                .Get(filter: el => !el.IsView && el.Camera.IsActive, includeProperties: "Camera,Camera.Location,Camera.Location.Area,ViolationCaseTypes,ViolationCaseTypes.Type");
             return _mapper.Map<IEnumerable<ViolationCaseDto>>(violationCases);
         }
 
@@ -248,15 +209,33 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
             return await _uow.SaveAsync() > 0 ? _mapper.Map<ViolationCaseDto>(violationCase) : null;
         }
 
-        public async Task<ViolationCaseDto> UpdateView(int id, ViolationCaseupdateViewParam param)
+        public async Task<ViolationCaseDto> UpdateView(ViolationCaseupdateViewParam param)
         {
-            ViolationCase violationCase = await _uow.ViolationCaseRepository.GetById(id);
+            ViolationCase violationCase = await _uow.ViolationCaseRepository.GetFirst( filter: el=> el.FileName == param.FileName,includeProperties: "Camera,Camera.Location,Camera.Location.Area,ViolationCaseTypes,ViolationCaseTypes.Type");
             if (violationCase != null)
             {
                 violationCase.IsView = param.IsView;
                 _uow.ViolationCaseRepository.Update(violationCase);
             }
-            return await _uow.SaveAsync() > 0 ? _mapper.Map<ViolationCaseDto>(violationCase) : null;
+            return await _uow.SaveAsync() > 0 ? new ViolationCaseDto()
+            {
+                Id = violationCase.Id,
+                CreatedTime = violationCase.CreatedTime,
+                ImgUrl = violationCase.ImgUrl,
+                VideoUrl = violationCase.VideoUrl,
+                CameraId = violationCase.CameraId,
+                CameraName = violationCase.Camera.Name,
+                LocationId = violationCase.Camera.LocationId,
+                LocationDescription = violationCase.Camera.Location.Description,
+                AreaId = violationCase.Camera.Location.AreaId,
+                AreaName = violationCase.Camera.Location.Area.Name,
+                AreaDescription = violationCase.Camera.Location.Area.Description,
+                GuardName = violationCase.GuardName,
+                Status = violationCase.Status,
+                IsView = violationCase.IsView,
+                ViolationTypes = violationCase.ViolationCaseTypes.Select(el => new ViolationTypeDto() { Id = el.Type.Id, Name = el.Type.Name }).ToList(),
+            }
+            : null;
         }
     }
 }

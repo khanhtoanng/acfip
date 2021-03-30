@@ -129,13 +129,13 @@ namespace ACFIP.Core.Controllers
             return Ok(result);
         }
 
-        [HttpPut("{id}/view")]
+        [HttpPut("view")]
         [Authorize(Roles = AppConstants.Role.Monitor.NAME
                           + ","
                           + AppConstants.Role.Manager.NAME)]
-        public async Task<IActionResult> UpdateView(int id, ViolationCaseupdateViewParam param)
+        public async Task<IActionResult> UpdateView(ViolationCaseupdateViewParam param)
         {
-            var result = await _violationCaseService.UpdateView(id, param);
+            var result = await _violationCaseService.UpdateView(param);
             if (result == null)
             {
                 return NotFound();

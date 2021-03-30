@@ -6,7 +6,7 @@ namespace ACFIP.Data.Dtos.ViolationCase
 {
     public class ViolationCaseupdateViewParam
     {
-        public int Id { get; set; }
+        public string FileName { get; set; }
         public bool IsView { get; set; }
     }
 }

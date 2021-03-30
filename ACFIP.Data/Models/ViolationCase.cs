@@ -31,6 +31,8 @@ namespace ACFIP.Data.Models
         public string GuardName { get; set; }
         [Column("is_view", Order = 6)]
         public bool IsView { get; set; } = false;
+        [Column("file_name", Order = 7)]
+        public string FileName { get; set; }
         [Required]
         [Column("created_time")]
         public DateTime CreatedTime { get; set; }
