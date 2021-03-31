@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using ACFIP.Data.Dtos.Area;
 using ACFIP.Data.Dtos.CameConfiguration;
+using ACFIP.Data.Dtos.ViolationCase;
 
 namespace ACFIP.Data.Dtos.Camera
 {
@@ -22,6 +23,7 @@ namespace ACFIP.Data.Dtos.Camera
         public float Height { get; set; }
         public float Angle { get; set; }
         public int NumberOfViolationsInDay { get; set; }
+        public List<ViolationCaseDto> ViolationCases { get; set; }
 
     }
 }
