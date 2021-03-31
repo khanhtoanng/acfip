@@ -1,6 +1,7 @@
 ﻿using ACFIP.Data.Dtos;
 using ACFIP.Data.Dtos.CameConfiguration;
 using ACFIP.Data.Dtos.Camera;
+using ACFIP.Data.Dtos.ViolationCase;
 using ACFIP.Data.Helpers;
 using ACFIP.Data.Models;
 using ACFIP.Data.Repository;
@@ -115,9 +116,13 @@ namespace ACFIP.Bussiness.Services.CameraService
 
             foreach (var camera in result)
             {
-                IEnumerable<ViolationCase> violationCases = await _uow.ViolationCaseRepository
-                                    .Get(filter: el => el.CameraId == camera.Id && el.CreatedTime.Date == DateTime.UtcNow.AddHours(7).Date);
-                camera.NumberOfViolationsInDay = violationCases.Count();
+                camera.NumberOfViolationsInDay = (await _uow.ViolationCaseRepository
+                                    .Get(filter: el => el.CameraId == camera.Id && el.CreatedTime.Date == DateTime.UtcNow.AddHours(7).Date))
+                                    .Count();
+
+                IEnumerable<ViolationCase> listViolationCases = await _uow.ViolationCaseRepository
+                       .Get(filter: el => el.CameraId == camera.Id && !el.IsView && el.Camera.IsActive, includeProperties: "Camera,Camera.Location,Camera.Location.Area,ViolationCaseTypes,ViolationCaseTypes.Type");
+                camera.ViolationCases = _mapper.Map<List<ViolationCaseDto>>(listViolationCases);
             }
             return result;
         }
