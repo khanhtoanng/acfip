@@ -60,7 +60,7 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
                 filter: el => el.TimeStart <= DateTime.UtcNow.AddHours(7).TimeOfDay && el.TimeEnd >= DateTime.UtcNow.AddHours(7).TimeOfDay && el.AreaId == location.AreaId);
 
             if (guard != null) { violationCase.GuardName = guard.FullName; }
-            
+
 
             _uow.ViolationCaseRepository.Add(violationCase);
             if (await _uow.SaveAsync() > 0)
@@ -138,7 +138,7 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
             {
                 expr = Expression.AndAlso(expr, Expression.Equal(memberAccesStatus, Expression.Constant(param.Status)));
             }
-            if (param.Month != 0) 
+            if (param.Month != 0)
             {
                 expr = Expression.AndAlso(expr, Expression.Equal(memberAccessMonth, Expression.Constant(param.Month)));
             }
@@ -181,16 +181,16 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
         public async Task<IEnumerable<ViolationReport>> GetViolationReport()
         {
             IEnumerable<ViolationCase> violationCases = await _uow.ViolationCaseRepository.Get();
-            IEnumerable<ViolationReport> result = violationCases.GroupBy(el => el.CreatedTime.Month).Select(el => new ViolationReport { Month = el.Key, NumberOfViolations = el.Count()}).OrderBy(el => el.Month);
+            IEnumerable<ViolationReport> result = violationCases.GroupBy(el => el.CreatedTime.Month).Select(el => new ViolationReport { Month = el.Key, NumberOfViolations = el.Count() }).OrderBy(el => el.Month);
             return result;
         }
 
         public async Task<ViolationReport> GetViolationReportInMonth(int month)
         {
-            IEnumerable<ViolationCase> violationCases = await _uow.ViolationCaseRepository.Get(filter: el => el.CreatedTime.Month == month,includeProperties: "ViolationCaseTypes,ViolationCaseTypes.Type");
+            IEnumerable<ViolationCase> violationCases = await _uow.ViolationCaseRepository.Get(filter: el => el.CreatedTime.Month == month, includeProperties: "ViolationCaseTypes,ViolationCaseTypes.Type");
             ViolationReport violationReport = new ViolationReport() { Month = month, NumberOfViolations = violationCases.Count() };
             var listVest = violationCases.Where(el => el.ViolationCaseTypes.ToList().FindIndex(f => f.TypeId == AppConstants.ViolationType.VEST) >= 0);
-            TypeReport vestReport = new TypeReport() {Type = "Vest", NumberOfViolation = listVest.Count() };
+            TypeReport vestReport = new TypeReport() { Type = "Vest", NumberOfViolation = listVest.Count() };
             var listHelmet = violationCases.Where(el => el.ViolationCaseTypes.ToList().FindIndex(f => f.TypeId == AppConstants.ViolationType.HELMET) >= 0);
             TypeReport helmettReport = new TypeReport() { Type = "Helmet", NumberOfViolation = listHelmet.Count() };
             violationReport.TypeReports.Add(vestReport);
@@ -200,7 +200,7 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
 
         public async Task<ViolationCaseDto> UpdateStatus(int id, ViolationCaseUpdateStatusParam param)
         {
-            ViolationCase violationCase = await _uow.ViolationCaseRepository.GetById(id);
+            ViolationCase violationCase = await _uow.ViolationCaseRepository.GetFirst(filter: el => el.Id == id, includeProperties: "Camera,Camera.Location,Camera.Location.Area,ViolationCaseTypes,ViolationCaseTypes.Type");
             if (violationCase != null)
             {
                 violationCase.Status = param.Status;
@@ -209,31 +209,22 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
             return await _uow.SaveAsync() > 0 ? _mapper.Map<ViolationCaseDto>(violationCase) : null;
         }
 
-        public async Task<ViolationCaseDto> UpdateView(ViolationCaseupdateViewParam param)
+        public async Task<ViolationCaseBase> UpdateView(ViolationCaseupdateViewParam param)
         {
-            ViolationCase violationCase = await _uow.ViolationCaseRepository.GetFirst( filter: el=> el.FileName == param.FileName,includeProperties: "Camera,Camera.Location,Camera.Location.Area,ViolationCaseTypes,ViolationCaseTypes.Type");
+            ViolationCase violationCase = await _uow.ViolationCaseRepository.GetFirst(filter: el => el.FileName == param.FileName, includeProperties: "Camera,Camera.Location,Camera.Location.Area,ViolationCaseTypes,ViolationCaseTypes.Type");
             if (violationCase != null)
             {
                 violationCase.IsView = param.IsView;
                 _uow.ViolationCaseRepository.Update(violationCase);
             }
-            return await _uow.SaveAsync() > 0 ? new ViolationCaseDto()
+            return await _uow.SaveAsync() > 0 ? new ViolationCaseBase()
             {
                 Id = violationCase.Id,
-                CreatedTime = violationCase.CreatedTime,
+                FileName = violationCase.FileName,
                 ImgUrl = violationCase.ImgUrl,
-                VideoUrl = violationCase.VideoUrl,
-                CameraId = violationCase.CameraId,
-                CameraName = violationCase.Camera.Name,
-                LocationId = violationCase.Camera.LocationId,
-                LocationDescription = violationCase.Camera.Location.Description,
-                AreaId = violationCase.Camera.Location.AreaId,
-                AreaName = violationCase.Camera.Location.Area.Name,
-                AreaDescription = violationCase.Camera.Location.Area.Description,
-                GuardName = violationCase.GuardName,
-                Status = violationCase.Status,
                 IsView = violationCase.IsView,
-                ViolationTypes = violationCase.ViolationCaseTypes.Select(el => new ViolationTypeDto() { Id = el.Type.Id, Name = el.Type.Name }).ToList(),
+                Status = violationCase.Status,
+                VideoUrl = violationCase.VideoUrl
             }
             : null;
         }

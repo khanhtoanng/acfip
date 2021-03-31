@@ -23,6 +23,7 @@ namespace ACFIP.Data.Dtos.ViolationCase
         public int? AreaId { get; set; }
         public string AreaName { get; set; }
         public string AreaDescription { get; set; }
+        public string FileName { get; set; }
         public bool IsView { get; set; }
 
         public virtual List<ViolationTypeDto> ViolationTypes { get; set; }
