@@ -11,6 +11,7 @@ using System.Linq;
 using ACFIP.Data.Dtos.Camera;
 using ACFIP.Data.Helpers;
 using ACFIP.Data.Dtos.Guard;
+using System.Linq.Expressions;
 
 namespace ACFIP.Bussiness.Services.AreaService
 {
@@ -91,18 +92,47 @@ namespace ACFIP.Bussiness.Services.AreaService
             }
             foreach (var area in result)
             {
-                IEnumerable<ViolationCase> list = await _uow.ViolationCaseRepository
-                    .Get(filter: el => el.Status == AppConstants.ViolationStatus.DETECTED && el.Camera.Location.AreaId == area.Id
-                    , includeProperties: "Camera,Camera.Location");
-                if (list != null || list.Count() != 0)
+                var parameter = Expression.Parameter(typeof(ViolationCase), "vCase");
+
+                Expression memberAccessArea = Expression.Property(parameter, typeof(ViolationCase).GetProperty("Camera"));
+                memberAccessArea = Expression.Property(memberAccessArea, typeof(Camera).GetProperty("Location"));
+                memberAccessArea = Expression.Property(memberAccessArea, typeof(Data.Models.Location).GetProperty("AreaId"));
+                // setting default value if AreaId is null
+                memberAccessArea = Expression.Coalesce(memberAccessArea, Expression.Constant(0));
+
+                var memberAccesStatus = Expression.Property(parameter, "Status");
+
+                var memberAccessDate = Expression.Property(parameter, "CreatedTime");
+                memberAccessDate = Expression.Property(memberAccessDate, typeof(DateTime).GetProperty("Day"));
+
+                var memberAccessMonth = Expression.Property(parameter, "CreatedTime");
+                memberAccessMonth = Expression.Property(memberAccessMonth, typeof(DateTime).GetProperty("Month"));
+
+                var memberAccessYear = Expression.Property(parameter, "CreatedTime");
+                memberAccessYear = Expression.Property(memberAccessYear, typeof(DateTime).GetProperty("Year"));
+
+                // init
+                var expr = Expression.Equal(memberAccessArea, Expression.Constant(area.Id));
+                expr = Expression.AndAlso(expr, Expression.Equal(memberAccesStatus, Expression.Constant(AppConstants.ViolationStatus.DETECTED)));
+
+                var freq = 12;
+                expr = Expression.AndAlso(expr, Expression.Equal(memberAccessYear, Expression.Constant(param.Year)));
+                if (param.Month != 0)
                 {
-                    if (param.Month != 0)
-                    {
-                        list = list.Where(el => el.CreatedTime.Month == param.Month);
-                    }
-                    area.NumberOfViolations = list.Count();
+                    expr = Expression.AndAlso(expr, Expression.Equal(memberAccessMonth, Expression.Constant(param.Month)));
+                    freq = DateTime.DaysInMonth(param.Year, param.Month);
+                }
+                if (param.Day != 0)
+                {
+                    expr = Expression.AndAlso(expr, Expression.Equal(memberAccessDate, Expression.Constant(param.Day)));
                 }
 
+                var filter = Expression.Lambda<Func<ViolationCase, bool>>(expr, parameter);
+                IEnumerable<ViolationCase> list = await _uow.ViolationCaseRepository
+                       .Get(filter: filter
+                       , includeProperties: "Camera,Camera.Location");
+                area.NumberOfViolations = list.Count();
+                area.Frequency = Math.Round((double)area.NumberOfViolations / (double)freq, 2);
             }
             Policy policy = await _uow.PolicyRepository.GetFirst();
             result = result.OrderByDescending(el => el.NumberOfViolations);
@@ -169,7 +199,7 @@ namespace ACFIP.Bussiness.Services.AreaService
 
             }
             result = result.Where(el => el.NumberOfViolations != 0).OrderByDescending(el => el.NumberOfViolations).ToList();
-            if (result.Count() >= 3) 
+            if (result.Count() >= 3)
             {
                 result = result.ToList().GetRange(0, 3);
             }
@@ -202,7 +232,7 @@ namespace ACFIP.Bussiness.Services.AreaService
             result = result.Where(el => el.NumberOfViolations <= policy.NumberOfViolation).OrderByDescending(el => el.NumberOfViolations);
             foreach (var item in result)
             {
-               if (item.NumberOfViolations == policy.NumberOfViolation) item.ViolatedStatus = AppConstants.AreaViolated.EQUAL_TO_POLICY;
+                if (item.NumberOfViolations == policy.NumberOfViolation) item.ViolatedStatus = AppConstants.AreaViolated.EQUAL_TO_POLICY;
             }
             return result;
         }

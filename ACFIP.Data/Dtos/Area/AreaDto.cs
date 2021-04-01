@@ -19,6 +19,7 @@ namespace ACFIP.Data.Dtos.Area
         public int NumberOfCameras { get; set; } 
         public int NumberOfViolations { get; set; }
         public int ViolatedStatus { get; set; } = AppConstants.AreaViolated.LOWER_POLICY;
+        public double Frequency { get; set; }
         public DateTime? DateOfViolation { get; set; }
         public List<CameraDto> Cameras { get; set; }
         public List<GuardParam> Guards { get; set; }
