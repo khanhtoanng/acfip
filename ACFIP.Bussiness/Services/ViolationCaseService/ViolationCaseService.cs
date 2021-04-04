@@ -57,7 +57,7 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
             Data.Models.Location location = (await _uow.CameraRepository.GetFirst(filter: el => el.Id == param.CameraId, includeProperties: "Location")).Location;
 
             Guard guard = await _uow.GuardRepository.GetFirst(
-                filter: el => el.TimeStart <= DateTime.UtcNow.AddHours(7).TimeOfDay && el.TimeEnd >= DateTime.UtcNow.AddHours(7).TimeOfDay && el.AreaId == location.AreaId);
+                filter: el => el.TimeStart <= param.CreateTime.TimeOfDay && el.TimeEnd >= param.CreateTime.TimeOfDay && el.AreaId == location.AreaId);
 
             if (guard != null) { violationCase.GuardName = guard.FullName; }
 
@@ -96,7 +96,6 @@ namespace ACFIP.Bussiness.Services.ViolationCaseService
 
         public async Task<IEnumerable<ViolationCaseDto>> GetAllViolation(ViolationRequestParam param)
         {
-            IEnumerable<ViolationCaseDto> result = null;
             Func<ViolationCaseType, bool> filterType = f => true;
 
             var parameter = Expression.Parameter(typeof(ViolationCase), "vCase");

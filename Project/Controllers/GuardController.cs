@@ -47,12 +47,19 @@ namespace ACFIP.Core.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] List<GuardCreateParam> listParam)
         {
-            var result = await _guardService.CreateGuards(listParam);
-            if (result == null)
+            try
             {
-                return NotFound();
+                var result = await _guardService.CreateGuards(listParam);
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                return Ok(result);
             }
-            return Ok(result);
+            catch (Exception e) 
+            {
+                return BadRequest(new { message = e.Message });
+            }
         }
     }
 }

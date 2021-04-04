@@ -29,6 +29,13 @@ namespace ACFIP.Bussiness.Services.GuardService
 
         public async Task<IEnumerable<GuardDto>> CreateGuards(List<GuardCreateParam> listParam)
         {
+            // check if all area name is matched
+            IEnumerable<Area> areas = await _uow.AreaRepository.Get(filter: el => !el.DeletedFlag);
+            foreach (var param in listParam)
+            {
+                if (!areas.Any(el => el.Name == param.AreaName)) throw new ArgumentException("The Area Name: " + param.AreaName + " not found.");
+            }
+
             IEnumerable<Guard> guards = await _uow.GuardRepository.Get();
             // if have data. Delete
             if (guards.Count() > 0)
